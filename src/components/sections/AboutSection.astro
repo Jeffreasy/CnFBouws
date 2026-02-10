@@ -1,0 +1,195 @@
+---
+import { SITE } from "../../data/site";
+---
+
+<section class="about" id="over-ons">
+    <div class="container">
+        <div class="about-grid">
+            <div class="about-visual">
+                <div class="about-image-wrapper">
+                    <div class="about-image-placeholder">
+                        <svg
+                            width="64"
+                            height="64"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            opacity="0.3"
+                            ><rect
+                                x="3"
+                                y="3"
+                                width="18"
+                                height="18"
+                                rx="2"
+                                ry="2"></rect><path d="M3 9h18"></path><path
+                                d="M9 21V9"></path></svg
+                        >
+                        <span>{SITE.name}</span>
+                    </div>
+                </div>
+                <div class="about-float">
+                    <span class="float-number">Schüco</span>
+                    <span class="float-text">Exclusief Partner</span>
+                </div>
+            </div>
+
+            <div class="about-content">
+                <span class="section-tag">{SITE.overOns.tagline}</span>
+                <h2 class="section-title">{SITE.overOns.title}</h2>
+                {
+                    SITE.overOns.paragraphs.map((p) => (
+                        <p class="about-text">{p}</p>
+                    ))
+                }
+
+                <div class="about-features">
+                    {
+                        SITE.overOns.features.map((feature) => (
+                            <div class="feature-item">
+                                <div class="feature-check">
+                                    <svg
+                                        width="16"
+                                        height="16"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="3"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                    >
+                                        <polyline points="20 6 9 17 4 12" />
+                                    </svg>
+                                </div>
+                                <span>{feature}</span>
+                            </div>
+                        ))
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .about {
+        padding: 6rem 0;
+    }
+
+    .about-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+        align-items: center;
+    }
+    .about-visual {
+        position: relative;
+    }
+
+    .about-image-wrapper {
+        aspect-ratio: 4 / 3;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        background:
+            linear-gradient(
+                135deg,
+                rgba(3, 105, 161, 0.1),
+                rgba(245, 158, 11, 0.06)
+            ),
+            var(--surface-card);
+        border: 1px solid var(--border-card);
+        border-radius: var(--radius-lg);
+    }
+    .about-image-placeholder {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+        color: var(--text-muted);
+        font-family: "Lexend", system-ui, sans-serif;
+        font-weight: 600;
+        font-size: 1.25rem;
+    }
+
+    .about-float {
+        position: absolute;
+        bottom: -1.5rem;
+        right: -1rem;
+        padding: 1.25rem 1.75rem;
+        text-align: center;
+        background: var(--color-cta);
+        color: white;
+        border-radius: var(--radius-md);
+        box-shadow:
+            var(--shadow-lg),
+            0 0 30px rgba(3, 105, 161, 0.3);
+    }
+    .float-number {
+        display: block;
+        font-family: "Lexend", sans-serif;
+        font-size: 1.25rem;
+        font-weight: 800;
+        color: white;
+    }
+    .float-text {
+        font-size: 0.6875rem;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.8);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .about-text {
+        color: var(--text-secondary);
+        font-size: 1rem;
+        line-height: 1.75;
+        margin-bottom: 1rem;
+    }
+    .about-features {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.875rem;
+        margin-top: 1.75rem;
+    }
+    .feature-item {
+        display: flex;
+        align-items: center;
+        gap: 0.625rem;
+        font-size: 0.9375rem;
+        font-weight: 500;
+    }
+    .feature-check {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        background: linear-gradient(
+            135deg,
+            rgba(3, 105, 161, 0.15),
+            rgba(3, 105, 161, 0.05)
+        );
+        border: 1px solid rgba(3, 105, 161, 0.15);
+        border-radius: 50%;
+        color: var(--color-cta);
+        flex-shrink: 0;
+    }
+
+    @media (max-width: 768px) {
+        .about-grid {
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+        .about-features {
+            grid-template-columns: 1fr;
+        }
+        .about-float {
+            right: 1rem;
+            bottom: -1rem;
+        }
+    }
+</style>

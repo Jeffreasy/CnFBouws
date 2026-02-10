@@ -1,0 +1,120 @@
+---
+import { WERKWIJZE } from "../../data/services";
+---
+
+<section class="werkwijze" id="werkwijze">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-tag">Werkwijze</span>
+            <h2 class="section-title">Duidelijk en overzichtelijk proces</h2>
+            <p class="section-subtitle">
+                Van eerste contact tot oplevering — wij hanteren een heldere
+                werkwijze zodat u altijd weet waar u aan toe bent.
+            </p>
+        </div>
+
+        <div class="werkwijze-grid">
+            {
+                WERKWIJZE.map((step) => (
+                    <div class="werkwijze-step">
+                        <div class="step-number">{step.step}</div>
+                        <div class="step-content">
+                            <h3 class="step-title">{step.title}</h3>
+                            <p class="step-desc">{step.description}</p>
+                        </div>
+                        {step.step < 4 && <div class="step-connector" />}
+                    </div>
+                ))
+            }
+        </div>
+    </div>
+</section>
+
+<style>
+    .werkwijze {
+        padding: 6rem 0;
+    }
+
+    .werkwijze-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.5rem;
+        position: relative;
+    }
+
+    .werkwijze-step {
+        position: relative;
+        text-align: center;
+        padding: 2.5rem 1.5rem 2rem;
+        background: var(--surface-card);
+        border: 1px solid var(--border-card);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-sm);
+        transition: all var(--transition-normal);
+    }
+    .werkwijze-step:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-lg);
+    }
+
+    .step-number {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 56px;
+        height: 56px;
+        margin: 0 auto 1.25rem;
+        background: linear-gradient(135deg, var(--color-cta), #0284c7);
+        color: var(--text-on-cta);
+        font-family: "Lexend", sans-serif;
+        font-size: 1.25rem;
+        font-weight: 800;
+        border-radius: 50%;
+        box-shadow: 0 4px 16px rgba(3, 105, 161, 0.35);
+    }
+    .step-title {
+        font-size: 1.125rem;
+        margin-bottom: 0.5rem;
+    }
+    .step-desc {
+        color: var(--text-secondary);
+        font-size: 0.9375rem;
+        line-height: 1.6;
+    }
+
+    .step-connector {
+        display: none;
+    }
+    @media (min-width: 769px) {
+        .step-connector {
+            display: block;
+            position: absolute;
+            top: calc(2.5rem + 28px);
+            right: -0.75rem;
+            width: 1.5rem;
+            height: 2px;
+            background: var(--color-cta);
+            opacity: 0.25;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .werkwijze-grid {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+        .werkwijze-step {
+            text-align: left;
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 1rem;
+            padding: 1.5rem;
+        }
+        .step-number {
+            margin: 0;
+            width: 48px;
+            height: 48px;
+            font-size: 1.125rem;
+        }
+    }
+</style>
