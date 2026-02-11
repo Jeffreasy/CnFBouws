@@ -23,10 +23,14 @@ import Icon from "../ui/Icon.astro";
         <p class="hero-subtitle">{SITE.hero.subtitle}</p>
 
         <div class="hero-actions">
-            <a href={SITE.cta.primary.href} class="btn btn-primary btn-lg">
+            <button
+                type="button"
+                data-modal-open="contact-modal"
+                class="btn btn-primary btn-lg"
+            >
                 <Icon name="mail" size={18} />
                 {SITE.cta.primary.label}
-            </a>
+            </button>
             <a
                 href={SITE.contact.whatsappHref}
                 class="btn btn-secondary btn-lg"

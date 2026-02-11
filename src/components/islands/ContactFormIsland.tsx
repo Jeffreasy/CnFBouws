@@ -1,9 +1,9 @@
 /**
  * ContactFormIsland — Interactive React island for the contact form
- * Renders client-side with validation, loading states, and API submission.
- * Used with `client:visible` to lazy-load when scrolled into view.
+ * All styling is inline to guarantee it renders correctly regardless of
+ * Astro CSS scoping. Matches the dark glass design system.
  */
-import { useState, type FormEvent } from 'react';
+import { useState, type FormEvent, type CSSProperties } from 'react';
 
 type FormStatus = 'idle' | 'loading' | 'success' | 'error';
 
@@ -23,11 +23,190 @@ const INITIAL_DATA: FormData = {
     bericht: '',
 };
 
+/* ═══════════════════════════════════════════════════════════
+   INLINE STYLES — Design token equivalents
+   ═══════════════════════════════════════════════════════════ */
+const styles = {
+    form: {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '1.25rem',
+    } as CSSProperties,
+
+    formGroup: {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '0.5rem',
+    } as CSSProperties,
+
+    label: {
+        fontFamily: "'Poppins', sans-serif",
+        fontSize: '0.8125rem',
+        fontWeight: 600,
+        color: 'var(--text-secondary, rgba(255,255,255,0.7))',
+        textTransform: 'uppercase',
+        letterSpacing: '0.05em',
+    } as CSSProperties,
+
+    input: {
+        padding: '0.875rem 1rem',
+        background: 'rgba(255, 255, 255, 0.05)',
+        border: '1px solid rgba(255, 255, 255, 0.1)',
+        borderRadius: '0.625rem',
+        fontFamily: "'Open Sans', sans-serif",
+        fontSize: '0.9375rem',
+        color: 'var(--text-primary, #fff)',
+        outline: 'none',
+        width: '100%',
+        boxSizing: 'border-box',
+        transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
+        WebkitAppearance: 'none',
+        appearance: 'none',
+    } as CSSProperties,
+
+    inputFocus: {
+        borderColor: 'var(--color-cta, #e8722a)',
+        boxShadow: '0 0 0 3px rgba(232, 114, 42, 0.15)',
+    } as CSSProperties,
+
+    inputError: {
+        borderColor: 'var(--color-error, #ef4444)',
+    } as CSSProperties,
+
+    select: {
+        padding: '0.875rem 1rem',
+        background: 'rgba(255, 255, 255, 0.05)',
+        border: '1px solid rgba(255, 255, 255, 0.1)',
+        borderRadius: '0.625rem',
+        fontFamily: "'Open Sans', sans-serif",
+        fontSize: '0.9375rem',
+        color: 'var(--text-primary, #fff)',
+        outline: 'none',
+        width: '100%',
+        boxSizing: 'border-box',
+        transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
+        cursor: 'pointer',
+        WebkitAppearance: 'none',
+        appearance: 'none',
+        backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.5)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E")`,
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'right 1rem center',
+        backgroundSize: '16px',
+        paddingRight: '2.5rem',
+    } as CSSProperties,
+
+    textarea: {
+        resize: 'vertical' as const,
+        minHeight: '120px',
+    },
+
+    errorText: {
+        fontSize: '0.8125rem',
+        color: 'var(--color-error, #ef4444)',
+        fontWeight: 500,
+    } as CSSProperties,
+
+    submitBtn: {
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: '0.5rem',
+        width: '100%',
+        padding: '1rem 1.5rem',
+        background: 'var(--color-cta, #e8722a)',
+        color: '#fff',
+        border: 'none',
+        borderRadius: '0.625rem',
+        fontFamily: "'Poppins', sans-serif",
+        fontSize: '1rem',
+        fontWeight: 600,
+        cursor: 'pointer',
+        transition: 'background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease',
+        marginTop: '0.5rem',
+    } as CSSProperties,
+
+    submitBtnDisabled: {
+        opacity: 0.7,
+        cursor: 'not-allowed',
+    } as CSSProperties,
+
+    alert: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: '0.625rem',
+        padding: '0.875rem 1rem',
+        borderRadius: '0.625rem',
+        fontSize: '0.875rem',
+        fontWeight: 500,
+        background: 'rgba(239, 68, 68, 0.08)',
+        color: 'var(--color-error, #ef4444)',
+        border: '1px solid rgba(239, 68, 68, 0.2)',
+    } as CSSProperties,
+
+    successWrap: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        textAlign: 'center',
+        padding: '3rem 1.5rem',
+    } as CSSProperties,
+
+    successIcon: {
+        color: 'var(--color-cta, #e8722a)',
+        marginBottom: '1.25rem',
+    } as CSSProperties,
+
+    successTitle: {
+        fontFamily: "'Poppins', sans-serif",
+        fontSize: '1.375rem',
+        fontWeight: 700,
+        color: 'var(--text-heading, #fff)',
+        marginBottom: '0.5rem',
+    } as CSSProperties,
+
+    successText: {
+        color: 'var(--text-secondary, rgba(255,255,255,0.7))',
+        marginBottom: '1.5rem',
+        lineHeight: 1.6,
+    } as CSSProperties,
+
+    resetBtn: {
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: '0.5rem',
+        padding: '0.75rem 1.5rem',
+        background: 'transparent',
+        color: 'var(--text-primary, #fff)',
+        border: '1px solid rgba(255, 255, 255, 0.15)',
+        borderRadius: '0.625rem',
+        fontFamily: "'Poppins', sans-serif",
+        fontSize: '0.9375rem',
+        fontWeight: 500,
+        cursor: 'pointer',
+        transition: 'border-color 0.2s ease, background 0.2s ease',
+    } as CSSProperties,
+
+    spinner: {
+        display: 'inline-block',
+        width: '18px',
+        height: '18px',
+        border: '2px solid rgba(255,255,255,0.3)',
+        borderTopColor: '#fff',
+        borderRadius: '50%',
+        animation: 'contactSpin 0.6s linear infinite',
+    } as CSSProperties,
+};
+
+/* ═══════════════════════════════════════════════════════════
+   COMPONENT
+   ═══════════════════════════════════════════════════════════ */
 export default function ContactFormIsland() {
     const [data, setData] = useState<FormData>(INITIAL_DATA);
     const [status, setStatus] = useState<FormStatus>('idle');
     const [message, setMessage] = useState('');
     const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>({});
+    const [focused, setFocused] = useState<string | null>(null);
 
     function validateField(name: keyof FormData, value: string): string {
         if (name === 'naam' && value.trim().length < 2) return 'Vul uw naam in';
@@ -43,8 +222,21 @@ export default function ContactFormIsland() {
     }
 
     function handleBlur(name: keyof FormData) {
+        setFocused(null);
         const error = validateField(name, data[name]);
         if (error) setErrors(prev => ({ ...prev, [name]: error }));
+    }
+
+    function handleFocus(name: string) {
+        setFocused(name);
+    }
+
+    function getInputStyle(name: keyof FormData): CSSProperties {
+        return {
+            ...styles.input,
+            ...(focused === name ? styles.inputFocus : {}),
+            ...(errors[name] ? styles.inputError : {}),
+        };
     }
 
     async function handleSubmit(e: FormEvent) {
@@ -87,19 +279,30 @@ export default function ContactFormIsland() {
         }
     }
 
+    /* ─── Keyframe injection (once) ──────────────────────────── */
+    if (typeof document !== 'undefined' && !document.getElementById('contact-spin-kf')) {
+        const sheet = document.createElement('style');
+        sheet.id = 'contact-spin-kf';
+        sheet.textContent = `@keyframes contactSpin { to { transform: rotate(360deg); } }`;
+        document.head.appendChild(sheet);
+    }
+
+    /* ─── Success state ──────────────────────────────────────── */
     if (status === 'success') {
         return (
-            <div className="form-success" role="alert">
-                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--color-cta)', marginBottom: '1rem' }}>
+            <div style={styles.successWrap} role="alert">
+                <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={styles.successIcon}>
                     <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
                     <polyline points="22 4 12 14.01 9 11.01" />
                 </svg>
-                <h3 style={{ fontSize: '1.25rem', marginBottom: '0.5rem', color: 'var(--text-heading)' }}>Bericht verzonden!</h3>
-                <p style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>{message}</p>
+                <h3 style={styles.successTitle}>Bericht verzonden!</h3>
+                <p style={styles.successText}>{message}</p>
                 <button
                     type="button"
-                    className="btn btn-secondary"
+                    style={styles.resetBtn}
                     onClick={() => setStatus('idle')}
+                    onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.3)'; e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; }}
+                    onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)'; e.currentTarget.style.background = 'transparent'; }}
                 >
                     Nog een bericht versturen
                 </button>
@@ -107,60 +310,77 @@ export default function ContactFormIsland() {
         );
     }
 
+    /* ─── Form ───────────────────────────────────────────────── */
     return (
-        <form onSubmit={handleSubmit} className="contact-form" noValidate>
-            <div className="form-group">
-                <label htmlFor="naam" className="form-label">Naam *</label>
+        <form onSubmit={handleSubmit} style={styles.form} noValidate>
+            {/* Naam */}
+            <div style={styles.formGroup}>
+                <label htmlFor="naam" style={styles.label}>Naam *</label>
                 <input
                     type="text"
                     id="naam"
                     value={data.naam}
                     onChange={e => handleChange('naam', e.target.value)}
                     onBlur={() => handleBlur('naam')}
-                    className={`form-input ${errors.naam ? 'form-input--error' : ''}`}
+                    onFocus={() => handleFocus('naam')}
+                    style={getInputStyle('naam')}
                     placeholder="Uw volledige naam"
                     required
                     autoComplete="name"
                 />
-                {errors.naam && <span className="form-error">{errors.naam}</span>}
+                {errors.naam && <span style={styles.errorText}>{errors.naam}</span>}
             </div>
 
-            <div className="form-group">
-                <label htmlFor="email" className="form-label">E-mail *</label>
+            {/* Email */}
+            <div style={styles.formGroup}>
+                <label htmlFor="email" style={styles.label}>E-mail *</label>
                 <input
                     type="email"
                     id="email"
                     value={data.email}
                     onChange={e => handleChange('email', e.target.value)}
                     onBlur={() => handleBlur('email')}
-                    className={`form-input ${errors.email ? 'form-input--error' : ''}`}
+                    onFocus={() => handleFocus('email')}
+                    style={getInputStyle('email')}
                     placeholder="uw@email.nl"
                     required
                     autoComplete="email"
                 />
-                {errors.email && <span className="form-error">{errors.email}</span>}
+                {errors.email && <span style={styles.errorText}>{errors.email}</span>}
             </div>
 
-            <div className="form-group">
-                <label htmlFor="telefoon" className="form-label">Telefoon</label>
+            {/* Telefoon */}
+            <div style={styles.formGroup}>
+                <label htmlFor="telefoon" style={styles.label}>Telefoon</label>
                 <input
                     type="tel"
                     id="telefoon"
                     value={data.telefoon}
                     onChange={e => handleChange('telefoon', e.target.value)}
-                    className="form-input"
+                    onFocus={() => handleFocus('telefoon')}
+                    onBlur={() => setFocused(null)}
+                    style={{
+                        ...styles.input,
+                        ...(focused === 'telefoon' ? styles.inputFocus : {}),
+                    }}
                     placeholder="06 1234 5678"
                     autoComplete="tel"
                 />
             </div>
 
-            <div className="form-group">
-                <label htmlFor="interesse" className="form-label">Interesse</label>
+            {/* Interesse */}
+            <div style={styles.formGroup}>
+                <label htmlFor="interesse" style={styles.label}>Interesse</label>
                 <select
                     id="interesse"
                     value={data.interesse}
                     onChange={e => handleChange('interesse', e.target.value)}
-                    className="form-input"
+                    onFocus={() => handleFocus('interesse')}
+                    onBlur={() => setFocused(null)}
+                    style={{
+                        ...styles.select,
+                        ...(focused === 'interesse' ? styles.inputFocus : {}),
+                    }}
                 >
                     <option value="">Kies een onderwerp</option>
                     <option value="offerte">Vrijblijvende offerte</option>
@@ -170,20 +390,28 @@ export default function ContactFormIsland() {
                 </select>
             </div>
 
-            <div className="form-group">
-                <label htmlFor="bericht" className="form-label">Bericht</label>
+            {/* Bericht */}
+            <div style={styles.formGroup}>
+                <label htmlFor="bericht" style={styles.label}>Bericht</label>
                 <textarea
                     id="bericht"
                     value={data.bericht}
                     onChange={e => handleChange('bericht', e.target.value)}
-                    className="form-input form-textarea"
+                    onFocus={() => handleFocus('bericht')}
+                    onBlur={() => setFocused(null)}
+                    style={{
+                        ...styles.input,
+                        ...styles.textarea,
+                        ...(focused === 'bericht' ? styles.inputFocus : {}),
+                    }}
                     placeholder="Vertel ons meer over uw wensen..."
                     rows={4}
                 />
             </div>
 
+            {/* Error Alert */}
             {status === 'error' && (
-                <div className="form-alert form-alert--error" role="alert">
+                <div style={styles.alert} role="alert">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <circle cx="12" cy="12" r="10" />
                         <line x1="15" y1="9" x2="9" y2="15" />
@@ -193,14 +421,20 @@ export default function ContactFormIsland() {
                 </div>
             )}
 
+            {/* Submit */}
             <button
                 type="submit"
-                className="btn btn-primary btn-lg form-submit"
+                style={{
+                    ...styles.submitBtn,
+                    ...(status === 'loading' ? styles.submitBtnDisabled : {}),
+                }}
                 disabled={status === 'loading'}
+                onMouseEnter={e => { if (status !== 'loading') { e.currentTarget.style.boxShadow = '0 0 24px rgba(232, 114, 42, 0.35)'; e.currentTarget.style.transform = 'translateY(-1px)'; } }}
+                onMouseLeave={e => { e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.transform = 'none'; }}
             >
                 {status === 'loading' ? (
                     <>
-                        <span className="spinner" aria-hidden="true" />
+                        <span style={styles.spinner} aria-hidden="true" />
                         Versturen...
                     </>
                 ) : (

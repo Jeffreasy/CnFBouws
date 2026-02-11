@@ -33,9 +33,13 @@ import { ikUrl } from "../lib/imagekit";
 
     <!-- CTA + Theme Toggle + Mobile Toggle -->
     <div class="nav-actions">
-      <a href={SITE.cta.primary.href} class="btn btn-primary nav-cta">
+      <button
+        type="button"
+        data-modal-open="contact-modal"
+        class="btn btn-primary nav-cta"
+      >
         {SITE.cta.primary.label}
-      </a>
+      </button>
       <button
         class="theme-toggle"
         id="theme-toggle"
@@ -113,9 +117,13 @@ import { ikUrl } from "../lib/imagekit";
       }
     </ul>
     <div class="mobile-cta">
-      <a href={SITE.cta.primary.href} class="btn btn-primary btn-lg mobile-btn">
+      <button
+        type="button"
+        data-modal-open="contact-modal"
+        class="btn btn-primary btn-lg mobile-btn"
+      >
         {SITE.cta.primary.label}
-      </a>
+      </button>
       <a
         href={SITE.contact.phoneHref}
         class="btn btn-secondary btn-lg mobile-btn"
