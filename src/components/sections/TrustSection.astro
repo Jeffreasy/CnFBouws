@@ -1,108 +1,57 @@
 ---
 import { KEURMERKEN, SUBSIDIE, TRUST_STATEMENT } from "../../data/keurmerken";
+import Section from "../ui/Section.astro";
+import Grid from "../ui/Grid.astro";
+import Card from "../ui/Card.astro";
+import Tag from "../ui/Tag.astro";
+import Icon from "../ui/Icon.astro";
 ---
 
-<section class="trust" id="keurmerken">
-    <div class="container">
-        <div class="section-header">
-            <span class="section-tag">Kwaliteit & Veiligheid</span>
-            <h2 class="section-title">Gecertificeerde kwaliteit</h2>
-            <p class="section-subtitle">{TRUST_STATEMENT}</p>
-        </div>
-
-        <div class="keurmerken-grid">
-            {
-                KEURMERKEN.map((k) => (
-                    <div class="keurmerk-card glass-card">
-                        <div class="keurmerk-icon">
-                            <svg
-                                width="24"
-                                height="24"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                            >
-                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                            </svg>
-                        </div>
-                        <span class="keurmerk-abbr">{k.abbreviation}</span>
-                        <h4 class="keurmerk-name">{k.name}</h4>
-                        <p class="keurmerk-desc">{k.description}</p>
+<Section
+    id="keurmerken"
+    tag="Kwaliteit & Veiligheid"
+    title="Gecertificeerde kwaliteit"
+    subtitle={TRUST_STATEMENT}
+    muted
+>
+    <Grid cols={4} gap="lg" stagger class="keurmerken-grid">
+        {
+            KEURMERKEN.map((k) => (
+                <Card center>
+                    <div class="icon-box icon-box--md keurmerk-icon">
+                        <Icon name="shield" size={24} />
                     </div>
-                ))
-            }
-        </div>
+                    <span class="keurmerk-abbr">{k.abbreviation}</span>
+                    <h4 class="keurmerk-name">{k.name}</h4>
+                    <p class="card-desc">{k.description}</p>
+                </Card>
+            ))
+        }
+    </Grid>
 
-        <!-- Subsidie Banner -->
-        <div class="subsidie-banner glass-card">
-            <div class="subsidie-icon">
-                <svg
-                    width="28"
-                    height="28"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    ><circle cx="12" cy="12" r="10"></circle><path
-                        d="M16 8h-6a2 2 0 100 4h4a2 2 0 110 4H8"></path><path
-                        d="M12 18V6"></path></svg
-                >
-            </div>
-            <div class="subsidie-content">
-                <span class="subsidie-tag">{SUBSIDIE.tagline}</span>
-                <h3 class="subsidie-title">{SUBSIDIE.title}</h3>
-                <p class="subsidie-desc">{SUBSIDIE.description}</p>
-            </div>
+    <!-- Subsidie Banner -->
+    <div class="glass-card subsidie-banner">
+        <div class="icon-box icon-box--lg icon-box--accent">
+            <Icon name="dollar-sign" size={28} />
+        </div>
+        <div class="subsidie-content">
+            <Tag variant="accent">{SUBSIDIE.tagline}</Tag>
+            <h3 class="subsidie-title">{SUBSIDIE.title}</h3>
+            <p class="card-desc">{SUBSIDIE.description}</p>
         </div>
     </div>
-</section>
+</Section>
 
 <style>
-    .trust {
-        padding: 6rem 0;
-        background: var(--surface-muted);
-    }
-
     .keurmerken-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 1.25rem;
         margin-bottom: 3rem;
     }
-    .keurmerk-card {
-        padding: 2rem;
-        text-align: center;
-        transition: all var(--transition-normal);
-    }
-    .keurmerk-card:hover {
-        transform: translateY(-4px);
-        box-shadow: var(--shadow-lg);
-    }
-
     .keurmerk-icon {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 52px;
-        height: 52px;
         margin: 0 auto 1rem;
-        background: linear-gradient(
-            135deg,
-            rgba(3, 105, 161, 0.12),
-            rgba(3, 105, 161, 0.04)
-        );
-        border: 1px solid rgba(3, 105, 161, 0.12);
-        border-radius: 50%;
-        color: var(--color-cta);
     }
     .keurmerk-abbr {
         display: block;
-        font-family: "Lexend", system-ui, sans-serif;
+        font-family: var(--font-heading);
         font-size: 1.5rem;
         font-weight: 800;
         color: var(--color-cta);
@@ -114,11 +63,6 @@ import { KEURMERKEN, SUBSIDIE, TRUST_STATEMENT } from "../../data/keurmerken";
         color: var(--text-muted);
         margin-bottom: 0.625rem;
     }
-    .keurmerk-desc {
-        font-size: 0.875rem;
-        color: var(--text-secondary);
-        line-height: 1.6;
-    }
 
     .subsidie-banner {
         display: flex;
@@ -127,64 +71,19 @@ import { KEURMERKEN, SUBSIDIE, TRUST_STATEMENT } from "../../data/keurmerken";
         padding: 2.5rem;
         background: linear-gradient(
             135deg,
-            rgba(245, 158, 11, 0.06),
-            rgba(3, 105, 161, 0.04)
+            rgba(var(--color-accent-rgb), 0.06),
+            rgba(var(--color-cta-rgb), 0.04)
         );
-        border: 1px solid rgba(245, 158, 11, 0.2);
-    }
-    .subsidie-icon {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 64px;
-        height: 64px;
-        background: linear-gradient(
-            135deg,
-            rgba(245, 158, 11, 0.15),
-            rgba(245, 158, 11, 0.05)
-        );
-        border: 1px solid rgba(245, 158, 11, 0.2);
-        border-radius: var(--radius-lg);
-        color: var(--color-accent);
-        flex-shrink: 0;
-    }
-    .subsidie-tag {
-        display: inline-block;
-        font-size: 0.6875rem;
-        font-weight: 700;
-        color: var(--color-accent);
-        text-transform: uppercase;
-        letter-spacing: 0.1em;
-        margin-bottom: 0.375rem;
-        font-family: "Lexend", system-ui, sans-serif;
-        padding: 0.2rem 0.75rem;
-        background: rgba(245, 158, 11, 0.08);
-        border-radius: var(--radius-full);
-        border: 1px solid rgba(245, 158, 11, 0.15);
+        border: 1px solid rgba(var(--color-accent-rgb), 0.2);
     }
     .subsidie-title {
         font-size: 1.375rem;
         margin-bottom: 0.5rem;
     }
-    .subsidie-desc {
-        color: var(--text-secondary);
-        font-size: 0.9375rem;
-        line-height: 1.65;
-    }
 
-    @media (max-width: 1024px) {
-        .keurmerken-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-    }
     @media (max-width: 768px) {
         .subsidie-banner {
             flex-direction: column;
-        }
-    }
-    @media (max-width: 480px) {
-        .keurmerken-grid {
-            grid-template-columns: 1fr;
         }
     }
 </style>

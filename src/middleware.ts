@@ -1,5 +1,6 @@
 // src/middleware.ts
-// Zero-Trust SSR Middleware — Session validation on every request
+// Zero-Trust session validation on every request
+// Validates against LaventeCare AuthSystem backend
 
 import { defineMiddleware } from "astro:middleware";
 

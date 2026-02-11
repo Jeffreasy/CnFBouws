@@ -1,0 +1,39 @@
+---
+/**
+ * Grid — Responsive grid layout
+ *
+ * Props:
+ *   cols    — Number of columns (2, 3, 4) or "auto" for auto-fit
+ *   gap     — Gap size: "sm" (1.25rem), "md" (default 1.5rem), "lg" (2rem)
+ *   stagger — Enable staggered fade-in animation for children
+ *   class   — Additional CSS classes
+ */
+
+interface Props {
+    cols?: 2 | 3 | 4 | "auto";
+    gap?: "sm" | "md" | "lg";
+    stagger?: boolean;
+    class?: string;
+}
+
+const {
+    cols = 3,
+    gap = "md",
+    stagger = false,
+    class: className = "",
+} = Astro.props;
+
+const gridClass = [
+    "grid",
+    `grid--${cols}`,
+    gap !== "md" && `grid--gap-${gap}`,
+    stagger && "grid--stagger",
+    className,
+]
+    .filter(Boolean)
+    .join(" ");
+---
+
+<div class={gridClass}>
+    <slot />
+</div>

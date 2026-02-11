@@ -24,11 +24,11 @@
 			"dest": "_render"
 		},
 		{
-			"src": "^/api(?:/(.*?))?/?$",
+			"src": "^/api/contact/?$",
 			"dest": "_render"
 		},
 		{
-			"src": "^/$",
+			"src": "^/api(?:/(.*?))?/?$",
 			"dest": "_render"
 		}
 	]

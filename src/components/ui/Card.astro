@@ -1,0 +1,48 @@
+---
+/**
+ * Card — Glass card with optional accent decorations
+ *
+ * Props:
+ *   accentBar  — Top accent gradient bar on hover
+ *   bottomBar  — Bottom gradient bar on hover
+ *   center     — Center-aligned text
+ *   variant    — "default" | "feature" (larger padding)
+ *   hover      — "lift" (default) | "none" (static)
+ *   class      — Additional CSS classes
+ */
+
+interface Props {
+    accentBar?: boolean;
+    bottomBar?: boolean;
+    center?: boolean;
+    variant?: "default" | "feature";
+    hover?: "lift" | "none";
+    class?: string;
+}
+
+const {
+    accentBar = false,
+    bottomBar = false,
+    center = false,
+    variant = "default",
+    hover = "lift",
+    class: className = "",
+} = Astro.props;
+
+const cardClass = [
+    "glass-card",
+    "card",
+    accentBar && "card--accent-bar",
+    bottomBar && "card--bottom-bar",
+    center && "card--center",
+    variant === "feature" && "card--feature",
+    hover === "none" && "card--no-hover",
+    className,
+]
+    .filter(Boolean)
+    .join(" ");
+---
+
+<div class={cardClass}>
+    <slot />
+</div>

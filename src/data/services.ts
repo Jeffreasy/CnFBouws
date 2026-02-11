@@ -58,6 +58,13 @@ export const SERVICES: Service[] = [
             "Vakkundige montage door ervaren vakmensen. Nette afwerking en oplevering inclusief. Snel en betrouwbaar.",
         icon: "wrench",
     },
+    {
+        id: "oplevering",
+        title: "Nette en zorgvuldige oplevering",
+        description:
+            "Na montage controleren wij alles en leveren wij het werk netjes op. Pas als u tevreden bent, is het project afgerond.",
+        icon: "check-circle",
+    },
 ];
 
 // ─── Werkwijze (4-staps proces) ──────────────────────────

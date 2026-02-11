@@ -1,156 +1,86 @@
 ---
 import { SITE } from "../../data/site";
 import { SCHUCO_PROFILES, PRODUCT_CATEGORIES } from "../../data/products";
-
-const CAT_ICONS: Record<string, string> = {
-    square: '<rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>',
-    "door-open":
-        '<path d="M13 4h3a2 2 0 012 2v14"/><path d="M2 20h3"/><path d="M13 20h9"/><path d="M10 12v.01"/><path d="M13 4.562v16.157a1 1 0 01-1.242.97L5 20V5.562a2 2 0 011.515-1.94l4-1A2 2 0 0113 4.561z"/>',
-    "panels-top-left":
-        '<rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/>',
-    "layout-grid":
-        '<rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/>',
-    "move-horizontal":
-        '<polyline points="18 8 22 12 18 16"/><polyline points="6 8 2 12 6 16"/><line x1="2" x2="22" y1="12" y2="12"/>',
-};
+import Section from "../ui/Section.astro";
+import Grid from "../ui/Grid.astro";
+import Card from "../ui/Card.astro";
+import Tag from "../ui/Tag.astro";
+import Icon from "../ui/Icon.astro";
 ---
 
-<section class="products" id="producten">
-    <div class="container">
-        <div class="section-header">
-            <span class="section-tag">Onze Producten</span>
-            <h2 class="section-title">
-                Kunststof kozijnen, deuren & schuifpuien
-            </h2>
-            <p class="section-subtitle">
-                Wij leveren een compleet assortiment kunststof gevelelementen
-                van het merk Schüco — van kozijnen en deuren tot schuifpuien en
-                sierpanelen.
-            </p>
+<Section
+    id="producten"
+    tag="Onze Producten"
+    title="Kunststof kozijnen, deuren & schuifpuien"
+    subtitle="Wij leveren een compleet assortiment kunststof gevelelementen van het merk Schüco — van kozijnen en deuren tot schuifpuien en sierpanelen."
+    muted
+>
+    <Grid cols="auto" gap="lg" stagger class="products-grid">
+        {
+            PRODUCT_CATEGORIES.map((cat) => (
+                <Card center variant="feature">
+                    <div class="icon-box icon-box--xl product-icon">
+                        <Icon name={cat.icon} size={32} strokeWidth={1.5} />
+                    </div>
+                    <h3 class="card-title product-title">{cat.name}</h3>
+                    <p class="card-desc">{cat.description}</p>
+                </Card>
+            ))
+        }
+    </Grid>
+
+    <!-- Schüco Profiles -->
+    <div class="schuco-section">
+        <div class="section-header schuco-header">
+            <span class="section-tag">{SITE.schuco.tagline}</span>
+            <h3 class="schuco-title">{SITE.schuco.title}</h3>
+            <p class="section-subtitle">{SITE.schuco.description}</p>
         </div>
 
-        <div class="products-grid">
+        <Grid cols={3} gap="lg">
             {
-                PRODUCT_CATEGORIES.map((cat) => (
-                    <div class="product-card glass-card">
-                        <div class="product-icon">
-                            <svg
-                                width="32"
-                                height="32"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                stroke-width="1.5"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                            >
-                                <Fragment
-                                    set:html={CAT_ICONS[cat.icon] || ""}
-                                />
-                            </svg>
+                SCHUCO_PROFILES.map((profile) => (
+                    <Card bottomBar>
+                        <div class="profile-header">
+                            <Tag variant="cta" class="profile-badge">
+                                {profile.subtitle}
+                            </Tag>
+                            <h4 class="profile-name">{profile.name}</h4>
                         </div>
-                        <h3 class="product-title">{cat.name}</h3>
-                        <p class="product-desc">{cat.description}</p>
-                    </div>
+                        <p class="card-desc profile-desc">
+                            {profile.description}
+                        </p>
+                        <p class="profile-best-for">
+                            <strong>Ideaal voor:</strong> {profile.bestFor}
+                        </p>
+                        <ul class="feature-list">
+                            {profile.features.map((f) => (
+                                <li class="feature-item">
+                                    <Icon
+                                        name="check"
+                                        size={14}
+                                        strokeWidth={3}
+                                    />
+                                    {f}
+                                </li>
+                            ))}
+                        </ul>
+                    </Card>
                 ))
             }
-        </div>
-
-        <!-- Schüco Profiles -->
-        <div class="schuco-section">
-            <div class="schuco-header">
-                <span class="section-tag">{SITE.schuco.tagline}</span>
-                <h3 class="schuco-title">{SITE.schuco.title}</h3>
-                <p class="section-subtitle">{SITE.schuco.description}</p>
-            </div>
-
-            <div class="profiles-grid">
-                {
-                    SCHUCO_PROFILES.map((profile) => (
-                        <div class="profile-card glass-card">
-                            <div class="profile-header">
-                                <span class="profile-badge">
-                                    {profile.subtitle}
-                                </span>
-                                <h4 class="profile-name">{profile.name}</h4>
-                            </div>
-                            <p class="profile-desc">{profile.description}</p>
-                            <p class="profile-best-for">
-                                <strong>Ideaal voor:</strong> {profile.bestFor}
-                            </p>
-                            <ul class="profile-features">
-                                {profile.features.map((f) => (
-                                    <li class="profile-feature">
-                                        <svg
-                                            width="14"
-                                            height="14"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            stroke-width="3"
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                        >
-                                            <polyline points="20 6 9 17 4 12" />
-                                        </svg>
-                                        {f}
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    ))
-                }
-            </div>
-        </div>
+        </Grid>
     </div>
-</section>
+</Section>
 
 <style>
-    .products {
-        padding: 6rem 0;
-        background: var(--surface-muted);
-    }
-
     .products-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1.25rem;
         margin-bottom: 5rem;
     }
-    .product-card {
-        padding: 2rem 1.5rem;
-        text-align: center;
-        transition: all var(--transition-normal);
-        cursor: default;
-    }
-    .product-card:hover {
-        transform: translateY(-5px);
-        box-shadow: var(--shadow-xl), var(--shadow-glow);
-    }
     .product-icon {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 72px;
-        height: 72px;
         margin: 0 auto 1.25rem;
-        background: linear-gradient(
-            135deg,
-            rgba(3, 105, 161, 0.12),
-            rgba(3, 105, 161, 0.04)
-        );
-        border: 1px solid rgba(3, 105, 161, 0.12);
-        border-radius: var(--radius-lg);
-        color: var(--color-cta);
     }
     .product-title {
         font-size: 1.0625rem;
-        margin-bottom: 0.625rem;
-    }
-    .product-desc {
-        color: var(--text-secondary);
-        font-size: 0.875rem;
-        line-height: 1.65;
     }
 
     .schuco-section {
@@ -158,8 +88,6 @@ const CAT_ICONS: Record<string, string> = {
         border-top: 1px solid var(--border-subtle);
     }
     .schuco-header {
-        text-align: center;
-        max-width: 640px;
         margin: 2.5rem auto 3rem;
     }
     .schuco-title {
@@ -167,64 +95,16 @@ const CAT_ICONS: Record<string, string> = {
         margin-bottom: 0.75rem;
     }
 
-    .profiles-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 1.5rem;
-    }
-    .profile-card {
-        padding: 2.25rem;
-        transition: all var(--transition-normal);
-        position: relative;
-        overflow: hidden;
-    }
-    .profile-card::after {
-        content: "";
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 3px;
-        background: linear-gradient(
-            90deg,
-            var(--color-cta),
-            var(--color-accent)
-        );
-        opacity: 0;
-        transition: opacity var(--transition-normal);
-    }
-    .profile-card:hover {
-        box-shadow: var(--shadow-xl), var(--shadow-glow);
-        transform: translateY(-4px);
-    }
-    .profile-card:hover::after {
-        opacity: 1;
-    }
-
     .profile-header {
         margin-bottom: 1rem;
     }
     .profile-badge {
-        display: inline-block;
-        padding: 0.3rem 0.875rem;
-        background: rgba(3, 105, 161, 0.1);
-        border: 1px solid rgba(3, 105, 161, 0.12);
-        color: var(--color-cta);
-        font-size: 0.6875rem;
-        font-weight: 700;
-        border-radius: var(--radius-full);
         margin-bottom: 0.625rem;
-        font-family: "Lexend", system-ui, sans-serif;
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
     }
     .profile-name {
         font-size: 1.375rem;
     }
     .profile-desc {
-        color: var(--text-secondary);
-        font-size: 0.9375rem;
-        line-height: 1.65;
         margin-bottom: 0.875rem;
     }
     .profile-best-for {
@@ -232,47 +112,11 @@ const CAT_ICONS: Record<string, string> = {
         color: var(--text-muted);
         margin-bottom: 1.125rem;
         padding: 0.5rem 0.875rem;
-        background: rgba(3, 105, 161, 0.04);
+        background: rgba(var(--color-cta-rgb), 0.04);
         border-radius: var(--radius-sm);
         border-left: 3px solid var(--color-cta);
     }
     .profile-best-for strong {
         color: var(--text-primary);
-    }
-    .profile-features {
-        list-style: none;
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-    .profile-feature {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        font-size: 0.875rem;
-        color: var(--text-secondary);
-    }
-    .profile-feature svg {
-        color: var(--color-cta);
-        flex-shrink: 0;
-    }
-
-    @media (max-width: 1024px) {
-        .profiles-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-    }
-    @media (max-width: 768px) {
-        .products-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-        .profiles-grid {
-            grid-template-columns: 1fr;
-        }
-    }
-    @media (max-width: 480px) {
-        .products-grid {
-            grid-template-columns: 1fr;
-        }
     }
 </style>

@@ -1,0 +1,111 @@
+---
+/**
+ * IKImage — Optimized image component using ImageKit CDN
+ *
+ * Features:
+ *   - Automatic format negotiation (WebP/AVIF)
+ *   - Responsive srcset generation
+ *   - Low-quality placeholder (LQIP) blur-up
+ *   - Lazy loading by default
+ *   - Proper alt text enforcement
+ *
+ * @example
+ * <IKImage src="/hero/banner.jpg" alt="C&F Bouw werkplaats" width={1200} />
+ * <IKImage src="/producten/kozijn.jpg" alt="Kunststof kozijn" sizes="(max-width: 768px) 100vw, 50vw" />
+ */
+import { ikUrl, ikSrcSet, type IKTransform } from "../../lib/imagekit";
+
+interface Props {
+    /** Image path on ImageKit (e.g. "/hero/banner.jpg") */
+    src: string;
+    /** Alt text (required for accessibility) */
+    alt: string;
+    /** Display width */
+    width?: number;
+    /** Display height */
+    height?: number;
+    /** Responsive sizes attribute */
+    sizes?: string;
+    /** Srcset widths */
+    widths?: number[];
+    /** ImageKit quality 1-100 */
+    quality?: number;
+    /** CSS class */
+    class?: string;
+    /** Loading strategy */
+    loading?: "lazy" | "eager";
+    /** Object-fit CSS value */
+    fit?: "cover" | "contain" | "fill" | "none";
+    /** Aspect ratio (e.g. "16/9", "4/3") */
+    aspectRatio?: string;
+    /** Focus area for smart cropping */
+    focus?: "auto" | "face" | "center";
+    /** Additional transforms */
+    transforms?: IKTransform;
+}
+
+const {
+    src,
+    alt,
+    width,
+    height,
+    sizes = "(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px",
+    widths = [400, 800, 1200, 1600],
+    quality = 80,
+    class: className = "",
+    loading = "lazy",
+    fit = "cover",
+    aspectRatio,
+    focus,
+    transforms = {},
+} = Astro.props;
+
+const baseTransforms: IKTransform = {
+    f: "auto",
+    q: quality,
+    ...(focus ? { fo: focus } : {}),
+    ...transforms,
+};
+
+const mainSrc = ikUrl(src, { ...baseTransforms, w: width });
+const srcset = ikSrcSet(src, widths, baseTransforms);
+
+const imgStyle = [
+    fit && `object-fit: ${fit}`,
+    aspectRatio && `aspect-ratio: ${aspectRatio}`,
+]
+    .filter(Boolean)
+    .join("; ");
+---
+
+<div
+    class:list={["ik-image", className]}
+    style={aspectRatio ? `aspect-ratio: ${aspectRatio}` : undefined}
+>
+    <img
+        src={mainSrc}
+        srcset={srcset}
+        sizes={sizes}
+        alt={alt}
+        width={width}
+        height={height}
+        loading={loading}
+        decoding="async"
+        style={imgStyle}
+        class="ik-img"
+    />
+</div>
+
+<style>
+    .ik-image {
+        position: relative;
+        overflow: hidden;
+        border-radius: var(--radius-lg);
+    }
+    .ik-img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        transition: opacity 0.3s ease;
+    }
+</style>

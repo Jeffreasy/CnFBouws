@@ -7,7 +7,7 @@ import type { APIRoute } from 'astro';
 export const prerender = false;
 
 const API_URL = import.meta.env.PUBLIC_API_URL
-  || "https://laventecareauthsystems.onrender.com/api/v1";
+    || "https://laventecareauthsystems.onrender.com/api/v1";
 
 export const ALL: APIRoute = async ({ request, params, cookies }) => {
     const path = params.all;
@@ -33,7 +33,7 @@ export const ALL: APIRoute = async ({ request, params, cookies }) => {
 
         // CRITICAL: Tenant isolation
         const tenantID = import.meta.env.PUBLIC_TENANT_ID
-          || '3b542934-6ac6-42b2-9511-a09e6cff8c80';
+            || '3b542934-6ac6-42b2-9511-a09e6cff8c80';
         headers.set("X-Tenant-ID", tenantID);
 
         let body: string | undefined = undefined;

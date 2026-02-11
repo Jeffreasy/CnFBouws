@@ -45,9 +45,9 @@ const ALL = async ({ request, params, cookies }) => {
 };
 
 const _page = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
-  __proto__: null,
-  ALL,
-  prerender
+    __proto__: null,
+    ALL,
+    prerender
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const page = () => _page;

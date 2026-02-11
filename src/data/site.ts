@@ -7,6 +7,7 @@ export const SITE = {
     kvk: "97394297",
     domain: "www.cfbouw.nl",
     region: "Apeldoorn en omgeving",
+    logo: "/cfbouw/webassets/CFLogo.webp",
 
     contact: {
         email: "info@cfbouw.nl",

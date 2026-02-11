@@ -1,5 +1,17 @@
 /// <reference path="../.astro/types.d.ts" />
 
+interface ImportMetaEnv {
+    readonly PUBLIC_API_URL: string;
+    readonly PUBLIC_TENANT_ID: string;
+    readonly PUBLIC_IMAGEKIT_URL: string;
+    readonly IMAGEKIT_PUBLIC_KEY: string;
+    readonly IMAGEKIT_PRIVATE_KEY: string;
+}
+
+interface ImportMeta {
+    readonly env: ImportMetaEnv;
+}
+
 declare namespace App {
     interface Locals {
         token: string | null;

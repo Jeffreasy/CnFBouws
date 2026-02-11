@@ -1,345 +1,562 @@
 ---
 import { SITE } from "../data/site";
+import Icon from "./ui/Icon.astro";
+import { ikUrl } from "../lib/imagekit";
 ---
 
 <nav class="navbar" id="main-nav">
-    <div class="nav-container">
-        <!-- Logo -->
-        <a href="/" class="nav-logo" aria-label={`${SITE.name} — Homepagina`}>
-            <div class="logo-mark">
-                <span class="logo-c">C</span><span class="logo-amp">&</span
-                ><span class="logo-f">F</span>
-            </div>
-            <div class="logo-text">
-                <span class="logo-name">C&F Bouw</span>
-                <span class="logo-tagline">Kunststof Kozijnen</span>
-            </div>
-        </a>
+  <div class="nav-container">
+    <!-- Logo — flex child, visually overflows navbar height -->
+    <a href="/" class="nav-logo" aria-label={`${SITE.name} — Homepagina`}>
+      <img
+        src={ikUrl(SITE.logo, { w: 400, h: 267, f: "auto", q: 90 })}
+        alt={`${SITE.name} logo`}
+        width="400"
+        height="267"
+        class="logo-img"
+        loading="eager"
+      />
+    </a>
 
-        <!-- Desktop Navigation -->
-        <ul class="nav-links" role="list">
-            {
-                SITE.nav.map((item) => (
-                    <li>
-                        <a href={item.href} class="nav-link">
-                            {item.label}
-                        </a>
-                    </li>
-                ))
-            }
-        </ul>
-
-        <!-- CTA + Mobile Toggle -->
-        <div class="nav-actions">
-            <a href={SITE.cta.primary.href} class="btn btn-primary nav-cta">
-                {SITE.cta.primary.label}
+    <!-- Desktop Navigation -->
+    <ul class="nav-links" role="list">
+      {
+        SITE.nav.map((item) => (
+          <li>
+            <a href={item.href} class="nav-link">
+              {item.label}
             </a>
-            <button
-                class="nav-toggle"
-                aria-label="Menu openen"
-                aria-expanded="false"
-                aria-controls="mobile-menu"
-            >
-                <span class="toggle-bar"></span>
-                <span class="toggle-bar"></span>
-                <span class="toggle-bar"></span>
-            </button>
-        </div>
+          </li>
+        ))
+      }
+    </ul>
+
+    <!-- CTA + Theme Toggle + Mobile Toggle -->
+    <div class="nav-actions">
+      <a href={SITE.cta.primary.href} class="btn btn-primary nav-cta">
+        {SITE.cta.primary.label}
+      </a>
+      <button
+        class="theme-toggle"
+        id="theme-toggle"
+        aria-label="Thema wisselen"
+        type="button"
+      >
+        <svg
+          class="theme-icon theme-icon--sun"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <circle cx="12" cy="12" r="5"></circle><line
+            x1="12"
+            y1="1"
+            x2="12"
+            y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line
+            x1="4.22"
+            y1="4.22"
+            x2="5.64"
+            y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"
+          ></line><line x1="1" y1="12" x2="3" y2="12"></line><line
+            x1="21"
+            y1="12"
+            x2="23"
+            y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"
+          ></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg
+          class="theme-icon theme-icon--moon"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+        </svg>
+      </button>
+      <button
+        class="nav-toggle"
+        id="nav-toggle"
+        aria-label="Menu openen"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+      >
+        <span class="toggle-bar"></span>
+        <span class="toggle-bar"></span>
+        <span class="toggle-bar"></span>
+      </button>
     </div>
+  </div>
 
-    <!-- Mobile Menu -->
-    <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
-        <ul class="mobile-links" role="list">
-            {
-                SITE.nav.map((item) => (
-                    <li>
-                        <a href={item.href} class="mobile-link">
-                            {item.label}
-                        </a>
-                    </li>
-                ))
-            }
-        </ul>
-        <div class="mobile-cta">
-            <a
-                href={SITE.cta.primary.href}
-                class="btn btn-primary btn-lg mobile-btn"
-            >
-                {SITE.cta.primary.label}
+  <!-- Mobile Menu (hidden on desktop via display:none) -->
+  <div class="mobile-menu" id="mobile-menu">
+    <ul class="mobile-links" role="list">
+      {
+        SITE.nav.map((item) => (
+          <li>
+            <a href={item.href} class="mobile-link">
+              {item.label}
             </a>
-            <a
-                href={SITE.contact.phoneHref}
-                class="btn btn-secondary btn-lg mobile-btn"
-            >
-                <svg
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                >
-                    <path
-                        d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"
-                    ></path>
-                </svg>
-                Bel Direct
-            </a>
-        </div>
+          </li>
+        ))
+      }
+    </ul>
+    <div class="mobile-cta">
+      <a href={SITE.cta.primary.href} class="btn btn-primary btn-lg mobile-btn">
+        {SITE.cta.primary.label}
+      </a>
+      <a
+        href={SITE.contact.phoneHref}
+        class="btn btn-secondary btn-lg mobile-btn"
+      >
+        <Icon name="phone" size={18} />
+        Bel Direct
+      </a>
     </div>
+  </div>
+
+  <!-- Mobile Backdrop -->
+  <div class="nav-backdrop" id="nav-backdrop"></div>
 </nav>
 
 <style>
-    .navbar {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        z-index: 1000;
-        background: var(--surface-glass);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border-bottom: 1px solid var(--border-subtle);
-        transition: all var(--transition-normal);
-    }
+  /* ═══════════════════════════════════════════════════════════
+       NAVBAR
+       ═══════════════════════════════════════════════════════════ */
+  .navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: var(--surface-glass);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border-subtle);
+    overflow: visible;
+    transition:
+      background var(--transition-normal),
+      box-shadow var(--transition-normal),
+      border-color var(--transition-normal);
+  }
 
-    .navbar.scrolled {
-        box-shadow: var(--shadow-md);
-    }
+  .navbar.scrolled {
+    box-shadow: var(--shadow-md);
+  }
 
-    .nav-container {
-        max-width: 1200px;
-        margin-inline: auto;
-        padding: 0 1.5rem;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        height: 72px;
-    }
+  .nav-container {
+    max-width: 1200px;
+    margin-inline: auto;
+    padding: 0 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    height: 72px;
+    gap: 1rem;
+    overflow: visible;
+  }
 
-    /* ─── Logo ──────────────────────────────────────────── */
-    .nav-logo {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        text-decoration: none;
-        color: inherit;
-        cursor: pointer;
-    }
+  /* ═══════════════════════════════════════════════════════════
+       LOGO — Takes natural flex space, image overflows visually
+       ═══════════════════════════════════════════════════════════ */
+  .nav-logo {
+    margin-right: auto;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    align-self: center;
+    overflow: visible;
+    text-decoration: none;
+    cursor: pointer;
+    z-index: 10;
+  }
 
-    .nav-logo:hover {
-        color: inherit;
-    }
+  .logo-img {
+    width: clamp(200px, 30vw, 400px);
+    height: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.15));
+    transform: translateY(10px);
+    transition:
+      width var(--transition-normal),
+      transform var(--transition-fast);
+  }
 
-    .logo-mark {
-        display: flex;
-        align-items: center;
-        gap: 0.125rem;
-        font-family: "Lexend", system-ui, sans-serif;
-        font-weight: 800;
-        font-size: 1.5rem;
-        color: var(--color-primary);
-    }
+  .navbar.scrolled .logo-img {
+    transform: translateY(0);
+  }
 
-    @media (prefers-color-scheme: dark) {
-        .logo-mark {
-            color: var(--text-primary);
-        }
-    }
+  .nav-logo:hover .logo-img {
+    transform: scale(1.03);
+  }
 
-    .logo-amp {
-        color: var(--color-cta);
-        font-weight: 700;
-        margin: 0 0.05rem;
-    }
+  /* ═══════════════════════════════════════════════════════════
+       DESKTOP NAV LINKS
+       ═══════════════════════════════════════════════════════════ */
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    list-style: none;
+  }
 
-    .logo-text {
-        display: flex;
-        flex-direction: column;
-        line-height: 1.1;
-    }
+  .nav-link {
+    display: block;
+    padding: 0.5rem 1rem;
+    font-family: var(--font-body);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    text-decoration: none;
+    border-radius: var(--radius-sm);
+    position: relative;
+    transition:
+      color var(--transition-fast),
+      background var(--transition-fast);
+  }
 
-    .logo-name {
-        font-family: "Lexend", system-ui, sans-serif;
-        font-weight: 700;
-        font-size: 1rem;
-        color: var(--color-primary);
-    }
+  .nav-link::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: var(--color-cta);
+    border-radius: 1px;
+    transform: translateX(-50%);
+    transition: width var(--transition-fast);
+  }
 
-    @media (prefers-color-scheme: dark) {
-        .logo-name {
-            color: var(--text-primary);
-        }
-    }
+  .nav-link:hover {
+    color: var(--color-cta);
+    background: rgba(var(--color-cta-rgb), 0.06);
+  }
 
-    .logo-tagline {
-        font-size: 0.6875rem;
-        color: var(--text-muted);
-        font-weight: 500;
-        letter-spacing: 0.02em;
-    }
+  .nav-link:hover::after,
+  .nav-link.active::after {
+    width: 60%;
+  }
 
-    /* ─── Desktop Nav Links ─────────────────────────────── */
+  .nav-link.active {
+    color: var(--color-cta);
+    font-weight: 600;
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+       CTA + TOGGLE
+       ═══════════════════════════════════════════════════════════ */
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-shrink: 0;
+  }
+
+  .nav-cta {
+    font-size: 0.875rem;
+    padding: 0.625rem 1.25rem;
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+       THEME TOGGLE
+       ═══════════════════════════════════════════════════════════ */
+  .theme-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition:
+      color var(--transition-fast),
+      background var(--transition-fast),
+      border-color var(--transition-fast);
+  }
+
+  .theme-toggle:hover {
+    color: var(--color-cta);
+    background: rgba(var(--color-cta-rgb), 0.08);
+    border-color: rgba(var(--color-cta-rgb), 0.3);
+  }
+
+  /* Light mode: show moon (switch to dark), hide sun */
+  .theme-icon--sun {
+    display: none;
+  }
+  .theme-icon--moon {
+    display: block;
+  }
+
+  /* Dark mode: show sun (switch to light), hide moon */
+  :global([data-theme="dark"]) .theme-icon--sun {
+    display: block;
+  }
+  :global([data-theme="dark"]) .theme-icon--moon {
+    display: none;
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+       HAMBURGER TOGGLE
+       ═══════════════════════════════════════════════════════════ */
+  .nav-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    width: 28px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px 0;
+    z-index: 1001;
+  }
+
+  .toggle-bar {
+    --offset: 7px;
+    display: block;
+    width: 100%;
+    height: 2px;
+    background: var(--text-primary);
+    border-radius: 2px;
+    transition:
+      transform var(--transition-fast),
+      opacity var(--transition-fast);
+    transform-origin: center;
+  }
+
+  .nav-toggle[aria-expanded="true"] .toggle-bar:nth-child(1) {
+    transform: translateY(var(--offset)) rotate(45deg);
+  }
+  .nav-toggle[aria-expanded="true"] .toggle-bar:nth-child(2) {
+    opacity: 0;
+  }
+  .nav-toggle[aria-expanded="true"] .toggle-bar:nth-child(3) {
+    transform: translateY(calc(-1 * var(--offset))) rotate(-45deg);
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+       MOBILE BACKDROP
+       ═══════════════════════════════════════════════════════════ */
+  .nav-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: var(--overlay-backdrop);
+    z-index: -1;
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+  }
+
+  .nav-backdrop.visible {
+    display: block;
+    opacity: 1;
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+       MOBILE MENU
+       ═══════════════════════════════════════════════════════════ */
+  .mobile-menu {
+    display: none;
+    background: var(--surface-glass);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid var(--border-subtle);
+    max-height: 0;
+    overflow: hidden;
+    transition:
+      max-height var(--transition-normal),
+      opacity var(--transition-normal);
+    opacity: 0;
+  }
+
+  .mobile-menu.open {
+    max-height: 500px;
+    opacity: 1;
+  }
+
+  .mobile-links {
+    list-style: none;
+    padding: 1rem 1.5rem 0;
+  }
+
+  .mobile-link {
+    display: block;
+    padding: 0.875rem 0;
+    font-family: var(--font-heading);
+    font-size: 1.0625rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    text-decoration: none;
+    border-bottom: 1px solid var(--border-subtle);
+    transition: color var(--transition-fast);
+  }
+
+  .mobile-link:hover {
+    color: var(--color-cta);
+  }
+
+  .mobile-link.active {
+    color: var(--color-cta);
+    font-weight: 600;
+  }
+
+  .mobile-cta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1rem 1.5rem 2rem;
+  }
+
+  .mobile-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+       RESPONSIVE — Mobile breakpoint
+       ═══════════════════════════════════════════════════════════ */
+  @media (max-width: 768px) {
     .nav-links {
-        display: flex;
-        align-items: center;
-        gap: 0.25rem;
-        list-style: none;
+      display: none;
     }
-
-    .nav-link {
-        display: block;
-        padding: 0.5rem 1rem;
-        font-family: "Source Sans 3", system-ui, sans-serif;
-        font-size: 0.9375rem;
-        font-weight: 500;
-        color: var(--text-secondary);
-        text-decoration: none;
-        border-radius: var(--radius-sm);
-        transition: all var(--transition-fast);
-    }
-
-    .nav-link:hover {
-        color: var(--color-cta);
-        background: rgba(3, 105, 161, 0.06);
-    }
-
-    /* ─── Actions ───────────────────────────────────────── */
-    .nav-actions {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-    }
-
     .nav-cta {
-        font-size: 0.875rem;
-        padding: 0.625rem 1.25rem;
+      display: none;
     }
-
-    /* ─── Mobile Toggle ─────────────────────────────────── */
     .nav-toggle {
-        display: none;
-        flex-direction: column;
-        gap: 5px;
-        width: 28px;
-        background: none;
-        border: none;
-        cursor: pointer;
-        padding: 4px 0;
+      display: flex;
     }
-
-    .toggle-bar {
-        display: block;
-        width: 100%;
-        height: 2px;
-        background: var(--text-primary);
-        border-radius: 2px;
-        transition: all var(--transition-fast);
+    .logo-img {
+      width: clamp(140px, 40vw, 180px);
     }
-
-    .nav-toggle[aria-expanded="true"] .toggle-bar:nth-child(1) {
-        transform: translateY(7px) rotate(45deg);
-    }
-    .nav-toggle[aria-expanded="true"] .toggle-bar:nth-child(2) {
-        opacity: 0;
-    }
-    .nav-toggle[aria-expanded="true"] .toggle-bar:nth-child(3) {
-        transform: translateY(-7px) rotate(-45deg);
-    }
-
-    /* ─── Mobile Menu ───────────────────────────────────── */
     .mobile-menu {
-        display: none;
-        padding: 1rem 1.5rem 2rem;
-        border-top: 1px solid var(--border-subtle);
+      display: block;
     }
-
-    .mobile-menu[aria-hidden="false"] {
-        display: block;
-    }
-
-    .mobile-links {
-        list-style: none;
-        margin-bottom: 1.5rem;
-    }
-
-    .mobile-link {
-        display: block;
-        padding: 0.875rem 0;
-        font-family: "Lexend", system-ui, sans-serif;
-        font-size: 1.0625rem;
-        font-weight: 500;
-        color: var(--text-primary);
-        text-decoration: none;
-        border-bottom: 1px solid var(--border-subtle);
-        transition: color var(--transition-fast);
-    }
-
-    .mobile-link:hover {
-        color: var(--color-cta);
-    }
-
-    .mobile-cta {
-        display: flex;
-        flex-direction: column;
-        gap: 0.75rem;
-    }
-
-    .mobile-btn {
-        width: 100%;
-        justify-content: center;
-    }
-
-    /* ─── Responsive ────────────────────────────────────── */
-    @media (max-width: 768px) {
-        .nav-links {
-            display: none;
-        }
-        .nav-cta {
-            display: none;
-        }
-        .nav-toggle {
-            display: flex;
-        }
-    }
+  }
 </style>
 
 <script>
-    // Mobile menu toggle
-    const toggle = document.querySelector(".nav-toggle") as HTMLButtonElement;
+  (function initNavbar() {
+    const toggle = document.getElementById(
+      "nav-toggle",
+    ) as HTMLButtonElement | null;
     const menu = document.getElementById("mobile-menu");
-
-    if (toggle && menu) {
-        toggle.addEventListener("click", () => {
-            const expanded = toggle.getAttribute("aria-expanded") === "true";
-            toggle.setAttribute("aria-expanded", String(!expanded));
-            menu.setAttribute("aria-hidden", String(expanded));
-            toggle.setAttribute(
-                "aria-label",
-                expanded ? "Menu openen" : "Menu sluiten",
-            );
-        });
-
-        // Close menu on link click
-        menu.querySelectorAll(".mobile-link").forEach((link) => {
-            link.addEventListener("click", () => {
-                toggle.setAttribute("aria-expanded", "false");
-                menu.setAttribute("aria-hidden", "true");
-            });
-        });
-    }
-
-    // Scroll effect
+    const backdrop = document.getElementById("nav-backdrop");
     const navbar = document.getElementById("main-nav");
-    if (navbar) {
-        window.addEventListener(
-            "scroll",
-            () => {
-                navbar.classList.toggle("scrolled", window.scrollY > 20);
-            },
-            { passive: true },
-        );
+
+    if (!toggle || !menu || !backdrop || !navbar) return;
+
+    function openMenu() {
+      toggle!.setAttribute("aria-expanded", "true");
+      toggle!.setAttribute("aria-label", "Menu sluiten");
+      menu!.classList.add("open");
+      backdrop!.classList.add("visible");
+      document.documentElement.style.overflow = "hidden";
     }
+
+    function closeMenu() {
+      toggle!.setAttribute("aria-expanded", "false");
+      toggle!.setAttribute("aria-label", "Menu openen");
+      menu!.classList.remove("open");
+      backdrop!.classList.remove("visible");
+      document.documentElement.style.overflow = "";
+    }
+
+    function isMenuOpen(): boolean {
+      return toggle!.getAttribute("aria-expanded") === "true";
+    }
+
+    // Toggle
+    toggle.addEventListener("click", () => {
+      isMenuOpen() ? closeMenu() : openMenu();
+    });
+
+    // Close on mobile link click
+    menu.querySelectorAll(".mobile-link").forEach((link) => {
+      link.addEventListener("click", closeMenu);
+    });
+
+    // Close on backdrop
+    backdrop.addEventListener("click", closeMenu);
+
+    // Close on Escape
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && isMenuOpen()) {
+        closeMenu();
+        toggle!.focus();
+      }
+    });
+
+    // Auto-close on resize past breakpoint
+    const mql = window.matchMedia("(min-width: 769px)");
+    mql.addEventListener("change", (e) => {
+      if (e.matches && isMenuOpen()) closeMenu();
+    });
+
+    // Scroll shadow
+    window.addEventListener(
+      "scroll",
+      () => {
+        navbar.classList.toggle("scrolled", window.scrollY > 20);
+      },
+      { passive: true },
+    );
+
+    // Active section highlighting
+    const navItems = document.querySelectorAll<HTMLAnchorElement>(
+      ".nav-link[href^='#'], .mobile-link[href^='#']",
+    );
+    const linkMap = new Map<string, HTMLAnchorElement[]>();
+    navItems.forEach((link) => {
+      const id = link.getAttribute("href")?.replace("#", "") || "";
+      if (!linkMap.has(id)) linkMap.set(id, []);
+      linkMap.get(id)!.push(link);
+    });
+
+    const sections = Array.from(linkMap.keys())
+      .map((id) => document.getElementById(id))
+      .filter(Boolean) as HTMLElement[];
+
+    if (sections.length > 0) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            const links = linkMap.get(entry.target.id);
+            if (!links) return;
+            links.forEach((link) =>
+              link.classList.toggle("active", entry.isIntersecting),
+            );
+          });
+        },
+        { rootMargin: "-20% 0px -60% 0px", threshold: 0 },
+      );
+      sections.forEach((s) => observer.observe(s));
+    }
+
+    // Theme toggle
+    const themeBtn = document.getElementById("theme-toggle");
+    if (themeBtn) {
+      themeBtn.addEventListener("click", () => {
+        const html = document.documentElement;
+        const isDark = html.getAttribute("data-theme") === "dark";
+        const next = isDark ? "light" : "dark";
+        html.setAttribute("data-theme", next);
+        localStorage.setItem("theme", next);
+      });
+    }
+  })();
 </script>

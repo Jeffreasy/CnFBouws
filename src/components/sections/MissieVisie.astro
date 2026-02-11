@@ -1,0 +1,40 @@
+---
+/**
+ * MissieVisie — Side-by-side cards showing company mission and vision
+ */
+import { SITE } from "../../data/site";
+import Section from "../ui/Section.astro";
+import Grid from "../ui/Grid.astro";
+import Card from "../ui/Card.astro";
+import Icon from "../ui/Icon.astro";
+---
+
+<Section id="missie-visie">
+    <Grid cols={2} gap="lg">
+        <Card accentBar variant="feature">
+            <div class="mv-icon icon-box icon-box--md">
+                <Icon name="target" size={24} />
+            </div>
+            <h3 class="card-title mv-title">{SITE.missie.title}</h3>
+            <p class="card-desc">{SITE.missie.text}</p>
+        </Card>
+
+        <Card accentBar variant="feature">
+            <div class="mv-icon icon-box icon-box--md">
+                <Icon name="eye" size={24} />
+            </div>
+            <h3 class="card-title mv-title">{SITE.visie.title}</h3>
+            <p class="card-desc">{SITE.visie.text}</p>
+        </Card>
+    </Grid>
+</Section>
+
+<style>
+    .mv-icon {
+        margin-bottom: 1rem;
+    }
+    .mv-title {
+        font-size: 1.25rem;
+        margin-bottom: 0.75rem;
+    }
+</style>

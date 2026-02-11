@@ -1,0 +1,22 @@
+---
+/**
+ * Tag — Small badge/label
+ *
+ * Props:
+ *   variant — "cta" (blue) or "accent" (amber)
+ *   class   — Additional CSS classes
+ */
+
+interface Props {
+    variant?: "cta" | "accent";
+    class?: string;
+}
+
+const { variant = "cta", class: className = "" } = Astro.props;
+
+const tagClass = ["tag", `tag--${variant}`, className]
+    .filter(Boolean)
+    .join(" ");
+---
+
+<span class={tagClass}><slot /></span>

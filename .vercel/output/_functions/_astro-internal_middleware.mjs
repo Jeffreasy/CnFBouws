@@ -1,8 +1,8 @@
-import { d as defineMiddleware, s as sequence } from './chunks/index_Dr2VxdWA.mjs';
+import { d as defineMiddleware, s as sequence } from './chunks/index_K1hdTeuc.mjs';
 import 'es-module-lexer';
-import './chunks/astro-designed-error-pages_Cj8i4i9J.mjs';
+import './chunks/astro-designed-error-pages_Dl5MPO2e.mjs';
 import 'piccolore';
-import './chunks/astro/server_DfgM8LhM.mjs';
+import './chunks/astro/server_CnI0z5zy.mjs';
 import 'clsx';
 
 const API_URL = "https://laventecareauthsystems.onrender.com/api/v1";

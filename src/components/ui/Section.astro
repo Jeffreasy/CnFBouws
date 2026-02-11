@@ -1,0 +1,62 @@
+---
+/**
+ * Section — Universal section wrapper
+ *
+ * Props:
+ *   id       — HTML id for anchor navigation
+ *   tag      — Small label above the title (e.g. "Onze Diensten")
+ *   title    — Section heading (h2)
+ *   subtitle — Supporting paragraph below the title
+ *   muted    — If true, applies muted background
+ *   align    — "center" (default) or "left" for header alignment
+ *   class    — Additional CSS classes
+ */
+
+interface Props {
+    id: string;
+    tag?: string;
+    title?: string;
+    subtitle?: string;
+    muted?: boolean;
+    align?: "center" | "left";
+    class?: string;
+}
+
+const {
+    id,
+    tag,
+    title,
+    subtitle,
+    muted = false,
+    align = "center",
+    class: className = "",
+} = Astro.props;
+
+const sectionClass = ["section", muted && "section--muted", className]
+    .filter(Boolean)
+    .join(" ");
+
+const headerClass = [
+    "section-header",
+    align === "left" && "section-header--left",
+]
+    .filter(Boolean)
+    .join(" ");
+
+const hasHeader = tag || title || subtitle;
+---
+
+<section class={sectionClass} id={id}>
+    <div class="container">
+        {
+            hasHeader && (
+                <div class={headerClass}>
+                    {tag && <span class="section-tag">{tag}</span>}
+                    {title && <h2 class="section-title">{title}</h2>}
+                    {subtitle && <p class="section-subtitle">{subtitle}</p>}
+                </div>
+            )
+        }
+        <slot />
+    </div>
+</section>

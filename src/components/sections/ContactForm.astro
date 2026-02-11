@@ -1,0 +1,263 @@
+---
+/**
+ * ContactForm — Contact section with React island form + static info card
+ * The form itself is a React island (client:visible) for interactivity.
+ * The info card remains static server-rendered Astro.
+ */
+import { SITE } from "../../data/site";
+import Section from "../ui/Section.astro";
+import Grid from "../ui/Grid.astro";
+import Card from "../ui/Card.astro";
+import Icon from "../ui/Icon.astro";
+import ContactFormIsland from "../islands/ContactFormIsland";
+---
+
+<Section
+    id="contact"
+    tag="Contact"
+    title="Neem contact met ons op"
+    subtitle="Vul het formulier in voor een vrijblijvende offerte, adviesgesprek of showroomafspraak. We nemen zo snel mogelijk contact met u op."
+>
+    <Grid cols={2} class="contact-grid">
+        <!-- Contact Form Island — client-side React -->
+        <Card class="contact-form-card">
+            <ContactFormIsland client:visible />
+        </Card>
+
+        <!-- Contact Info — static Astro -->
+        <div class="contact-info">
+            <Card class="info-card">
+                <div class="info-item">
+                    <div class="icon-box icon-box--sm">
+                        <Icon name="mail" size={16} />
+                    </div>
+                    <div>
+                        <span class="info-label">E-mail</span>
+                        <a href={SITE.contact.emailHref} class="info-value"
+                            >{SITE.contact.email}</a
+                        >
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="icon-box icon-box--sm">
+                        <Icon name="phone" size={16} />
+                    </div>
+                    <div>
+                        <span class="info-label">Telefoon / WhatsApp</span>
+                        <a href={SITE.contact.phoneHref} class="info-value"
+                            >{SITE.contact.phone}</a
+                        >
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="icon-box icon-box--sm">
+                        <Icon name="building" size={16} />
+                    </div>
+                    <div>
+                        <span class="info-label">Bedrijf</span>
+                        <span class="info-value">{SITE.legalName}</span>
+                        <span class="info-sub">KvK: {SITE.kvk}</span>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="icon-box icon-box--sm">
+                        <Icon name="map-pin" size={16} />
+                    </div>
+                    <div>
+                        <span class="info-label">Regio</span>
+                        <span class="info-value">{SITE.region}</span>
+                    </div>
+                </div>
+            </Card>
+
+            <div class="contact-cta-buttons">
+                <a
+                    href={SITE.contact.whatsappHref}
+                    class="btn btn-primary btn-lg"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    <Icon name="message-circle" size={18} />
+                    WhatsApp
+                </a>
+                <a
+                    href={SITE.contact.phoneHref}
+                    class="btn btn-secondary btn-lg"
+                >
+                    <Icon name="phone" size={18} />
+                    Bel Direct
+                </a>
+            </div>
+        </div>
+    </Grid>
+</Section>
+
+<style>
+    .contact-form-card {
+        padding: 2.5rem;
+    }
+
+    /* ─── Island-specific form styles ──────────────────────── */
+    .contact-form-card :global(.contact-form) {
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+    }
+    .contact-form-card :global(.form-group) {
+        display: flex;
+        flex-direction: column;
+        gap: 0.375rem;
+    }
+    .contact-form-card :global(.form-label) {
+        font-family: var(--font-heading);
+        font-size: 0.8125rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+    .contact-form-card :global(.form-input) {
+        padding: 0.75rem 1rem;
+        background: var(--surface-muted);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-md);
+        font-family: var(--font-body);
+        font-size: 0.9375rem;
+        color: var(--text-primary);
+        transition: border-color var(--transition-fast);
+        outline: none;
+        width: 100%;
+    }
+    .contact-form-card :global(.form-input::placeholder) {
+        color: var(--text-muted);
+    }
+    .contact-form-card :global(.form-input:focus) {
+        border-color: var(--color-cta);
+        box-shadow: 0 0 0 3px rgba(var(--color-cta-rgb), 0.1);
+    }
+    .contact-form-card :global(.form-input--error) {
+        border-color: var(--color-error);
+    }
+    .contact-form-card :global(.form-input--error:focus) {
+        box-shadow: 0 0 0 3px rgba(var(--color-error-rgb), 0.1);
+    }
+    .contact-form-card :global(.form-error) {
+        font-size: 0.8125rem;
+        color: var(--color-error);
+        font-weight: 500;
+    }
+    .contact-form-card :global(.form-textarea) {
+        resize: vertical;
+        min-height: 100px;
+    }
+    .contact-form-card :global(.form-submit) {
+        width: 100%;
+        margin-top: 0.5rem;
+    }
+    .contact-form-card :global(.form-submit:disabled) {
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
+    .contact-form-card :global(.form-alert) {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1rem;
+        border-radius: var(--radius-md);
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+    .contact-form-card :global(.form-alert--error) {
+        background: rgba(var(--color-error-rgb), 0.08);
+        color: var(--color-error);
+        border: 1px solid rgba(var(--color-error-rgb), 0.15);
+    }
+    .contact-form-card :global(.form-success) {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 2rem 1rem;
+    }
+    .contact-form-card :global(.spinner) {
+        display: inline-block;
+        width: 18px;
+        height: 18px;
+        border: 2px solid currentColor;
+        border-color: rgba(0, 0, 0, 0.15);
+        border-top-color: currentColor;
+        border-radius: 50%;
+        animation: spin 0.6s linear infinite;
+    }
+    @keyframes spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    /* ─── Info Card ─────────────────────────────────────────── */
+    .contact-info {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+    .info-card {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        padding: 2.5rem;
+    }
+    .info-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    .info-label {
+        display: block;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        margin-bottom: 0.125rem;
+    }
+    .info-value {
+        display: block;
+        font-weight: 600;
+        color: var(--text-primary);
+        text-decoration: none;
+    }
+    a.info-value:hover {
+        color: var(--color-cta);
+    }
+    .info-sub {
+        display: block;
+        font-size: 0.8125rem;
+        color: var(--text-muted);
+        margin-top: 0.125rem;
+    }
+
+    .contact-cta-buttons {
+        display: flex;
+        gap: 0.875rem;
+    }
+    .contact-cta-buttons .btn {
+        flex: 1;
+        justify-content: center;
+    }
+
+    @media (max-width: 768px) {
+        .contact-form-card {
+            padding: 1.5rem;
+        }
+        .info-card {
+            padding: 1.5rem;
+        }
+        .contact-cta-buttons {
+            flex-direction: column;
+        }
+    }
+</style>
