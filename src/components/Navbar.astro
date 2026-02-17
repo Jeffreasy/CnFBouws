@@ -14,16 +14,18 @@ import { SITE } from "../data/site";
 import Icon from "./ui/Icon.astro";
 import { ikUrl } from "../lib/imagekit";
 
-const currentPath = Astro.url.pathname;
-
 /**
- * Determine active state for a nav item:
+ * Active state for nav items:
  * - Hash links (#diensten) → handled client-side via IntersectionObserver
- * - Path links (/about) → matched server-side against currentPath
+ * - Path links (/about) → would be matched server-side when multi-page routes exist
+ *
+ * Note: Astro.url.pathname is avoided here because the homepage is prerendered
+ * (prerender = true) and accessing it triggers an Astro.request.headers warning.
+ * When adding multi-page routes, switch to: const currentPath = Astro.url.pathname;
  */
 function isActive(href: string): boolean {
   if (href.startsWith("#")) return false; // Handled client-side
-  return currentPath === href || currentPath.startsWith(href + "/");
+  return href === "/"; // Only root matches on this single-page site
 }
 ---
 

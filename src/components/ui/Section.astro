@@ -18,6 +18,7 @@ interface Props {
     title?: string;
     subtitle?: string;
     muted?: boolean;
+    brand?: boolean;
     align?: "center" | "left";
     class?: string;
 }
@@ -28,11 +29,17 @@ const {
     title,
     subtitle,
     muted = false,
+    brand = false,
     align = "center",
     class: className = "",
 } = Astro.props;
 
-const sectionClass = ["section", muted && "section--muted", className]
+const sectionClass = [
+    "section",
+    muted && "section--muted",
+    brand && "section--brand",
+    className,
+]
     .filter(Boolean)
     .join(" ");
 

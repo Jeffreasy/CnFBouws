@@ -24,12 +24,14 @@
     --font-heading: "Lexend", system-ui, sans-serif;
     --font-body: "Source Sans 3", system-ui, sans-serif;
 
-    /* Surfaces — Soft blue-gray body, white cards */
-    --surface-body: #F8FAFC;
-    --surface-card: #FFFFFF;
-    --surface-glass: rgba(255, 255, 255, 0.85);
+    /* Surfaces — Warm stone/sand palette for construction identity */
+    --surface-body: #F5F3EF;
+    --surface-card: #FEFDFB;
+    --surface-glass: rgba(254, 253, 251, 0.88);
     --surface-elevated: #FFFFFF;
-    --surface-muted: #F1F5F9;
+    --surface-muted: #EDE9E3;
+    --surface-warm: #E5DFD6;
+    --surface-brand: #E8EEF3;
 
     /* Text — Dark for readability, softer than black */
     --text-primary: #0F172A;
@@ -39,14 +41,14 @@
     --text-on-brand: #FFFFFF;
     --text-on-cta: #FFFFFF;
 
-    /* Borders & Shadows */
-    --border-subtle: #E2E8F0;
-    --border-glass: rgba(255, 255, 255, 0.25);
-    --border-card: #E2E8F0;
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
-    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
-    --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.12);
+    /* Borders & Shadows — warm-tinted for depth */
+    --border-subtle: #DDD8D0;
+    --border-glass: rgba(255, 253, 248, 0.3);
+    --border-card: #DDD8D0;
+    --shadow-sm: 0 1px 2px rgba(120, 100, 70, 0.06);
+    --shadow-md: 0 4px 8px rgba(120, 100, 70, 0.08);
+    --shadow-lg: 0 10px 20px rgba(120, 100, 70, 0.1);
+    --shadow-xl: 0 20px 30px rgba(120, 100, 70, 0.12);
     --shadow-glow: 0 0 30px rgba(224, 126, 52, 0.2);
 
     /* State Colors — Semantic */
@@ -232,6 +234,14 @@ img {
     background: var(--surface-muted);
 }
 
+.section--brand {
+    background:
+        linear-gradient(135deg,
+            rgba(var(--color-primary-rgb), 0.06),
+            rgba(var(--color-cta-rgb), 0.03)),
+        var(--surface-brand);
+}
+
 /* ─── Section Header ─────────────────────────────────────── */
 .section-header {
     text-align: center;
@@ -394,8 +404,8 @@ img {
     border: 1px solid var(--border-glass);
     border-radius: var(--radius-lg);
     box-shadow:
-        var(--shadow-sm),
-        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        var(--shadow-md),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
 .card {

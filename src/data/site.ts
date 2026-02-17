@@ -22,7 +22,7 @@ export const SITE = {
         title: "Kunststof kozijnen & schuifpuien | C&F Bouw",
         description:
             "C&F Bouw is gespecialiseerd in het leveren en monteren van hoogwaardige kunststof kozijnen, deuren en schuifpuien. Schüco kwaliteit, vakkundige montage in Apeldoorn en omgeving.",
-        ogImage: "/og-image.jpg",
+        ogImage: "https://ik.imagekit.io/a0oim4e3e/cfbouw/webassets/CFLogo.webp?tr=w-1200,h-630,f-jpg",
     },
 
     nav: [

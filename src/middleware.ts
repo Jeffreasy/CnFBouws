@@ -13,6 +13,11 @@ export const onRequest = defineMiddleware(async (context, next) => {
     const { request, cookies, redirect, locals } = context;
     const url = new URL(request.url);
 
+    // Skip auth for prerendered pages (cookies/headers don't exist at build time)
+    if (context.isPrerendered) {
+        return next();
+    }
+
     // Bypass assets & API routes
     if (url.pathname.startsWith("/_astro") ||
         url.pathname.startsWith("/api/auth") ||
@@ -42,7 +47,9 @@ export const onRequest = defineMiddleware(async (context, next) => {
                 if (user.user) user = user.user;
             }
         } catch (error) {
-            console.error("[Middleware] Session validation failed:", error);
+            if (import.meta.env.DEV) {
+                console.error("[Middleware] Session validation failed:", error);
+            }
         }
     }
 
@@ -50,19 +57,10 @@ export const onRequest = defineMiddleware(async (context, next) => {
     locals.token = token || null;
     locals.user = user || null;
 
-    // Route guards
-    const protectedRoutes = ["/admin", "/dashboard", "/profile"];
-    const isProtected = protectedRoutes.some(p => url.pathname.startsWith(p));
-
-    if (isProtected && !locals.user) {
-        return redirect("/login");
-    }
-
-    if (url.pathname.startsWith("/admin") &&
-        locals.user?.role !== "admin" &&
-        locals.user?.role !== "editor") {
-        return redirect("/dashboard");
-    }
+    // Route guards — add entries here when protected pages are created
+    // const protectedRoutes = ["/admin", "/dashboard"];
+    // const isProtected = protectedRoutes.some(p => url.pathname.startsWith(p));
+    // if (isProtected && !locals.user) return redirect("/login");
 
     const response = await next();
 
