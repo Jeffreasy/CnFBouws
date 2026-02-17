@@ -28,6 +28,9 @@ pnpm-debug.log*
 .vscode/
 
 # AI agent tooling
-.agent/
+.agent/*
+!.agent/workflows/
+!.agent/workflows/*.md
+!.agent/ARCHITECTURE.md
 .windsurf/
 design-system/
