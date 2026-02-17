@@ -30,6 +30,7 @@ export const SITE = {
         { label: "Producten", href: "#producten" },
         { label: "Over Ons", href: "#over-ons" },
         { label: "Werkwijze", href: "#werkwijze" },
+        { label: "Keurmerken", href: "#keurmerken" },
         { label: "Contact", href: "#contact" },
     ],
 

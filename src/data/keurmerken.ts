@@ -1,10 +1,21 @@
 // ─── C&F Bouw — Keurmerken & Subsidie Data ───────────────
+// ImageKit CDN base URL loaded from env
+const CDN = "https://ik.imagekit.io/a0oim4e3e";
+
+/**
+ * Build optimized ImageKit URL for keurmerk logos.
+ * Transforms raw uploads (up to 95KB) into ~5KB optimized images.
+ */
+function keurmerkUrl(path: string): string {
+    return `${CDN}/tr:w-200,h-200,cm-at_max,f-auto,q-80${path}`;
+}
 
 export interface Keurmerk {
     id: string;
     name: string;
     abbreviation: string;
     description: string;
+    logo: string;
 }
 
 // ─── Keurmerken & Certificeringen ────────────────────────
@@ -15,6 +26,7 @@ export const KEURMERKEN: Keurmerk[] = [
         abbreviation: "KOMO",
         description:
             "Onafhankelijk kwaliteitskeurmerk dat garandeert dat producten en processen voldoen aan de geldende bouwregelgeving.",
+        logo: keurmerkUrl("/cfbouw/webassets/Logo_KOMO_XL_RGB.jpg"),
     },
     {
         id: "vkg",
@@ -22,6 +34,7 @@ export const KEURMERKEN: Keurmerk[] = [
         abbreviation: "VKG",
         description:
             "Keurmerk van de Vereniging Kunststof Gevelelementenindustrie. Staat voor kwaliteitsgarantie in kunststof kozijnen.",
+        logo: keurmerkUrl("/cfbouw/webassets/VKG_logo.png"),
     },
     {
         id: "skg",
@@ -29,6 +42,7 @@ export const KEURMERKEN: Keurmerk[] = [
         abbreviation: "SKG",
         description:
             "Het hang- en sluitwerk is SKG-gecertificeerd en geschikt voor het Politiekeurmerk Veilig Wonen.",
+        logo: keurmerkUrl("/cfbouw/webassets/SKG_keurmerk.png"),
     },
     {
         id: "pkvw",
@@ -36,6 +50,9 @@ export const KEURMERKEN: Keurmerk[] = [
         abbreviation: "PKVW",
         description:
             "Keurmerk dat aangeeft dat de producten voldoen aan de veiligheidseisen voor inbraakpreventie.",
+        logo: keurmerkUrl(
+            "/cfbouw/webassets/cropped-Politie-veilig-wonen-keurmerk-1.jpg"
+        ),
     },
 ];
 
