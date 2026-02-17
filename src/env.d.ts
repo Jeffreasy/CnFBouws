@@ -6,6 +6,8 @@ interface ImportMetaEnv {
     readonly PUBLIC_IMAGEKIT_URL: string;
     readonly IMAGEKIT_PUBLIC_KEY: string;
     readonly IMAGEKIT_PRIVATE_KEY: string;
+    readonly RESEND_API_KEY: string;
+    readonly CONTACT_EMAIL: string;
 }
 
 interface ImportMeta {

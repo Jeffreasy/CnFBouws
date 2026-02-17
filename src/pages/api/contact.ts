@@ -1,9 +1,20 @@
 // src/pages/api/contact.ts
 // Server endpoint for contact form submissions
+// Features: validation, rate limiting, honeypot, origin check, email delivery
 
 import type { APIRoute } from 'astro';
+import { sendContactEmail } from '../../lib/email';
+import { checkRateLimit } from '../../lib/rateLimit';
 
 export const prerender = false;
+
+// Allowed origins for CSRF protection
+const ALLOWED_ORIGINS = [
+    'https://cfbouw.nl',
+    'https://www.cfbouw.nl',
+    'http://localhost:4321',
+    'http://localhost:3000',
+];
 
 interface ContactPayload {
     naam: string;
@@ -38,11 +49,60 @@ function validate(data: unknown): { valid: true; payload: ContactPayload } | { v
     };
 }
 
+/**
+ * Extract client IP from request headers (Vercel sends x-forwarded-for).
+ */
+function getClientIP(request: Request): string {
+    return request.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
+        || request.headers.get('x-real-ip')
+        || 'unknown';
+}
+
 export const POST: APIRoute = async ({ request }) => {
     try {
-        const body = await request.json();
-        const result = validate(body);
+        // ── Origin Check (lightweight CSRF) ────────────────────
+        const origin = request.headers.get('origin');
+        if (origin && !ALLOWED_ORIGINS.includes(origin)) {
+            return new Response(JSON.stringify({ success: false, error: 'Ongeautoriseerd' }), {
+                status: 403,
+                headers: { 'Content-Type': 'application/json' },
+            });
+        }
 
+        // ── Rate Limiting (5 per 15 min per IP) ────────────────
+        const clientIP = getClientIP(request);
+        const { limited, retryAfterMs } = checkRateLimit(clientIP);
+
+        if (limited) {
+            const retryAfterSec = Math.ceil((retryAfterMs || 60000) / 1000);
+            return new Response(JSON.stringify({
+                success: false,
+                error: 'Te veel aanvragen. Probeer het later opnieuw.',
+            }), {
+                status: 429,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Retry-After': String(retryAfterSec),
+                },
+            });
+        }
+
+        const body = await request.json();
+
+        // ── Honeypot Check (bots fill hidden fields) ───────────
+        if (body.website) {
+            // Silently accept but don't process — don't tip off bots
+            return new Response(JSON.stringify({
+                success: true,
+                message: 'Bedankt! Wij nemen zo snel mogelijk contact met u op.',
+            }), {
+                status: 200,
+                headers: { 'Content-Type': 'application/json' },
+            });
+        }
+
+        // ── Validation ─────────────────────────────────────────
+        const result = validate(body);
         if (!result.valid) {
             return new Response(JSON.stringify({ success: false, error: result.error }), {
                 status: 400,
@@ -50,13 +110,24 @@ export const POST: APIRoute = async ({ request }) => {
             });
         }
 
+        // ── Send Email ─────────────────────────────────────────
         const { payload } = result;
+        const emailResult = await sendContactEmail(payload);
 
-        // TODO: Integrate with email service (Resend, SendGrid, Mailgun, etc.)
-        // For now, log and return success
-        console.log('[Contact Form]', JSON.stringify(payload, null, 2));
+        if (!emailResult.success) {
+            return new Response(JSON.stringify({
+                success: false,
+                error: emailResult.error || 'Er ging iets mis bij het versturen.',
+            }), {
+                status: 502,
+                headers: { 'Content-Type': 'application/json' },
+            });
+        }
 
-        return new Response(JSON.stringify({ success: true, message: 'Bedankt! Wij nemen zo snel mogelijk contact met u op.' }), {
+        return new Response(JSON.stringify({
+            success: true,
+            message: 'Bedankt! Wij nemen zo snel mogelijk contact met u op.',
+        }), {
             status: 200,
             headers: { 'Content-Type': 'application/json' },
         });

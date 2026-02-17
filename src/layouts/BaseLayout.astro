@@ -1,4 +1,13 @@
 ---
+/**
+ * BaseLayout — C&F Bouw
+ *
+ * Architecture:
+ * - <ClientRouter /> enables SPA-like View Transitions
+ * - Inline theme script prevents FOUC (runs before paint)
+ * - Scroll reveal uses astro:page-load for VT compatibility
+ */
+import { ClientRouter } from "astro:transitions";
 import Navbar from "../components/Navbar.astro";
 import Footer from "../components/Footer.astro";
 import { SITE } from "../data/site";
@@ -36,11 +45,11 @@ const { title = SITE.seo.title, description = SITE.seo.description } =
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&family=Source+Sans+3:wght@300;400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Lexend:wght@600;700;800&family=Source+Sans+3:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
 
-    <!-- Theme: sync before paint to prevent FOUC -->
+    <!-- Theme: sync before paint to prevent FOUC (must be is:inline) -->
     <script is:inline>
       (function () {
         var t = localStorage.getItem("theme");
@@ -53,12 +62,47 @@ const { title = SITE.seo.title, description = SITE.seo.description } =
     </script>
 
     <title>{title}</title>
+
+    <!-- View Transitions: SPA-like navigation -->
+    <ClientRouter />
   </head>
   <body>
+    <a href="#main-content" class="skip-link">Ga naar inhoud</a>
     <Navbar />
-    <main>
+    <main id="main-content">
       <slot />
     </main>
     <Footer />
+
+    <!-- Scroll Reveal: VT-compatible via astro:page-load -->
+    <script>
+      function initScrollReveal(): void {
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          document
+            .querySelectorAll(".fade-in-on-scroll")
+            .forEach((el) => el.classList.add("is-visible"));
+          return;
+        }
+
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("is-visible");
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.1, rootMargin: "0px 0px -50px 0px" },
+        );
+
+        document
+          .querySelectorAll(".fade-in-on-scroll")
+          .forEach((el) => observer.observe(el));
+      }
+
+      // Fires on initial load AND after every View Transition navigation
+      document.addEventListener("astro:page-load", initScrollReveal);
+    </script>
   </body>
 </html>

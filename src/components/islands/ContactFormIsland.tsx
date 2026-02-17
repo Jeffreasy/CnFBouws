@@ -13,6 +13,7 @@ interface FormData {
     telefoon: string;
     interesse: string;
     bericht: string;
+    website: string; // Honeypot — hidden from users, bots fill it
 }
 
 const INITIAL_DATA: FormData = {
@@ -21,6 +22,7 @@ const INITIAL_DATA: FormData = {
     telefoon: '',
     interesse: '',
     bericht: '',
+    website: '',
 };
 
 /* ═══════════════════════════════════════════════════════════
@@ -40,7 +42,7 @@ const styles = {
     } as CSSProperties,
 
     label: {
-        fontFamily: "'Poppins', sans-serif",
+        fontFamily: "var(--font-heading)",
         fontSize: '0.8125rem',
         fontWeight: 600,
         color: 'var(--text-secondary, rgba(255,255,255,0.7))',
@@ -50,10 +52,10 @@ const styles = {
 
     input: {
         padding: '0.875rem 1rem',
-        background: 'rgba(255, 255, 255, 0.05)',
-        border: '1px solid rgba(255, 255, 255, 0.1)',
+        background: 'var(--surface-glass, rgba(255, 255, 255, 0.05))',
+        border: '1px solid var(--border-glass, rgba(255, 255, 255, 0.1))',
         borderRadius: '0.625rem',
-        fontFamily: "'Open Sans', sans-serif",
+        fontFamily: "var(--font-body)",
         fontSize: '0.9375rem',
         color: 'var(--text-primary, #fff)',
         outline: 'none',
@@ -75,10 +77,10 @@ const styles = {
 
     select: {
         padding: '0.875rem 1rem',
-        background: 'rgba(255, 255, 255, 0.05)',
-        border: '1px solid rgba(255, 255, 255, 0.1)',
+        background: 'var(--surface-glass, rgba(255, 255, 255, 0.05))',
+        border: '1px solid var(--border-glass, rgba(255, 255, 255, 0.1))',
         borderRadius: '0.625rem',
-        fontFamily: "'Open Sans', sans-serif",
+        fontFamily: "var(--font-body)",
         fontSize: '0.9375rem',
         color: 'var(--text-primary, #fff)',
         outline: 'none',
@@ -117,7 +119,7 @@ const styles = {
         color: '#fff',
         border: 'none',
         borderRadius: '0.625rem',
-        fontFamily: "'Poppins', sans-serif",
+        fontFamily: "var(--font-heading)",
         fontSize: '1rem',
         fontWeight: 600,
         cursor: 'pointer',
@@ -157,7 +159,7 @@ const styles = {
     } as CSSProperties,
 
     successTitle: {
-        fontFamily: "'Poppins', sans-serif",
+        fontFamily: "var(--font-heading)",
         fontSize: '1.375rem',
         fontWeight: 700,
         color: 'var(--text-heading, #fff)',
@@ -178,9 +180,9 @@ const styles = {
         padding: '0.75rem 1.5rem',
         background: 'transparent',
         color: 'var(--text-primary, #fff)',
-        border: '1px solid rgba(255, 255, 255, 0.15)',
+        border: '1px solid var(--border-glass, rgba(255, 255, 255, 0.15))',
         borderRadius: '0.625rem',
-        fontFamily: "'Poppins', sans-serif",
+        fontFamily: "var(--font-heading)",
         fontSize: '0.9375rem',
         fontWeight: 500,
         cursor: 'pointer',
@@ -406,6 +408,20 @@ export default function ContactFormIsland() {
                     }}
                     placeholder="Vertel ons meer over uw wensen..."
                     rows={4}
+                />
+            </div>
+
+            {/* Honeypot — visually hidden, bots auto-fill */}
+            <div style={{ position: 'absolute', left: '-9999px', height: 0, overflow: 'hidden' }} aria-hidden="true">
+                <label htmlFor="website">Website</label>
+                <input
+                    type="text"
+                    id="website"
+                    name="website"
+                    value={data.website}
+                    onChange={e => handleChange('website', e.target.value)}
+                    tabIndex={-1}
+                    autoComplete="off"
                 />
             </div>
 

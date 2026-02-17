@@ -1,4 +1,14 @@
 ---
+/**
+ * Footer — C&F Bouw
+ *
+ * Architecture:
+ * - Semantic <footer> with aria-label for landmark identification
+ * - <nav> wrappers for navigation link lists (a11y)
+ * - External links have rel="noopener noreferrer" + sr-only indication
+ * - All styles are component-scoped, referencing global design tokens
+ * - No client-side JS needed — fully static
+ */
 import { SITE } from "../data/site";
 import { KEURMERKEN } from "../data/keurmerken";
 import Icon from "./ui/Icon.astro";
@@ -7,11 +17,15 @@ import { ikUrl } from "../lib/imagekit";
 const year = new Date().getFullYear();
 ---
 
-<footer class="footer" id="footer">
+<footer class="footer" id="footer" aria-label="Site footer">
     <div class="container">
-        <!-- Brand Row — Logo prominent, full width -->
+        <!-- Brand Row — Logo + Tagline + Badges -->
         <div class="footer-brand">
-            <div class="footer-logo">
+            <a
+                href="/"
+                class="footer-logo"
+                aria-label={`${SITE.name} — Homepagina`}
+            >
                 <img
                     src={ikUrl(SITE.logo, {
                         w: 400,
@@ -25,16 +39,16 @@ const year = new Date().getFullYear();
                     class="footer-logo-img"
                     loading="lazy"
                 />
-            </div>
+            </a>
             <div class="footer-brand-text">
                 <p class="footer-tagline">
                     Specialist in kunststof kozijnen, deuren en schuifpuien.
                     Schüco kwaliteit, vakkundige montage.
                 </p>
-                <div class="footer-badges">
+                <div class="footer-badges" role="list" aria-label="Keurmerken">
                     {
                         KEURMERKEN.map((k) => (
-                            <span class="badge" title={k.name}>
+                            <span class="badge" role="listitem" title={k.name}>
                                 {k.abbreviation}
                             </span>
                         ))
@@ -45,74 +59,86 @@ const year = new Date().getFullYear();
 
         <!-- Navigation Grid -->
         <div class="footer-grid">
+            <!-- Column 1: Site Navigation -->
             <div class="footer-col">
-                <h4 class="footer-heading">Navigatie</h4>
-                <ul class="footer-list" role="list">
-                    {
-                        SITE.nav.map((item) => (
-                            <li>
-                                <a href={item.href} class="footer-link">
-                                    {item.label}
-                                </a>
-                            </li>
-                        ))
-                    }
-                </ul>
+                <nav aria-label="Footer navigatie">
+                    <h4 class="footer-heading">Navigatie</h4>
+                    <ul class="footer-list" role="list">
+                        {
+                            SITE.nav.map((item) => (
+                                <li>
+                                    <a href={item.href} class="footer-link">
+                                        {item.label}
+                                    </a>
+                                </li>
+                            ))
+                        }
+                    </ul>
+                </nav>
             </div>
 
-            <!-- Column 3: Diensten -->
+            <!-- Column 2: Services -->
             <div class="footer-col">
-                <h4 class="footer-heading">Diensten</h4>
-                <ul class="footer-list" role="list">
-                    <li>
-                        <a href="#diensten" class="footer-link"
-                            >Advies op maat</a
-                        >
-                    </li>
-                    <li>
-                        <a href="#diensten" class="footer-link"
-                            >Inmeten op locatie</a
-                        >
-                    </li>
-                    <li>
-                        <a href="#diensten" class="footer-link"
-                            >Kunststof kozijnen</a
-                        >
-                    </li>
-                    <li>
-                        <a href="#diensten" class="footer-link"
-                            >Professionele montage</a
-                        >
-                    </li>
-                </ul>
+                <nav aria-label="Footer diensten">
+                    <h4 class="footer-heading">Diensten</h4>
+                    <ul class="footer-list" role="list">
+                        <li>
+                            <a href="#diensten" class="footer-link"
+                                >Advies op maat</a
+                            >
+                        </li>
+                        <li>
+                            <a href="#diensten" class="footer-link"
+                                >Inmeten op locatie</a
+                            >
+                        </li>
+                        <li>
+                            <a href="#diensten" class="footer-link"
+                                >Kunststof kozijnen</a
+                            >
+                        </li>
+                        <li>
+                            <a href="#diensten" class="footer-link"
+                                >Professionele montage</a
+                            >
+                        </li>
+                    </ul>
+                </nav>
             </div>
 
-            <!-- Column 4: Contact -->
+            <!-- Column 3: Contact -->
             <div class="footer-col">
-                <h4 class="footer-heading">Contact</h4>
-                <ul class="footer-list" role="list">
-                    <li class="footer-contact-item">
-                        <Icon name="mail" size={16} />
-                        <a href={SITE.contact.emailHref} class="footer-link"
-                            >{SITE.contact.email}</a
-                        >
-                    </li>
-                    <li class="footer-contact-item">
-                        <Icon name="phone" size={16} />
-                        <a href={SITE.contact.phoneHref} class="footer-link"
-                            >{SITE.contact.phone}</a
-                        >
-                    </li>
-                    <li class="footer-contact-item">
-                        <Icon name="message-circle" size={16} />
-                        <a
-                            href={SITE.contact.whatsappHref}
-                            class="footer-link"
-                            target="_blank"
-                            rel="noopener noreferrer">WhatsApp</a
-                        >
-                    </li>
-                </ul>
+                <div class="footer-contact-section">
+                    <h4 class="footer-heading">Contact</h4>
+                    <ul class="footer-list" role="list">
+                        <li class="footer-contact-item">
+                            <Icon name="mail" size={16} />
+                            <a href={SITE.contact.emailHref} class="footer-link"
+                                >{SITE.contact.email}</a
+                            >
+                        </li>
+                        <li class="footer-contact-item">
+                            <Icon name="phone" size={16} />
+                            <a href={SITE.contact.phoneHref} class="footer-link"
+                                >{SITE.contact.phone}</a
+                            >
+                        </li>
+                        <li class="footer-contact-item">
+                            <Icon name="message-circle" size={16} />
+                            <a
+                                href={SITE.contact.whatsappHref}
+                                class="footer-link"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                WhatsApp
+                                <span class="sr-only"
+                                    >(opent in nieuw tabblad)</span
+                                >
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
 
@@ -144,7 +170,8 @@ const year = new Date().getFullYear();
         padding-bottom: var(--space-2xl);
     }
 
-    /* ─── Brand Row — Logo + Text side by side ─────────── */
+    /* ── Brand Row ─────────────────────────────────────── */
+
     .footer-brand {
         display: flex;
         align-items: center;
@@ -156,6 +183,8 @@ const year = new Date().getFullYear();
 
     .footer-logo {
         flex-shrink: 0;
+        display: block;
+        text-decoration: none;
     }
 
     .footer-logo-img {
@@ -163,6 +192,11 @@ const year = new Date().getFullYear();
         max-width: 100%;
         height: auto;
         object-fit: contain;
+        transition: opacity var(--transition-fast);
+    }
+
+    .footer-logo:hover .footer-logo-img {
+        opacity: 0.85;
     }
 
     .footer-brand-text {
@@ -198,7 +232,8 @@ const year = new Date().getFullYear();
         text-transform: uppercase;
     }
 
-    /* ─── Columns ───────────────────────────────────────── */
+    /* ── Columns ────────────────────────────────────────── */
+
     .footer-heading {
         font-family: var(--font-heading);
         font-size: 0.875rem;
@@ -239,7 +274,8 @@ const year = new Date().getFullYear();
         opacity: 0.6;
     }
 
-    /* ─── Bottom Bar ────────────────────────────────────── */
+    /* ── Bottom Bar ─────────────────────────────────────── */
+
     .footer-bottom {
         display: flex;
         justify-content: space-between;
@@ -259,7 +295,8 @@ const year = new Date().getFullYear();
         color: var(--footer-dim);
     }
 
-    /* ─── Responsive ────────────────────────────────────── */
+    /* ── Responsive ─────────────────────────────────────── */
+
     @media (max-width: 768px) {
         .footer-brand {
             flex-direction: column;
@@ -273,13 +310,11 @@ const year = new Date().getFullYear();
             grid-template-columns: 1fr;
             gap: var(--space-xl);
         }
-
         .footer-bottom {
             flex-direction: column;
             gap: 0.75rem;
             text-align: center;
         }
-
         .footer-legal {
             text-align: center;
         }

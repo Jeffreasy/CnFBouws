@@ -1,12 +1,17 @@
 ---
 /**
  * Modal — Reusable glass modal overlay
+ *
  * Usage: trigger with data-modal-open="modal-id" on any button/anchor
  *
  * Props:
  *   id       — unique identifier (used by trigger buttons)
  *   title    — modal header title
  *   size     — "sm" | "md" | "lg" (default: "md")
+ *
+ * View Transitions:
+ *   Script uses astro:page-load for VT compatibility.
+ *   Cleanup via astro:before-swap prevents listener leaks.
  */
 interface Props {
     id: string;
@@ -70,7 +75,7 @@ const { id, title, size = "md" } = Astro.props;
     .modal-backdrop {
         position: fixed;
         inset: 0;
-        z-index: 2000;
+        z-index: var(--z-modal);
         display: none;
         align-items: center;
         justify-content: center;
@@ -138,7 +143,6 @@ const { id, title, size = "md" } = Astro.props;
     }
 
     .modal-title {
-        font-family: var(--font-heading);
         font-size: 1.25rem;
         font-weight: 700;
         color: var(--text-heading);
@@ -195,84 +199,152 @@ const { id, title, size = "md" } = Astro.props;
 </style>
 
 <script>
-    // ─── Modal Controller ──────────────────────────────────────
-    (function initModals() {
-        // Open triggers: any element with data-modal-open="modal-id"
-        document
-            .querySelectorAll<HTMLElement>("[data-modal-open]")
-            .forEach((trigger) => {
-                trigger.addEventListener("click", (e) => {
-                    e.preventDefault();
-                    const modalId = trigger.getAttribute("data-modal-open");
-                    if (!modalId) return;
+    /**
+     * Modal Controller — View Transitions Compatible
+     *
+     * Uses astro:page-load for initialization and
+     * astro:before-swap for cleanup to prevent listener leaks.
+     */
 
-                    // Close mobile menu if open
-                    const mobileMenu =
-                        document.querySelector(".mobile-menu.open");
-                    if (mobileMenu) {
-                        mobileMenu.classList.remove("open");
-                        document.documentElement.style.overflow = "";
-                    }
+    let modalCleanupFns: Array<() => void> = [];
 
-                    const backdrop = document.getElementById(
-                        `${modalId}-backdrop`,
-                    );
-                    if (!backdrop) return;
-                    backdrop.classList.add("open");
-                    document.documentElement.style.overflow = "hidden";
-                    // Focus first focusable element
-                    const focusable = backdrop.querySelector<HTMLElement>(
-                        "input, select, textarea, button:not(.modal-close)",
-                    );
-                    setTimeout(() => focusable?.focus(), 100);
-                });
-            });
+    function closeModal(modalId: string | null): void {
+        if (!modalId) return;
+        const backdrop = document.getElementById(`${modalId}-backdrop`);
+        if (!backdrop) return;
+        backdrop.classList.remove("open");
+        document.documentElement.style.overflow = "";
+        // Return focus to trigger
+        const trigger = document.querySelector<HTMLElement>(
+            `[data-modal-open="${modalId}"]`,
+        );
+        trigger?.focus();
+    }
 
-        // Close triggers: close button + backdrop click
-        document
-            .querySelectorAll<HTMLElement>("[data-modal-close]")
-            .forEach((btn) => {
-                btn.addEventListener("click", () => {
-                    const modalId = btn.getAttribute("data-modal-close");
-                    closeModal(modalId);
-                });
-            });
+    function initModals(): void {
+        // ── Open triggers ──
+        const openTriggers =
+            document.querySelectorAll<HTMLElement>("[data-modal-open]");
+        openTriggers.forEach((trigger) => {
+            const handler = (e: Event): void => {
+                e.preventDefault();
+                const modalId = trigger.getAttribute("data-modal-open");
+                if (!modalId) return;
 
-        document
-            .querySelectorAll<HTMLElement>(".modal-backdrop")
-            .forEach((backdrop) => {
-                backdrop.addEventListener("click", (e) => {
-                    if (e.target === backdrop) {
-                        const modalId = backdrop.getAttribute("data-modal-id");
-                        closeModal(modalId);
-                    }
-                });
-            });
-
-        // Escape key
-        document.addEventListener("keydown", (e) => {
-            if (e.key === "Escape") {
-                const openModal = document.querySelector(
-                    ".modal-backdrop.open",
-                );
-                if (openModal) {
-                    const modalId = openModal.getAttribute("data-modal-id");
-                    closeModal(modalId);
+                // Close mobile menu if open (interop with Navbar)
+                const navToggle = document.getElementById(
+                    "nav-toggle",
+                ) as HTMLButtonElement | null;
+                if (navToggle?.getAttribute("aria-expanded") === "true") {
+                    navToggle.click();
                 }
-            }
+
+                const backdrop = document.getElementById(`${modalId}-backdrop`);
+                if (!backdrop) return;
+                backdrop.classList.add("open");
+                document.documentElement.style.overflow = "hidden";
+
+                // Focus first focusable element
+                const focusable = backdrop.querySelector<HTMLElement>(
+                    "input, select, textarea, button:not(.modal-close)",
+                );
+                setTimeout(() => focusable?.focus(), 100);
+            };
+            trigger.addEventListener("click", handler);
+            modalCleanupFns.push(() =>
+                trigger.removeEventListener("click", handler),
+            );
         });
 
-        function closeModal(modalId: string | null) {
-            if (!modalId) return;
-            const backdrop = document.getElementById(`${modalId}-backdrop`);
-            if (!backdrop) return;
-            backdrop.classList.remove("open");
-            document.documentElement.style.overflow = "";
-            // Return focus to trigger
-            const trigger = document.querySelector<HTMLElement>(
-                `[data-modal-open="${modalId}"]`,
+        // ── Close button triggers ──
+        const closeTriggers =
+            document.querySelectorAll<HTMLElement>("[data-modal-close]");
+        closeTriggers.forEach((btn) => {
+            const handler = (): void => {
+                const modalId = btn.getAttribute("data-modal-close");
+                closeModal(modalId);
+            };
+            btn.addEventListener("click", handler);
+            modalCleanupFns.push(() =>
+                btn.removeEventListener("click", handler),
             );
-            trigger?.focus();
+        });
+
+        // ── Backdrop click closes ──
+        const backdrops =
+            document.querySelectorAll<HTMLElement>(".modal-backdrop");
+        backdrops.forEach((backdrop) => {
+            const handler = (e: Event): void => {
+                if (e.target === backdrop) {
+                    const modalId = backdrop.getAttribute("data-modal-id");
+                    closeModal(modalId);
+                }
+            };
+            backdrop.addEventListener("click", handler);
+            modalCleanupFns.push(() =>
+                backdrop.removeEventListener("click", handler),
+            );
+        });
+
+        // ── Escape key + Focus trap ──
+        const onKeydown = (e: KeyboardEvent): void => {
+            // Escape closes open modal
+            if (e.key === "Escape") {
+                const openBackdrop = document.querySelector(
+                    ".modal-backdrop.open",
+                );
+                if (openBackdrop) {
+                    const modalId = openBackdrop.getAttribute("data-modal-id");
+                    closeModal(modalId);
+                }
+                return;
+            }
+
+            // Focus trap on Tab
+            if (e.key !== "Tab") return;
+            const openBackdrop = document.querySelector(".modal-backdrop.open");
+            if (!openBackdrop) return;
+
+            const focusable = openBackdrop.querySelectorAll<HTMLElement>(
+                'a[href], button:not([disabled]), input:not([disabled]):not([tabindex="-1"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+            );
+            if (focusable.length === 0) return;
+
+            const first = focusable[0];
+            const last = focusable[focusable.length - 1];
+
+            if (e.shiftKey) {
+                if (document.activeElement === first) {
+                    e.preventDefault();
+                    last.focus();
+                }
+            } else {
+                if (document.activeElement === last) {
+                    e.preventDefault();
+                    first.focus();
+                }
+            }
+        };
+        document.addEventListener("keydown", onKeydown);
+        modalCleanupFns.push(() =>
+            document.removeEventListener("keydown", onKeydown),
+        );
+    }
+
+    function cleanupModals(): void {
+        // Close any open modals before swap
+        const openModal = document.querySelector(".modal-backdrop.open");
+        if (openModal) {
+            const modalId = openModal.getAttribute("data-modal-id");
+            closeModal(modalId);
         }
-    })();
+
+        // Remove all registered event listeners
+        modalCleanupFns.forEach((fn) => fn());
+        modalCleanupFns = [];
+    }
+
+    // ── View Transitions lifecycle ──
+    document.addEventListener("astro:page-load", initModals);
+    document.addEventListener("astro:before-swap", cleanupModals);
 </script>

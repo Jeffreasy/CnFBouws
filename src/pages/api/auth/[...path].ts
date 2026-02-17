@@ -66,17 +66,9 @@ export const ALL: APIRoute = async ({ request, params, cookies }) => {
         }
     }
 
-    // ── TOKEN RETRIEVAL (for React Islands) ─────────────────
-    if (path === 'token' && request.method === 'GET') {
-        const token = cookies.get("access_token")?.value;
-        if (token) {
-            return new Response(JSON.stringify({ token }), {
-                status: 200,
-                headers: { 'Content-Type': 'application/json' }
-            });
-        }
-        return new Response(JSON.stringify({ error: "No session" }), { status: 401 });
-    }
+    // TOKEN RETRIEVAL endpoint removed — exposing HttpOnly cookie tokens
+    // to JavaScript defeats XSS protection. If React islands need auth,
+    // use server-side props or a secure session check endpoint instead.
 
     // ── LOGOUT ──────────────────────────────────────────────
     if (path === 'logout') {
