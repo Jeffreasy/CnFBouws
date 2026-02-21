@@ -36,6 +36,7 @@ import Icon from "../ui/Icon.astro";
                 class="btn btn-secondary btn-lg"
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label={`Stuur een WhatsApp bericht naar ${SITE.contact.phone}`}
             >
                 <Icon name="message-circle" size={18} />
                 WhatsApp
@@ -221,6 +222,18 @@ import Icon from "../ui/Icon.astro";
         .stat-divider {
             width: 100%;
             height: 1px;
+        }
+    }
+
+    /* ─── Reduced Motion ─────────────────────────────────── */
+    @media (prefers-reduced-motion: reduce) {
+        .hero-badge,
+        .badge-dot,
+        .hero-title,
+        .hero-subtitle,
+        .hero-actions,
+        .hero-stats {
+            animation: none !important;
         }
     }
 </style>

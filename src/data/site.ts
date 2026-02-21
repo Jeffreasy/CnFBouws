@@ -28,8 +28,8 @@ export const SITE = {
     nav: [
         { label: "Diensten", href: "#diensten" },
         { label: "Producten", href: "#producten" },
-        { label: "Over Ons", href: "#over-ons" },
         { label: "Werkwijze", href: "#werkwijze" },
+        { label: "Over Ons", href: "#over-ons" },
         { label: "Keurmerken", href: "#keurmerken" },
         { label: "Contact", href: "#contact" },
     ],

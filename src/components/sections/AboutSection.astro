@@ -1,59 +1,65 @@
 ---
 import { SITE } from "../../data/site";
 import Section from "../ui/Section.astro";
+import Grid from "../ui/Grid.astro";
 import Icon from "../ui/Icon.astro";
 ---
 
-<Section id="over-ons" muted>
-    <div class="about-grid">
-        <div class="about-visual">
-            <div class="about-image-wrapper">
-                <div class="about-image-placeholder">
-                    <Icon
-                        name="panels-top-left"
-                        size={64}
-                        strokeWidth={1.5}
-                        class="about-placeholder-icon"
-                    />
-                    <span>{SITE.name}</span>
+<Section id="over-ons">
+    <div class="about-grid-wrapper">
+        <Grid cols={2} gap="lg">
+            <div class="about-visual">
+                <div class="about-image-wrapper">
+                    <div class="about-image-placeholder">
+                        <Icon
+                            name="panels-top-left"
+                            size={64}
+                            strokeWidth={1.5}
+                            class="about-placeholder-icon"
+                        />
+                        <span>{SITE.name}</span>
+                    </div>
+                </div>
+                <div class="about-float">
+                    <span class="float-number">Schüco</span>
+                    <span class="float-text">Exclusief Partner</span>
                 </div>
             </div>
-            <div class="about-float">
-                <span class="float-number">Schüco</span>
-                <span class="float-text">Exclusief Partner</span>
-            </div>
-        </div>
 
-        <div class="about-content">
-            <span class="section-tag">{SITE.overOns.tagline}</span>
-            <h2 class="section-title">{SITE.overOns.title}</h2>
-            {
-                SITE.overOns.paragraphs.map((p) => (
-                    <p class="card-desc about-text">{p}</p>
-                ))
-            }
-
-            <div class="about-features">
+            <div class="about-content">
+                <span class="section-tag">{SITE.overOns.tagline}</span>
+                <h2 class="section-title">{SITE.overOns.title}</h2>
                 {
-                    SITE.overOns.features.map((feature) => (
-                        <div class="feature-item">
-                            <div class="icon-box icon-box--sm">
-                                <Icon name="check" size={16} strokeWidth={3} />
-                            </div>
-                            <span>{feature}</span>
-                        </div>
+                    SITE.overOns.paragraphs.map((p) => (
+                        <p class="card-desc about-text">{p}</p>
                     ))
                 }
+
+                <div class="about-features">
+                    <Grid cols={2} gap="sm">
+                        {
+                            SITE.overOns.features.map((feature) => (
+                                <div class="feature-item">
+                                    <div class="icon-box icon-box--sm">
+                                        <Icon
+                                            name="check"
+                                            size={16}
+                                            strokeWidth={3}
+                                        />
+                                    </div>
+                                    <span>{feature}</span>
+                                </div>
+                            ))
+                        }
+                    </Grid>
+                </div>
             </div>
-        </div>
+        </Grid>
     </div>
 </Section>
 
 <style>
-    .about-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 4rem;
+    .about-grid-wrapper :global(.grid) {
         align-items: center;
     }
 
@@ -123,20 +129,10 @@ import Icon from "../ui/Icon.astro";
         margin-bottom: 1rem;
     }
     .about-features {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 0.875rem;
         margin-top: 1.75rem;
     }
 
     @media (max-width: 768px) {
-        .about-grid {
-            grid-template-columns: 1fr;
-            gap: 2rem;
-        }
-        .about-features {
-            grid-template-columns: 1fr;
-        }
         .about-float {
             right: 1rem;
             bottom: -1rem;

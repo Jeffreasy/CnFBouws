@@ -1,6 +1,7 @@
 ---
 import { SERVICES } from "../../data/services";
 import Section from "../ui/Section.astro";
+import Grid from "../ui/Grid.astro";
 import Card from "../ui/Card.astro";
 import Icon from "../ui/Icon.astro";
 
@@ -27,7 +28,7 @@ const diensten = SERVICES.filter(
             Producten
             <span class="services-group-label-line"></span>
         </h3>
-        <div class="services-products">
+        <Grid cols={3} gap="lg">
             {
                 producten.map((service) => (
                     <Card accentBar>
@@ -39,7 +40,7 @@ const diensten = SERVICES.filter(
                     </Card>
                 ))
             }
-        </div>
+        </Grid>
     </div>
 
     <!-- Service Process — 4 cards -->
@@ -49,7 +50,7 @@ const diensten = SERVICES.filter(
             Ons Proces
             <span class="services-group-label-line"></span>
         </h3>
-        <div class="services-process">
+        <Grid cols={4} gap="lg">
             {
                 diensten.map((service, i) => (
                     <Card accentBar>
@@ -57,7 +58,10 @@ const diensten = SERVICES.filter(
                             <div class="icon-box icon-box--lg service-icon">
                                 <Icon name={service.icon} size={28} />
                             </div>
-                            <span class="service-step-number">
+                            <span
+                                class="service-step-number"
+                                aria-hidden="true"
+                            >
                                 {String(i + 1).padStart(2, "0")}
                             </span>
                         </div>
@@ -66,7 +70,7 @@ const diensten = SERVICES.filter(
                     </Card>
                 ))
             }
-        </div>
+        </Grid>
     </div>
 </Section>
 
@@ -103,59 +107,7 @@ const diensten = SERVICES.filter(
         );
     }
 
-    /* ─── Products: 3-col ───────────────────────────────── */
-    .services-products {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 2rem;
-    }
-
-    /* ─── Service Process: 4-col ────────────────────────── */
-    .services-process {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 2rem;
-    }
-
-    .service-step-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 1.25rem;
-    }
-
-    .service-step-number {
-        font-family: var(--font-heading);
-        font-size: 2rem;
-        font-weight: 700;
-        color: rgba(var(--color-cta-rgb), 0.12);
-        line-height: 1;
-    }
-
-    .service-icon {
-        margin-bottom: 1.25rem;
-    }
-
     .service-step-header .service-icon {
         margin-bottom: 0;
-    }
-
-    /* ─── Responsive ────────────────────────────────────── */
-    @media (max-width: 1024px) {
-        .services-products {
-            grid-template-columns: repeat(3, 1fr);
-        }
-        .services-process {
-            grid-template-columns: repeat(2, 1fr);
-        }
-    }
-
-    @media (max-width: 768px) {
-        .services-products {
-            grid-template-columns: 1fr;
-        }
-        .services-process {
-            grid-template-columns: 1fr;
-        }
     }
 </style>

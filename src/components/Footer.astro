@@ -161,6 +161,19 @@ const year = new Date().getFullYear();
         background: var(--footer-bg);
         color: var(--footer-text);
         padding: var(--space-3xl) 0 0;
+        position: relative;
+    }
+
+    /* Top bleed: smooth muted → footer-bg fade from Contact section */
+    .footer::before {
+        content: "";
+        position: absolute;
+        top: -60px;
+        left: 0;
+        right: 0;
+        height: 60px;
+        background: linear-gradient(to bottom, transparent, var(--footer-bg));
+        pointer-events: none;
     }
 
     .footer-grid {

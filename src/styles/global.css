@@ -228,6 +228,7 @@ img {
 /* ─── Section ────────────────────────────────────────────── */
 .section {
     padding: 6rem 0;
+    position: relative;
 }
 
 .section--muted {
@@ -240,6 +241,42 @@ img {
             rgba(var(--color-primary-rgb), 0.06),
             rgba(var(--color-cta-rgb), 0.03)),
         var(--surface-brand);
+}
+
+/* ─── Section Bleed Transitions ─────────────────────────── */
+/* Smooth gradient fade from previous section color into current.
+   Height sits within the 6rem (96px) top padding. */
+
+/* Muted sections: fade FROM default (body) color */
+.section--muted::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100px;
+    background: linear-gradient(to bottom, var(--surface-body), transparent);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Default sections (after muted): fade FROM muted color */
+.section:not(.section--muted):not(.section--brand)::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100px;
+    background: linear-gradient(to bottom, var(--surface-muted), transparent);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Ensure section content sits above the bleed gradient */
+.section>.container {
+    position: relative;
+    z-index: 1;
 }
 
 /* ─── Section Header ─────────────────────────────────────── */

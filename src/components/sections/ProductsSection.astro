@@ -13,7 +13,6 @@ import Icon from "../ui/Icon.astro";
     tag="Onze Producten"
     title="Kunststof kozijnen, deuren & schuifpuien"
     subtitle="Wij leveren een compleet assortiment kunststof gevelelementen van het merk Schüco — van kozijnen en deuren tot schuifpuien en sierpanelen."
-    muted
 >
     <Grid cols="auto" gap="lg" stagger class="products-grid">
         {
@@ -42,9 +41,7 @@ import Icon from "../ui/Icon.astro";
                 SCHUCO_PROFILES.map((profile) => (
                     <Card bottomBar>
                         <div class="profile-header">
-                            <Tag variant="cta" class="profile-badge">
-                                {profile.subtitle}
-                            </Tag>
+                            <Tag variant="cta">{profile.subtitle}</Tag>
                             <h4 class="profile-name">{profile.name}</h4>
                         </div>
                         <p class="card-desc profile-desc">
@@ -73,9 +70,6 @@ import Icon from "../ui/Icon.astro";
 </Section>
 
 <style>
-    .products-grid {
-        margin-bottom: 5rem;
-    }
     .product-icon {
         margin: 0 auto 1.25rem;
     }
@@ -84,6 +78,7 @@ import Icon from "../ui/Icon.astro";
     }
 
     .schuco-section {
+        margin-top: 5rem;
         padding-top: 2rem;
         border-top: 1px solid var(--border-subtle);
     }
@@ -96,10 +91,11 @@ import Icon from "../ui/Icon.astro";
     }
 
     .profile-header {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.625rem;
         margin-bottom: 1rem;
-    }
-    .profile-badge {
-        margin-bottom: 0.625rem;
     }
     .profile-name {
         font-size: 1.375rem;
