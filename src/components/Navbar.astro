@@ -519,7 +519,7 @@ function isActive(href: string): boolean {
 
     // ── Focusable elements selector ──
     const FOCUSABLE =
-      'a[href], button:not([disabled]), input, textarea, select, [tabindex]:not([tabindex="-1"])';
+      'a[href]:not([hidden]), button:not([disabled]):not([hidden]), input:not([hidden]), textarea:not([hidden]), select:not([hidden]), [tabindex]:not([tabindex="-1"]):not([hidden])';
 
     // ── Menu State ──
     function isMenuOpen(): boolean {

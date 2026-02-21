@@ -11,6 +11,7 @@
  */
 import { SITE } from "../data/site";
 import { KEURMERKEN } from "../data/keurmerken";
+import Grid from "./ui/Grid.astro";
 import Icon from "./ui/Icon.astro";
 import { ikUrl } from "../lib/imagekit";
 
@@ -58,7 +59,7 @@ const year = new Date().getFullYear();
         </div>
 
         <!-- Navigation Grid -->
-        <div class="footer-grid">
+        <Grid cols={3} gap="lg" class="footer-grid">
             <!-- Column 1: Site Navigation -->
             <div class="footer-col">
                 <nav aria-label="Footer navigatie">
@@ -140,7 +141,7 @@ const year = new Date().getFullYear();
                     </ul>
                 </div>
             </div>
-        </div>
+        </Grid>
 
         <!-- Bottom Bar -->
         <div class="footer-bottom">
@@ -177,9 +178,6 @@ const year = new Date().getFullYear();
     }
 
     .footer-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: var(--space-2xl);
         padding-bottom: var(--space-2xl);
     }
 
@@ -319,10 +317,6 @@ const year = new Date().getFullYear();
         .footer-logo-img {
             width: 280px;
         }
-        .footer-grid {
-            grid-template-columns: 1fr;
-            gap: var(--space-xl);
-        }
         .footer-bottom {
             flex-direction: column;
             gap: 0.75rem;
@@ -330,12 +324,6 @@ const year = new Date().getFullYear();
         }
         .footer-legal {
             text-align: center;
-        }
-    }
-
-    @media (min-width: 769px) and (max-width: 1024px) {
-        .footer-grid {
-            grid-template-columns: 1fr 1fr;
         }
     }
 </style>
