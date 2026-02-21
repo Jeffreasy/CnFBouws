@@ -62,7 +62,7 @@ const { id, title, size = "md" } = Astro.props;
         </div>
 
         {/* ─── Body (slot) ───────────────────────────────── */}
-        <div class="modal-body">
+        <div class="modal-body" role="document">
             <slot />
         </div>
     </div>
@@ -246,7 +246,7 @@ const { id, title, size = "md" } = Astro.props;
 
                 // Focus first focusable element
                 const focusable = backdrop.querySelector<HTMLElement>(
-                    "input, select, textarea, button:not(.modal-close)",
+                    "input:not([hidden]), select:not([hidden]), textarea:not([hidden]), button:not(.modal-close):not([hidden]), a[href]:not([hidden])",
                 );
                 setTimeout(() => focusable?.focus(), 100);
             };
@@ -306,7 +306,7 @@ const { id, title, size = "md" } = Astro.props;
             if (!openBackdrop) return;
 
             const focusable = openBackdrop.querySelectorAll<HTMLElement>(
-                'a[href], button:not([disabled]), input:not([disabled]):not([tabindex="-1"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+                'a[href]:not([hidden]), button:not([disabled]):not([hidden]), input:not([disabled]):not([hidden]):not([tabindex="-1"]), select:not([disabled]):not([hidden]), textarea:not([disabled]):not([hidden]), [tabindex]:not([tabindex="-1"]):not([hidden])',
             );
             if (focusable.length === 0) return;
 

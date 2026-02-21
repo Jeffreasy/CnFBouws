@@ -34,6 +34,8 @@ interface Props {
     class?: string;
     /** Loading strategy */
     loading?: "lazy" | "eager";
+    /** Fetch priority optimization */
+    fetchpriority?: "high" | "low" | "auto";
     /** Object-fit CSS value */
     fit?: "cover" | "contain" | "fill" | "none";
     /** Aspect ratio (e.g. "16/9", "4/3") */
@@ -54,6 +56,7 @@ const {
     quality = 80,
     class: className = "",
     loading = "lazy",
+    fetchpriority,
     fit = "cover",
     aspectRatio,
     focus,
@@ -76,6 +79,9 @@ const imgStyle = [
 ]
     .filter(Boolean)
     .join("; ");
+
+const resolvedFetchPriority =
+    fetchpriority || (loading === "eager" ? "high" : "auto");
 ---
 
 <div
@@ -90,6 +96,7 @@ const imgStyle = [
         width={width}
         height={height}
         loading={loading}
+        fetchpriority={resolvedFetchPriority}
         decoding="async"
         style={imgStyle}
         class="ik-img"
