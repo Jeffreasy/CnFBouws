@@ -56,7 +56,7 @@ const styles = {
         border: '1px solid var(--border-glass, rgba(255, 255, 255, 0.1))',
         borderRadius: '0.625rem',
         fontFamily: "var(--font-body)",
-        fontSize: '0.9375rem',
+        fontSize: '1rem',
         color: 'var(--text-primary, #fff)',
         outline: 'none',
         width: '100%',
@@ -81,7 +81,7 @@ const styles = {
         border: '1px solid var(--border-glass, rgba(255, 255, 255, 0.1))',
         borderRadius: '0.625rem',
         fontFamily: "var(--font-body)",
-        fontSize: '0.9375rem',
+        fontSize: '1rem',
         color: 'var(--text-primary, #fff)',
         outline: 'none',
         width: '100%',
@@ -329,8 +329,10 @@ export default function ContactFormIsland() {
                     placeholder="Uw volledige naam"
                     required
                     autoComplete="name"
+                    aria-invalid={!!errors.naam}
+                    aria-describedby={errors.naam ? "naam-error" : undefined}
                 />
-                {errors.naam && <span style={styles.errorText}>{errors.naam}</span>}
+                {errors.naam && <span id="naam-error" style={styles.errorText}>{errors.naam}</span>}
             </div>
 
             {/* Email */}
@@ -347,8 +349,10 @@ export default function ContactFormIsland() {
                     placeholder="uw@email.nl"
                     required
                     autoComplete="email"
+                    aria-invalid={!!errors.email}
+                    aria-describedby={errors.email ? "email-error" : undefined}
                 />
-                {errors.email && <span style={styles.errorText}>{errors.email}</span>}
+                {errors.email && <span id="email-error" style={styles.errorText}>{errors.email}</span>}
             </div>
 
             {/* Telefoon */}
