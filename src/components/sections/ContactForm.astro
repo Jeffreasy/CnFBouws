@@ -1,15 +1,16 @@
 ---
 /**
- * ContactForm — Compact CTA section + Modal with React island form
+ * ContactForm — Compact CTA section + Modal with native Astro form
  * The form opens in a modal overlay, saving page space.
  * Contact info is displayed inline in the CTA card.
+ * Uses NativeContactForm instead of React island — zero framework overhead.
  */
 import { SITE } from "../../data/site";
 import Section from "../ui/Section.astro";
 import Card from "../ui/Card.astro";
 import Icon from "../ui/Icon.astro";
 import Modal from "../ui/Modal.astro";
-import ContactFormIsland from "../islands/ContactFormIsland";
+import NativeContactForm from "../ui/NativeContactForm.astro";
 ---
 
 {
@@ -80,5 +81,5 @@ import ContactFormIsland from "../islands/ContactFormIsland";
    ═══════════════════════════════════════════════════════════ */
 }
 <Modal id="contact-modal" title="Offerte aanvragen" size="md">
-    <ContactFormIsland client:idle />
+    <NativeContactForm />
 </Modal>

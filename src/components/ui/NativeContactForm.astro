@@ -1,0 +1,458 @@
+---
+/**
+ * NativeContactForm — Zero-JS-framework contact form
+ * Replaces the React ContactFormIsland to eliminate the 182 KB React runtime.
+ * Uses vanilla JS + fetch() for validation, submission, and state management.
+ * All styles are scoped — matches the existing glass design system tokens.
+ */
+---
+
+<form
+    id="contact-native-form"
+    class="cnf-form"
+    novalidate
+    autocomplete="on"
+>
+    <!-- Naam -->
+    <div class="cnf-group">
+        <label for="cnf-naam" class="cnf-label">Naam *</label>
+        <input
+            type="text"
+            id="cnf-naam"
+            name="naam"
+            class="cnf-input"
+            placeholder="Uw volledige naam"
+            required
+            autocomplete="name"
+            aria-required="true"
+        />
+        <span class="cnf-error" id="cnf-naam-error" role="alert" aria-live="polite"></span>
+    </div>
+
+    <!-- Email -->
+    <div class="cnf-group">
+        <label for="cnf-email" class="cnf-label">E-mail *</label>
+        <input
+            type="email"
+            id="cnf-email"
+            name="email"
+            class="cnf-input"
+            placeholder="uw@email.nl"
+            required
+            autocomplete="email"
+            aria-required="true"
+        />
+        <span class="cnf-error" id="cnf-email-error" role="alert" aria-live="polite"></span>
+    </div>
+
+    <!-- Telefoon -->
+    <div class="cnf-group">
+        <label for="cnf-telefoon" class="cnf-label">Telefoon</label>
+        <input
+            type="tel"
+            id="cnf-telefoon"
+            name="telefoon"
+            class="cnf-input"
+            placeholder="06 1234 5678"
+            autocomplete="tel"
+        />
+    </div>
+
+    <!-- Interesse -->
+    <div class="cnf-group">
+        <label for="cnf-interesse" class="cnf-label">Interesse</label>
+        <div class="cnf-select-wrap">
+            <select id="cnf-interesse" name="interesse" class="cnf-input cnf-select">
+                <option value="">Kies een onderwerp</option>
+                <option value="offerte">Vrijblijvende offerte</option>
+                <option value="advies">Adviesgesprek &amp; inmeten</option>
+                <option value="showroom">Showroom bezoeken</option>
+                <option value="overig">Overige vraag</option>
+            </select>
+            <!-- Custom chevron -->
+            <svg class="cnf-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+        </div>
+    </div>
+
+    <!-- Bericht -->
+    <div class="cnf-group">
+        <label for="cnf-bericht" class="cnf-label">Bericht</label>
+        <textarea
+            id="cnf-bericht"
+            name="bericht"
+            class="cnf-input cnf-textarea"
+            placeholder="Vertel ons meer over uw wensen..."
+            rows="4"
+        ></textarea>
+    </div>
+
+    <!-- Honeypot — bots fill this, humans don't see it -->
+    <div class="cnf-honeypot" aria-hidden="true">
+        <label for="cnf-website">Website</label>
+        <input type="text" id="cnf-website" name="website" tabindex="-1" autocomplete="off" />
+    </div>
+
+    <!-- Error alert -->
+    <div id="cnf-alert" class="cnf-alert" role="alert" aria-live="assertive" hidden></div>
+
+    <!-- Submit -->
+    <button type="submit" id="cnf-submit" class="cnf-submit">
+        <svg class="cnf-btn-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+        </svg>
+        <span class="cnf-btn-label">Verstuur bericht</span>
+        <span class="cnf-spinner" aria-hidden="true" hidden></span>
+    </button>
+</form>
+
+<!-- Success state (hidden until form submits successfully) -->
+<div id="cnf-success" class="cnf-success" role="alert" hidden>
+    <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="cnf-success-icon" aria-hidden="true">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+    </svg>
+    <h3 class="cnf-success-title">Bericht verzonden!</h3>
+    <p class="cnf-success-text" id="cnf-success-msg">Bedankt! Wij nemen zo snel mogelijk contact met u op.</p>
+    <button type="button" id="cnf-reset" class="cnf-reset-btn">Nog een bericht versturen</button>
+</div>
+
+<style>
+    /* ── Layout ─────────────────────────────────────────────── */
+    .cnf-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+    }
+
+    .cnf-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.375rem;
+    }
+
+    /* ── Label ──────────────────────────────────────────────── */
+    .cnf-label {
+        font-family: var(--font-heading);
+        font-size: 0.8125rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    /* ── Inputs ─────────────────────────────────────────────── */
+    .cnf-input {
+        padding: 0.875rem 1rem;
+        background: var(--surface-card);
+        border: 1px solid var(--border-card);
+        border-radius: 0.625rem;
+        font-family: var(--font-body);
+        font-size: 1rem;
+        color: var(--text-primary);
+        width: 100%;
+        box-sizing: border-box;
+        outline: none;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        -webkit-appearance: none;
+        appearance: none;
+    }
+
+    .cnf-input:focus {
+        border-color: var(--color-cta);
+        box-shadow: 0 0 0 3px rgba(var(--color-cta-rgb), 0.15);
+    }
+
+    .cnf-input.is-error {
+        border-color: var(--color-error, #ef4444);
+    }
+
+    /* ── Select ─────────────────────────────────────────────── */
+    .cnf-select-wrap {
+        position: relative;
+    }
+
+    .cnf-select {
+        padding-right: 2.5rem;
+        cursor: pointer;
+    }
+
+    .cnf-chevron {
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-muted);
+        pointer-events: none;
+    }
+
+    /* ── Textarea ───────────────────────────────────────────── */
+    .cnf-textarea {
+        resize: vertical;
+        min-height: 120px;
+    }
+
+    /* ── Error text ─────────────────────────────────────────── */
+    .cnf-error {
+        font-size: 0.8125rem;
+        color: var(--color-error, #ef4444);
+        font-weight: 500;
+        min-height: 1em; /* prevents layout jump */
+    }
+
+    /* ── Honeypot ───────────────────────────────────────────── */
+    .cnf-honeypot {
+        position: absolute;
+        left: -9999px;
+        height: 0;
+        overflow: hidden;
+    }
+
+    /* ── Alert ──────────────────────────────────────────────── */
+    .cnf-alert {
+        display: flex;
+        align-items: center;
+        gap: 0.625rem;
+        padding: 0.875rem 1rem;
+        border-radius: 0.625rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        background: rgba(239, 68, 68, 0.08);
+        color: var(--color-error, #ef4444);
+        border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+
+    /* ── Submit ─────────────────────────────────────────────── */
+    .cnf-submit {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        width: 100%;
+        padding: 1rem 1.5rem;
+        background: var(--color-cta);
+        color: #fff;
+        border: none;
+        border-radius: 0.625rem;
+        font-family: var(--font-heading);
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+        margin-top: 0.5rem;
+    }
+
+    .cnf-submit:hover:not(:disabled) {
+        box-shadow: 0 0 24px rgba(var(--color-cta-rgb), 0.35);
+        transform: translateY(-1px);
+    }
+
+    .cnf-submit:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
+
+    /* ── Spinner ────────────────────────────────────────────── */
+    @keyframes cnf-spin {
+        to { transform: rotate(360deg); }
+    }
+
+    .cnf-spinner {
+        display: inline-block;
+        width: 18px;
+        height: 18px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-top-color: #fff;
+        border-radius: 50%;
+        animation: cnf-spin 0.6s linear infinite;
+    }
+
+    /* ── Success ────────────────────────────────────────────── */
+    .cnf-success {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 3rem 1.5rem;
+    }
+
+    .cnf-success-icon {
+        color: var(--color-cta);
+        margin-bottom: 1.25rem;
+    }
+
+    .cnf-success-title {
+        font-family: var(--font-heading);
+        font-size: clamp(1.125rem, 2.5vw, 1.375rem);
+        font-weight: 700;
+        color: var(--text-heading);
+        margin-bottom: 0.5rem;
+    }
+
+    .cnf-success-text {
+        color: var(--text-secondary);
+        margin-bottom: 1.5rem;
+        line-height: 1.6;
+    }
+
+    .cnf-reset-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        background: transparent;
+        color: var(--text-primary);
+        border: 1px solid var(--border-card);
+        border-radius: 0.625rem;
+        font-family: var(--font-heading);
+        font-size: 0.9375rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .cnf-reset-btn:hover {
+        border-color: var(--color-cta);
+        background: rgba(var(--color-cta-rgb), 0.06);
+    }
+</style>
+
+<script>
+(function () {
+    // ── Selectors ───────────────────────────────────────────────
+    const form     = document.getElementById('contact-native-form') as HTMLFormElement | null;
+    const success  = document.getElementById('cnf-success') as HTMLDivElement | null;
+    const alert    = document.getElementById('cnf-alert') as HTMLDivElement | null;
+    const submit   = document.getElementById('cnf-submit') as HTMLButtonElement | null;
+    const spinner  = submit?.querySelector('.cnf-spinner') as HTMLSpanElement | null;
+    const btnIcon  = submit?.querySelector('.cnf-btn-icon') as SVGElement | null;
+    const btnLabel = submit?.querySelector('.cnf-btn-label') as HTMLSpanElement | null;
+    const resetBtn = document.getElementById('cnf-reset') as HTMLButtonElement | null;
+    const msgEl    = document.getElementById('cnf-success-msg') as HTMLParagraphElement | null;
+
+    if (!form) return;
+
+    // ── Validation ──────────────────────────────────────────────
+    function validateField(name: string, value: string): string {
+        if (name === 'naam' && value.trim().length < 2) return 'Vul uw naam in';
+        if (name === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return 'Vul een geldig e-mailadres in';
+        return '';
+    }
+
+    function showFieldError(fieldId: string, message: string) {
+        const input = document.getElementById(fieldId) as HTMLInputElement | null;
+        const errorEl = document.getElementById(fieldId + '-error') as HTMLSpanElement | null;
+        if (input) {
+            input.classList.toggle('is-error', !!message);
+            input.setAttribute('aria-invalid', message ? 'true' : 'false');
+        }
+        if (errorEl) errorEl.textContent = message;
+    }
+
+    // ── Inline validation on blur ───────────────────────────────
+    form.addEventListener('blur', (e) => {
+        const target = e.target as HTMLInputElement;
+        if (!target.name || !['naam', 'email'].includes(target.name)) return;
+        const err = validateField(target.name, target.value);
+        showFieldError('cnf-' + target.name, err);
+    }, true);
+
+    // ── Clear error on input ────────────────────────────────────
+    form.addEventListener('input', (e) => {
+        const target = e.target as HTMLInputElement;
+        if (!target.name || !['naam', 'email'].includes(target.name)) return;
+        if (target.classList.contains('is-error')) {
+            const err = validateField(target.name, target.value);
+            showFieldError('cnf-' + target.name, err);
+        }
+    });
+
+    // ── Loading state ───────────────────────────────────────────
+    function setLoading(loading: boolean) {
+        if (!submit || !spinner || !btnIcon || !btnLabel) return;
+        submit.disabled = loading;
+        spinner.hidden = !loading;
+        btnIcon.style.display = loading ? 'none' : '';
+        btnLabel.textContent = loading ? 'Versturen...' : 'Verstuur bericht';
+    }
+
+    // ── Submit handler ──────────────────────────────────────────
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        // Validate required fields
+        const naam  = (form.elements.namedItem('naam') as HTMLInputElement).value;
+        const email = (form.elements.namedItem('email') as HTMLInputElement).value;
+        const naamErr  = validateField('naam', naam);
+        const emailErr = validateField('email', email);
+
+        showFieldError('cnf-naam', naamErr);
+        showFieldError('cnf-email', emailErr);
+        if (naamErr || emailErr) return;
+
+        // Hide previous alert
+        if (alert) alert.hidden = true;
+        setLoading(true);
+
+        // Collect data
+        const data = {
+            naam:      (form.elements.namedItem('naam')      as HTMLInputElement).value,
+            email:     (form.elements.namedItem('email')     as HTMLInputElement).value,
+            telefoon:  (form.elements.namedItem('telefoon')  as HTMLInputElement).value,
+            interesse: (form.elements.namedItem('interesse') as HTMLSelectElement).value,
+            bericht:   (form.elements.namedItem('bericht')   as HTMLTextAreaElement).value,
+            website:   (form.elements.namedItem('website')   as HTMLInputElement).value,
+        };
+
+        try {
+            const res = await fetch('/api/contact', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data),
+            });
+
+            const result = await res.json();
+
+            if (res.ok && result.success) {
+                // Show success panel
+                form.hidden = true;
+                if (success) success.hidden = false;
+                if (msgEl) msgEl.textContent = result.message || 'Bedankt! Wij nemen zo snel mogelijk contact met u op.';
+                form.reset();
+            } else {
+                if (alert) {
+                    alert.textContent = result.error || 'Er ging iets mis. Probeer het opnieuw.';
+                    alert.hidden = false;
+                }
+            }
+        } catch {
+            if (alert) {
+                alert.textContent = 'Verbinding mislukt. Controleer uw internetverbinding.';
+                alert.hidden = false;
+            }
+        } finally {
+            setLoading(false);
+        }
+    });
+
+    // ── Reset (send another) ────────────────────────────────────
+    resetBtn?.addEventListener('click', () => {
+        if (success) success.hidden = true;
+        if (alert) alert.hidden = true;
+        form.hidden = false;
+        form.reset();
+    });
+
+    // ── Reset on modal close ────────────────────────────────────
+    document.addEventListener('modal:closed', () => {
+        form.hidden = false;
+        form.reset();
+        if (success) success.hidden = true;
+        if (alert) alert.hidden = true;
+        showFieldError('cnf-naam', '');
+        showFieldError('cnf-email', '');
+    });
+})();
+</script>

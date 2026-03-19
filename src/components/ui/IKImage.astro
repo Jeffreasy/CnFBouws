@@ -128,21 +128,7 @@ const wrapperStyle = [
     />
 </div>
 
-{/* Inline per-instance load handler — adds .is-loaded which fades in the image */}
-{lqipSrc && (
-    <script define:vars={{ uid }}>
-        (function () {
-            var img = document.getElementById(uid);
-            if (!img) return;
-            function reveal() { img.classList.add("is-loaded"); }
-            if (img.complete && img.naturalWidth > 0) {
-                reveal();
-            } else {
-                img.addEventListener("load", reveal, { once: true });
-            }
-        })();
-    </script>
-)}
+{/* Blur-up handled centrally by BaseLayout's initImageReveal() via .ik-img--lqip class */}
 
 <style>
     .ik-image {

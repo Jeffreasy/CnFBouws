@@ -74,7 +74,7 @@ const { title = SITE.seo.title, description = SITE.seo.description } =
     </main>
     <Footer />
 
-    <!-- Scroll Reveal: VT-compatible via astro:page-load -->
+    <!-- Scroll Reveal + IKImage blur-up: VT-compatible via astro:page-load -->
     <script>
       function initScrollReveal(): void {
         if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
@@ -101,8 +101,23 @@ const { title = SITE.seo.title, description = SITE.seo.description } =
           .forEach((el) => observer.observe(el));
       }
 
-      // Fires on initial load AND after every View Transition navigation
-      document.addEventListener("astro:page-load", initScrollReveal);
+      // Centralized IKImage LQIP blur-up handler
+      // Replaces the per-instance inline <script define:vars> in IKImage.astro
+      function initImageReveal(): void {
+        document.querySelectorAll<HTMLImageElement>(".ik-img--lqip").forEach((img) => {
+          if (img.complete && img.naturalWidth > 0) {
+            img.classList.add("is-loaded");
+          } else {
+            img.addEventListener("load", () => img.classList.add("is-loaded"), { once: true });
+          }
+        });
+      }
+
+      // Fire on initial load AND after every View Transition navigation
+      document.addEventListener("astro:page-load", () => {
+        initScrollReveal();
+        initImageReveal();
+      });
     </script>
   </body>
 </html>
