@@ -320,139 +320,155 @@
 </style>
 
 <script>
-(function () {
-    // ── Selectors ───────────────────────────────────────────────
-    const form     = document.getElementById('contact-native-form') as HTMLFormElement | null;
-    const success  = document.getElementById('cnf-success') as HTMLDivElement | null;
-    const alert    = document.getElementById('cnf-alert') as HTMLDivElement | null;
-    const submit   = document.getElementById('cnf-submit') as HTMLButtonElement | null;
-    const spinner  = submit?.querySelector('.cnf-spinner') as HTMLSpanElement | null;
-    const btnIcon  = submit?.querySelector('.cnf-btn-icon') as SVGElement | null;
-    const btnLabel = submit?.querySelector('.cnf-btn-label') as HTMLSpanElement | null;
-    const resetBtn = document.getElementById('cnf-reset') as HTMLButtonElement | null;
-    const msgEl    = document.getElementById('cnf-success-msg') as HTMLParagraphElement | null;
+    /**
+     * Contact form controller — View Transitions compatible.
+     * Wrapped in astro:page-load so it re-initialises after every VT navigation.
+     * Hard-resets form state on every load to prevent stale UI from persisting.
+     */
+    let cnfCleanup: (() => void)[] = [];
 
-    if (!form) return;
+    function resetForm(): void {
+        const form    = document.getElementById('contact-native-form') as HTMLFormElement | null;
+        const success = document.getElementById('cnf-success')         as HTMLDivElement | null;
+        const alert   = document.getElementById('cnf-alert')           as HTMLDivElement | null;
 
-    // ── Validation ──────────────────────────────────────────────
-    function validateField(name: string, value: string): string {
-        if (name === 'naam' && value.trim().length < 2) return 'Vul uw naam in';
-        if (name === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return 'Vul een geldig e-mailadres in';
-        return '';
+        if (!form) return;
+
+        // Hard reset — ensures "Bericht verzonden" never shows on fresh open
+        form.hidden = false;
+        form.reset();
+        if (success) success.hidden = true;
+        if (alert)   alert.hidden   = true;
+
+        // Clear field error states
+        ['cnf-naam', 'cnf-email'].forEach((id) => {
+            const input = document.getElementById(id) as HTMLInputElement | null;
+            const err   = document.getElementById(id + '-error') as HTMLSpanElement | null;
+            if (input) { input.classList.remove('is-error'); input.removeAttribute('aria-invalid'); }
+            if (err)   err.textContent = '';
+        });
     }
 
-    function showFieldError(fieldId: string, message: string) {
-        const input = document.getElementById(fieldId) as HTMLInputElement | null;
-        const errorEl = document.getElementById(fieldId + '-error') as HTMLSpanElement | null;
-        if (input) {
-            input.classList.toggle('is-error', !!message);
-            input.setAttribute('aria-invalid', message ? 'true' : 'false');
+    function initContactForm(): void {
+        // ── Selectors ────────────────────────────────────────────
+        const form     = document.getElementById('contact-native-form') as HTMLFormElement | null;
+        const success  = document.getElementById('cnf-success')         as HTMLDivElement | null;
+        const alert    = document.getElementById('cnf-alert')           as HTMLDivElement | null;
+        const submit   = document.getElementById('cnf-submit')          as HTMLButtonElement | null;
+        const spinner  = submit?.querySelector('.cnf-spinner')           as HTMLSpanElement | null;
+        const btnIcon  = submit?.querySelector('.cnf-btn-icon')          as SVGElement | null;
+        const btnLabel = submit?.querySelector('.cnf-btn-label')         as HTMLSpanElement | null;
+        const resetBtn = document.getElementById('cnf-reset')           as HTMLButtonElement | null;
+        const msgEl    = document.getElementById('cnf-success-msg')     as HTMLParagraphElement | null;
+
+        if (!form) return;
+
+        // ── Always start in clean state ──────────────────────────
+        resetForm();
+
+        // ── Validation ──────────────────────────────────────────
+        function validateField(name: string, value: string): string {
+            if (name === 'naam'  && value.trim().length < 2)                    return 'Vul uw naam in';
+            if (name === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return 'Vul een geldig e-mailadres in';
+            return '';
         }
-        if (errorEl) errorEl.textContent = message;
-    }
 
-    // ── Inline validation on blur ───────────────────────────────
-    form.addEventListener('blur', (e) => {
-        const target = e.target as HTMLInputElement;
-        if (!target.name || !['naam', 'email'].includes(target.name)) return;
-        const err = validateField(target.name, target.value);
-        showFieldError('cnf-' + target.name, err);
-    }, true);
-
-    // ── Clear error on input ────────────────────────────────────
-    form.addEventListener('input', (e) => {
-        const target = e.target as HTMLInputElement;
-        if (!target.name || !['naam', 'email'].includes(target.name)) return;
-        if (target.classList.contains('is-error')) {
-            const err = validateField(target.name, target.value);
-            showFieldError('cnf-' + target.name, err);
+        function showFieldError(fieldId: string, message: string): void {
+            const input   = document.getElementById(fieldId)           as HTMLInputElement | null;
+            const errorEl = document.getElementById(fieldId + '-error') as HTMLSpanElement | null;
+            if (input)   { input.classList.toggle('is-error', !!message); input.setAttribute('aria-invalid', message ? 'true' : 'false'); }
+            if (errorEl) errorEl.textContent = message;
         }
-    });
 
-    // ── Loading state ───────────────────────────────────────────
-    function setLoading(loading: boolean) {
-        if (!submit || !spinner || !btnIcon || !btnLabel) return;
-        submit.disabled = loading;
-        spinner.hidden = !loading;
-        btnIcon.style.display = loading ? 'none' : '';
-        btnLabel.textContent = loading ? 'Versturen...' : 'Verstuur bericht';
-    }
-
-    // ── Submit handler ──────────────────────────────────────────
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        // Validate required fields
-        const naam  = (form.elements.namedItem('naam') as HTMLInputElement).value;
-        const email = (form.elements.namedItem('email') as HTMLInputElement).value;
-        const naamErr  = validateField('naam', naam);
-        const emailErr = validateField('email', email);
-
-        showFieldError('cnf-naam', naamErr);
-        showFieldError('cnf-email', emailErr);
-        if (naamErr || emailErr) return;
-
-        // Hide previous alert
-        if (alert) alert.hidden = true;
-        setLoading(true);
-
-        // Collect data
-        const data = {
-            naam:      (form.elements.namedItem('naam')      as HTMLInputElement).value,
-            email:     (form.elements.namedItem('email')     as HTMLInputElement).value,
-            telefoon:  (form.elements.namedItem('telefoon')  as HTMLInputElement).value,
-            interesse: (form.elements.namedItem('interesse') as HTMLSelectElement).value,
-            bericht:   (form.elements.namedItem('bericht')   as HTMLTextAreaElement).value,
-            website:   (form.elements.namedItem('website')   as HTMLInputElement).value,
+        // ── Inline validation on blur ────────────────────────────
+        const onBlur = (e: Event): void => {
+            const target = e.target as HTMLInputElement;
+            if (!target.name || !['naam', 'email'].includes(target.name)) return;
+            showFieldError('cnf-' + target.name, validateField(target.name, target.value));
         };
+        form.addEventListener('blur', onBlur, true);
+        cnfCleanup.push(() => form.removeEventListener('blur', onBlur, true));
 
-        try {
-            const res = await fetch('/api/contact', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data),
-            });
+        // ── Clear error on input ─────────────────────────────────
+        const onInput = (e: Event): void => {
+            const target = e.target as HTMLInputElement;
+            if (!target.name || !['naam', 'email'].includes(target.name)) return;
+            if (target.classList.contains('is-error')) showFieldError('cnf-' + target.name, validateField(target.name, target.value));
+        };
+        form.addEventListener('input', onInput);
+        cnfCleanup.push(() => form.removeEventListener('input', onInput));
 
-            const result = await res.json();
-
-            if (res.ok && result.success) {
-                // Show success panel
-                form.hidden = true;
-                if (success) success.hidden = false;
-                if (msgEl) msgEl.textContent = result.message || 'Bedankt! Wij nemen zo snel mogelijk contact met u op.';
-                form.reset();
-            } else {
-                if (alert) {
-                    alert.textContent = result.error || 'Er ging iets mis. Probeer het opnieuw.';
-                    alert.hidden = false;
-                }
-            }
-        } catch {
-            if (alert) {
-                alert.textContent = 'Verbinding mislukt. Controleer uw internetverbinding.';
-                alert.hidden = false;
-            }
-        } finally {
-            setLoading(false);
+        // ── Loading state ────────────────────────────────────────
+        function setLoading(loading: boolean): void {
+            if (!submit || !spinner || !btnIcon || !btnLabel) return;
+            submit.disabled = loading;
+            spinner.hidden  = !loading;
+            btnIcon.style.display   = loading ? 'none' : '';
+            btnLabel.textContent    = loading ? 'Versturen...' : 'Verstuur bericht';
         }
-    });
 
-    // ── Reset (send another) ────────────────────────────────────
-    resetBtn?.addEventListener('click', () => {
-        if (success) success.hidden = true;
-        if (alert) alert.hidden = true;
-        form.hidden = false;
-        form.reset();
-    });
+        // ── Submit ───────────────────────────────────────────────
+        const onSubmit = async (e: Event): Promise<void> => {
+            e.preventDefault();
 
-    // ── Reset on modal close ────────────────────────────────────
-    document.addEventListener('modal:closed', () => {
-        form.hidden = false;
-        form.reset();
-        if (success) success.hidden = true;
-        if (alert) alert.hidden = true;
-        showFieldError('cnf-naam', '');
-        showFieldError('cnf-email', '');
+            const naam  = (form.elements.namedItem('naam')  as HTMLInputElement).value;
+            const email = (form.elements.namedItem('email') as HTMLInputElement).value;
+            const naamErr  = validateField('naam',  naam);
+            const emailErr = validateField('email', email);
+            showFieldError('cnf-naam',  naamErr);
+            showFieldError('cnf-email', emailErr);
+            if (naamErr || emailErr) return;
+
+            if (alert) alert.hidden = true;
+            setLoading(true);
+
+            const data = {
+                naam:      (form.elements.namedItem('naam')      as HTMLInputElement).value,
+                email:     (form.elements.namedItem('email')     as HTMLInputElement).value,
+                telefoon:  (form.elements.namedItem('telefoon')  as HTMLInputElement).value,
+                interesse: (form.elements.namedItem('interesse') as HTMLSelectElement).value,
+                bericht:   (form.elements.namedItem('bericht')   as HTMLTextAreaElement).value,
+                website:   (form.elements.namedItem('website')   as HTMLInputElement).value,
+            };
+
+            try {
+                const res    = await fetch('/api/contact', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+                const result = await res.json();
+
+                if (res.ok && result.success) {
+                    form.hidden = true;
+                    if (success) success.hidden = false;
+                    if (msgEl)   msgEl.textContent = result.message || 'Bedankt! Wij nemen zo snel mogelijk contact met u op.';
+                    form.reset();
+                } else {
+                    if (alert) { alert.textContent = result.error || 'Er ging iets mis. Probeer het opnieuw.'; alert.hidden = false; }
+                }
+            } catch {
+                if (alert) { alert.textContent = 'Verbinding mislukt. Controleer uw internetverbinding.'; alert.hidden = false; }
+            } finally {
+                setLoading(false);
+            }
+        };
+        form.addEventListener('submit', onSubmit);
+        cnfCleanup.push(() => form.removeEventListener('submit', onSubmit));
+
+        // ── Reset button ─────────────────────────────────────────
+        const onReset = (): void => { resetForm(); };
+        resetBtn?.addEventListener('click', onReset);
+        cnfCleanup.push(() => resetBtn?.removeEventListener('click', onReset));
+
+        // ── Reset on modal:closed ────────────────────────────────
+        const onModalClosed = (): void => { resetForm(); };
+        document.addEventListener('modal:closed', onModalClosed);
+        cnfCleanup.push(() => document.removeEventListener('modal:closed', onModalClosed));
+    }
+
+    // View Transitions: re-init after every navigation
+    document.addEventListener('astro:page-load', initContactForm);
+
+    // Cleanup before DOM swap to prevent listener leaks
+    document.addEventListener('astro:before-swap', () => {
+        cnfCleanup.forEach((fn) => fn());
+        cnfCleanup = [];
     });
-})();
 </script>
