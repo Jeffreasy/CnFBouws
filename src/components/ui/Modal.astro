@@ -110,6 +110,8 @@ const { id, title, size = "md" } = Astro.props;
         width: 100%;
         max-height: calc(100vh - 3rem);
         overflow-y: auto;
+        overscroll-behavior: contain;       /* prevent scroll-through to page */
+        -webkit-overflow-scrolling: touch;  /* momentum scrolling on iOS */
         background: linear-gradient(
             135deg,
             var(--surface-card),
@@ -190,18 +192,27 @@ const { id, title, size = "md" } = Astro.props;
     /* ─── Mobile ─────────────────────────────────────────── */
     @media (max-width: 768px) {
         .modal-backdrop {
-            padding: 0.75rem;
+            padding: 0;
             align-items: flex-end;
         }
         .modal-panel {
-            max-height: 90vh;
+            /* Full-width bottom-sheet, never wider than viewport */
+            width: 100%;
+            max-width: 100% !important;
+            max-height: 92svh;   /* svh = small viewport height — accounts for mobile browser chrome */
             border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+            /* iOS home bar safe area: padding-bottom so submit is never hidden */
+            padding-bottom: env(safe-area-inset-bottom, 0px);
         }
         .modal-header {
-            padding: 1.25rem 1.5rem;
+            padding: 1.25rem 1.25rem 1.125rem;
+            position: sticky;
+            top: 0;
+            background: var(--surface-card); /* header stays visible while scrolling */
+            z-index: 1;
         }
         .modal-body {
-            padding: 1.5rem;
+            padding: 1.25rem;
         }
     }
 </style>

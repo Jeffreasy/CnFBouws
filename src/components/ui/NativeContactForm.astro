@@ -194,6 +194,12 @@
         min-height: 120px;
     }
 
+    @media (max-width: 768px) {
+        .cnf-textarea {
+            resize: none; /* no resize handle on mobile — causes accidental touches */
+        }
+    }
+
     /* ── Error text ─────────────────────────────────────────── */
     .cnf-error {
         font-size: 0.8125rem;
@@ -211,7 +217,8 @@
     }
 
     /* ── Alert ──────────────────────────────────────────────── */
-    .cnf-alert {
+    /* :not([hidden]) so CSS display does NOT override hidden attribute */
+    .cnf-alert:not([hidden]) {
         display: flex;
         align-items: center;
         gap: 0.625rem;
@@ -231,6 +238,7 @@
         justify-content: center;
         gap: 0.5rem;
         width: 100%;
+        min-height: 48px; /* proper mobile tap target */
         padding: 1rem 1.5rem;
         background: var(--color-cta);
         color: #fff;
@@ -240,6 +248,7 @@
         font-size: 1rem;
         font-weight: 600;
         cursor: pointer;
+        touch-action: manipulation; /* eliminates 300ms tap delay on iOS/Android */
         transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
         margin-top: 0.5rem;
     }
@@ -259,7 +268,7 @@
         to { transform: rotate(360deg); }
     }
 
-    .cnf-spinner {
+    .cnf-spinner:not([hidden]) {
         display: inline-block;
         width: 18px;
         height: 18px;
@@ -270,12 +279,19 @@
     }
 
     /* ── Success ────────────────────────────────────────────── */
-    .cnf-success {
+    /* :not([hidden]) prevents overriding hidden attribute like display:flex does */
+    .cnf-success:not([hidden]) {
         display: flex;
         flex-direction: column;
         align-items: center;
         text-align: center;
         padding: 3rem 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+        .cnf-success:not([hidden]) {
+            padding: 2rem 1rem; /* less padding so it fits on small screens */
+        }
     }
 
     .cnf-success-icon {
@@ -300,7 +316,9 @@
     .cnf-reset-btn {
         display: inline-flex;
         align-items: center;
+        justify-content: center;
         gap: 0.5rem;
+        min-height: 44px; /* WCAG minimum tap target */
         padding: 0.75rem 1.5rem;
         background: transparent;
         color: var(--text-primary);
@@ -311,6 +329,7 @@
         font-weight: 500;
         cursor: pointer;
         transition: border-color 0.2s ease, background 0.2s ease;
+        touch-action: manipulation; /* no double-tap zoom on mobile */
     }
 
     .cnf-reset-btn:hover {
