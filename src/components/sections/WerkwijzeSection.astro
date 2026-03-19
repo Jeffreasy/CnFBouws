@@ -1,126 +1,47 @@
 ---
 /**
- * WerkwijzeSection — 4-step process timeline
- *
- * Uses: Section, Grid, Card, Icon primitives
- * Design tokens: --space-*, --color-cta-*, --font-heading, --radius-*
+ * WerkwijzeSection — Premium 4-step process
+ * Markup only. All styles live in global.css (.wz-* classes).
  */
 import { WERKWIJZE } from "../../data/services";
-import Section from "../ui/Section.astro";
-import Grid from "../ui/Grid.astro";
-import Card from "../ui/Card.astro";
-import Icon from "../ui/Icon.astro";
 ---
 
-<Section
-    id="werkwijze"
-    tag="Ons Proces"
-    title="Duidelijk en overzichtelijk proces"
-    subtitle="Van eerste contact tot oplevering — wij hanteren een heldere werkwijze zodat u altijd weet waar u aan toe bent."
-    muted
->
-    <Grid cols={4} gap="lg" stagger>
-        {
-            WERKWIJZE.map((step, index) => (
-                <Card center class="werkwijze-step">
-                    <div class="step-header">
-                        <div class="step-number" aria-hidden="true">
-                            {step.step}
-                        </div>
-                        <div class="icon-box icon-box--sm step-icon">
-                            <Icon name={step.icon} size={14} />
-                        </div>
+<section id="werkwijze" class="wz-section">
+    <div class="wz-container">
+
+        <div class="wz-header">
+            <span class="wz-tag">Ons Proces</span>
+            <h2 class="wz-title">Van contact tot oplevering</h2>
+            <p class="wz-sub">Een helder, transparant proces — zodat u altijd weet waar u aan toe bent.</p>
+        </div>
+
+        <div class="wz-steps">
+            {WERKWIJZE.map((step, i) => (
+                <article class={`wz-card wz-card--${i}`}>
+
+                    <div class="wz-num">{step.step}</div>
+
+                    <div class="wz-icon">
+                        {step.icon === 'calendar' && (
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                        )}
+                        {step.icon === 'ruler' && (
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25z"/><path d="M20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+                        )}
+                        {step.icon === 'file-text' && (
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                        )}
+                        {step.icon === 'check-circle' && (
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                        )}
                     </div>
-                    <div class="step-content">
-                        <h3 class="card-title">{step.title}</h3>
-                        <p class="card-desc">{step.description}</p>
-                    </div>
-                    {index < WERKWIJZE.length - 1 && (
-                        <div class="step-connector" aria-hidden="true" />
-                    )}
-                </Card>
-            ))
-        }
-    </Grid>
-</Section>
 
-<style>
-    /* ── Step Header ──────────────────────────────────────── */
-    .werkwijze-step {
-        position: relative;
-    }
+                    <h3 class="wz-step-title">{step.title}</h3>
+                    <p class="wz-step-desc">{step.description}</p>
 
-    .step-header {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: var(--space-sm);
-        margin-bottom: var(--space-lg);
-    }
+                </article>
+            ))}
+        </div>
 
-    .step-number {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 56px;
-        height: 56px;
-        background: linear-gradient(
-            135deg,
-            var(--color-cta),
-            var(--color-cta-light)
-        );
-        color: var(--text-on-cta);
-        font-family: var(--font-heading);
-        font-size: clamp(1rem, 2.5vw, 1.25rem);
-        font-weight: 800;
-        border-radius: 50%;
-        box-shadow: 0 4px 16px rgba(var(--color-cta-rgb), 0.35);
-    }
-
-    .step-icon {
-        opacity: 0.7;
-    }
-
-    /* ── Connector Line ──────────────────────────────────── */
-
-    .step-connector {
-        display: none;
-    }
-
-    @media (min-width: 769px) {
-        .step-connector {
-            display: block;
-            position: absolute;
-            top: calc(var(--space-xl) + 28px);
-            right: calc(var(--space-sm) * -1);
-            width: var(--space-md);
-            height: 2px;
-            background: var(--color-cta);
-            opacity: 0.25;
-        }
-    }
-
-    /* ── Mobile: Horizontal card layout ──────────────────── */
-
-    @media (max-width: 768px) {
-        .werkwijze-step {
-            text-align: left;
-            display: grid;
-            grid-template-columns: auto 1fr;
-            gap: var(--space-md);
-            padding: var(--space-lg);
-            position: relative;
-        }
-
-        .step-header {
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .step-number {
-            width: 48px;
-            height: 48px;
-            font-size: 1.125rem;
-        }
-    }
-</style>
+    </div>
+</section>
