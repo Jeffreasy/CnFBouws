@@ -76,6 +76,35 @@ const { title = SITE.seo.title, description = SITE.seo.description } =
 
     <!-- View Transitions: SPA-like navigation -->
     <ClientRouter />
+
+    <!-- JSON-LD Structured Data: LocalBusiness -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "name": SITE.name,
+      "legalName": SITE.legalName,
+      "url": `https://${SITE.domain}`,
+      "logo": `https://${SITE.domain}${SITE.logo}`,
+      "image": SITE.seo.ogImage,
+      "description": SITE.seo.description,
+      "telephone": "+31613963156",
+      "email": SITE.contact.email,
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Apeldoorn",
+        "addressRegion": "Gelderland",
+        "addressCountry": "NL"
+      },
+      "areaServed": [
+        { "@type": "City", "name": "Apeldoorn" },
+        { "@type": "City", "name": "Deventer" },
+        { "@type": "City", "name": "Zutphen" },
+        { "@type": "City", "name": "Arnhem" }
+      ],
+      "priceRange": "€€",
+      "knowsAbout": ["Kunststof kozijnen", "Schuifpuien", "Aluminium deuren", "Schüco systemen"],
+      "sameAs": [`https://wa.me/31613963156`]
+    })} />
   </head>
   <body>
     <a href="#main-content" class="skip-link">Ga naar inhoud</a>
