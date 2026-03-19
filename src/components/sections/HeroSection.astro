@@ -53,11 +53,11 @@ import Icon from "../ui/Icon.astro";
             </a>
         </div>
 
-        <div class="hero-stats glass-card">
+        <div class="hero-stats glass-card" aria-label="Statistieken">
             {
                 SITE.hero.stats.map((stat, i) => (
                     <>
-                        {i > 0 && <div class="stat-divider" />}
+                        {i > 0 && <div class="stat-divider" aria-hidden="true" />}
                         <div class="stat-item">
                             <span class="stat-value">{stat.value}</span>
                             <span class="stat-label">{stat.label}</span>

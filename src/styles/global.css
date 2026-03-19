@@ -645,6 +645,13 @@ img {
     color: var(--text-on-cta);
 }
 
+/* Focus ring on primary button: white outline for contrast on orange background */
+.btn-primary:focus-visible {
+    outline: 2px solid #ffffff;
+    outline-offset: 3px;
+    box-shadow: 0 0 0 4px var(--color-cta);
+}
+
 .btn-secondary {
     background: transparent;
     color: var(--color-primary);

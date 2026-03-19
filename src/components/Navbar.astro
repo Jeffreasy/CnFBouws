@@ -693,12 +693,23 @@ function isActive(href: string): boolean {
 
     // ── Theme Toggle ──
     if (themeBtn) {
+      // Set initial aria-label based on current theme
+      const html = document.documentElement;
+      const setThemeLabel = (): void => {
+        const isDark = html.getAttribute("data-theme") === "dark";
+        themeBtn!.setAttribute(
+          "aria-label",
+          isDark ? "Schakel naar licht thema" : "Schakel naar donker thema"
+        );
+      };
+      setThemeLabel();
+
       const onThemeClick = (): void => {
-        const html = document.documentElement;
         const isDark = html.getAttribute("data-theme") === "dark";
         const next = isDark ? "light" : "dark";
         html.setAttribute("data-theme", next);
         localStorage.setItem("theme", next);
+        setThemeLabel(); // update label after toggling
       };
       themeBtn.addEventListener("click", onThemeClick);
       cleanupFns.push(() =>
