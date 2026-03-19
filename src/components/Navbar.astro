@@ -468,23 +468,41 @@ function isActive(href: string): boolean {
     justify-content: center;
   }
 
-  /* ── Responsive ──────────────────────────────────────── */
+  /* ── Responsive — Mobile-First ───────────────────────── */
 
-  @media (max-width: 768px) {
+  /* Mobile base: hide desktop nav, show hamburger */
+  .nav-links {
+    display: none;
+  }
+  .nav-cta {
+    display: none;
+  }
+  .nav-toggle {
+    display: flex;
+  }
+  .logo-img {
+    width: clamp(160px, 50vw, 220px);
+  }
+  .mobile-menu:not([hidden]) {
+    display: block;
+  }
+
+  /* Desktop (>=769px): show desktop nav, hide hamburger */
+  @media (min-width: 769px) {
     .nav-links {
-      display: none;
-    }
-    .nav-cta {
-      display: none;
-    }
-    .nav-toggle {
       display: flex;
     }
-    .logo-img {
-      width: clamp(160px, 50vw, 220px);
+    .nav-cta {
+      display: inline-flex;
     }
-    .mobile-menu:not([hidden]) {
-      display: block;
+    .nav-toggle {
+      display: none;
+    }
+    .logo-img {
+      width: clamp(200px, 30vw, 400px);
+    }
+    .mobile-menu {
+      display: none !important; /* always hidden on desktop regardless of state */
     }
   }
 </style>

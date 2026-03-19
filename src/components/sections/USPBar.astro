@@ -34,24 +34,31 @@ import Grid from "../ui/Grid.astro";
         padding: 1.25rem 0;
         position: relative;
         z-index: 1;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
     }
 
-    /* Bottom bleed: smooth blue → transparent fade into next section */
-    .usp-bar::after {
-        content: "";
+    /* Light mode: subtle top-fade to soften the hero→USPbar cut */
+    .usp-bar::before {
+        content: '';
         position: absolute;
-        bottom: -60px;
+        top: -20px;
         left: 0;
         right: 0;
-        height: 60px;
+        height: 20px;
         background: linear-gradient(
             to bottom,
-            var(--color-primary),
-            transparent
+            transparent,
+            rgba(var(--color-primary-rgb), 0.25)
         );
         pointer-events: none;
-        z-index: 0;
     }
+
+    /* Dark mode: the bg-to-bg transition is already smooth — remove fade */
+    :global([data-theme="dark"]) .usp-bar::before {
+        display: none;
+    }
+
     .usp-item {
         display: flex;
         align-items: center;
@@ -67,12 +74,12 @@ import Grid from "../ui/Grid.astro";
         display: block;
         font-family: var(--font-heading);
         font-weight: 700;
-        font-size: 0.875rem;
+        font-size: clamp(0.8125rem, 1.5vw, 0.875rem); /* fluid */
         line-height: 1.2;
     }
     .usp-desc {
         display: block;
-        font-size: 0.75rem;
+        font-size: clamp(0.6875rem, 1.2vw, 0.75rem); /* fluid */
         color: var(--text-on-brand-muted);
         line-height: 1.3;
     }

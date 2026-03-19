@@ -12,6 +12,14 @@
     --color-cta: #E07E34;
     --color-cta-light: #e8944f;
     --color-cta-dark: #c96a24;
+
+    /*
+     * INTENTIONAL ALIAS: --color-accent mirrors --color-primary (brand blue).
+     * Semantics: use 'primary' for structural elements (backgrounds, borders, nav).
+     *            use 'accent' for decorative highlights (icon-boxes, badge borders, tags).
+     * They are equal now by design — keeping them separate makes future divergence
+     * (e.g. giving accent a distinct teal) a one-line change without touching components.
+     */
     --color-accent: #155A84;
     --color-accent-light: #1a6d9e;
 
@@ -43,7 +51,7 @@
 
     /* Borders & Shadows — warm-tinted for depth */
     --border-subtle: #DDD8D0;
-    --border-glass: rgba(255, 253, 248, 0.3);
+    --border-glass: rgba(180, 160, 130, 0.25);  /* warm subtle border, visible in light mode */
     --border-card: #DDD8D0;
     --shadow-sm: 0 1px 2px rgba(120, 100, 70, 0.06);
     --shadow-md: 0 4px 8px rgba(120, 100, 70, 0.08);
@@ -66,15 +74,20 @@
     --overlay-backdrop: rgba(0, 0, 0, 0.4);
 
     /* Footer Semantic Tokens */
-    --footer-bg: #155A84;
-    --footer-text: #c8dde9;
-    --footer-muted: #8fbad5;
-    --footer-dim: #5e9bbd;
+    /*
+     * Footer is ALWAYS brand-blue (in both light and dark) — intentional brand decision.
+     * Light mode uses a slightly lighter/warmer shade for better integration
+     * with the warm cream palette above it.
+     */
+    --footer-bg: #1A6B9B;
+    --footer-text: #d6eaf5;
+    --footer-muted: #9ecce4;
+    --footer-dim: #72afd0;
     --footer-heading: #ffffff;
-    --footer-border: rgba(255, 255, 255, 0.1);
+    --footer-border: rgba(255, 255, 255, 0.12);
     --footer-badge-bg: rgba(255, 255, 255, 0.1);
-    --footer-badge-border: rgba(255, 255, 255, 0.15);
-    --footer-badge-text: #e0eef5;
+    --footer-badge-border: rgba(255, 255, 255, 0.18);
+    --footer-badge-text: #e8f4fb;
 
     /* Spacing */
     --space-xs: 0.25rem;
@@ -112,7 +125,7 @@
     --surface-body: #0F172A;
     --surface-card: #1E293B;
     --surface-glass: rgba(30, 41, 59, 0.85);
-    --surface-elevated: #1E293B;
+    --surface-elevated: #243447;  /* slightly lighter than card for depth hierarchy */
     --surface-muted: #0F172A;
 
     /* Text — Bright but not blinding */
@@ -131,7 +144,7 @@
 
     /* Borders & Shadows */
     --border-subtle: #334155;
-    --border-glass: rgba(51, 65, 85, 0.5);
+    --border-glass: rgba(255, 255, 255, 0.08);  /* slightly more visible on dark bg */
     --border-card: #334155;
     --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
     --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.45);
@@ -222,12 +235,12 @@ img {
     width: 100%;
     max-width: 1200px;
     margin-inline: auto;
-    padding-inline: 1.5rem;
+    padding-inline: clamp(1rem, 5vw, 1.5rem); /* fluid: tighter on small screens */
 }
 
 /* ─── Section ────────────────────────────────────────────── */
 .section {
-    padding: 6rem 0;
+    padding: clamp(3rem, 8vw, 6rem) 0; /* fluid: 3rem mobile → 6rem desktop */
     position: relative;
 }
 
@@ -283,7 +296,7 @@ img {
 .section-header {
     text-align: center;
     max-width: 680px;
-    margin: 0 auto 4rem;
+    margin: 0 auto clamp(2rem, 6vw, 4rem); /* fluid bottom margin */
 }
 
 .section-header--left {
@@ -334,34 +347,22 @@ img {
 
 .section-subtitle {
     color: var(--text-secondary);
-    font-size: 1.0625rem;
+    font-size: clamp(0.9375rem, 1.5vw, 1.0625rem); /* fluid: slightly smaller on mobile */
     line-height: 1.7;
 }
 
 
-/* ═══════════════════════════════════════════════════════════
-   GRID SYSTEM
-   ═══════════════════════════════════════════════════════════ */
+/* ===========================================================
+   GRID SYSTEM -- Mobile-First
+   All grids start as 1 column (mobile base).
+   Expand to multi-column via min-width breakpoints:
+     >=640px: 2-col | >=768px: 3-col | >=1024px: 4-col
+   =========================================================== */
 
 .grid {
     display: grid;
-    gap: 1.5rem;
-}
-
-.grid--2 {
-    grid-template-columns: repeat(2, 1fr);
-}
-
-.grid--3 {
-    grid-template-columns: repeat(3, 1fr);
-}
-
-.grid--4 {
-    grid-template-columns: repeat(4, 1fr);
-}
-
-.grid--auto {
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: var(--space-lg); /* 1.5rem */
+    grid-template-columns: 1fr; /* mobile baseline: single column */
 }
 
 .grid--gap-sm {
@@ -369,63 +370,47 @@ img {
 }
 
 .grid--gap-lg {
-    gap: 2rem;
+    gap: var(--space-xl); /* 2rem */
 }
 
 /* Stagger fade-in animation for grid children */
-.grid--stagger>* {
+.grid--stagger > * {
     opacity: 0;
     animation: staggerFadeIn 0.5s ease-out forwards;
 }
+.grid--stagger > *:nth-child(1) { animation-delay: 0ms; }
+.grid--stagger > *:nth-child(2) { animation-delay: 80ms; }
+.grid--stagger > *:nth-child(3) { animation-delay: 160ms; }
+.grid--stagger > *:nth-child(4) { animation-delay: 240ms; }
+.grid--stagger > *:nth-child(5) { animation-delay: 320ms; }
+.grid--stagger > *:nth-child(6) { animation-delay: 400ms; }
 
-.grid--stagger>*:nth-child(1) {
-    animation-delay: 0ms;
-}
-
-.grid--stagger>*:nth-child(2) {
-    animation-delay: 80ms;
-}
-
-.grid--stagger>*:nth-child(3) {
-    animation-delay: 160ms;
-}
-
-.grid--stagger>*:nth-child(4) {
-    animation-delay: 240ms;
-}
-
-.grid--stagger>*:nth-child(5) {
-    animation-delay: 320ms;
-}
-
-.grid--stagger>*:nth-child(6) {
-    animation-delay: 400ms;
-}
-
-@media (max-width: 1024px) {
-
-    .grid--3,
-    .grid--4 {
+/* -- Tablet (>=640px): 2-col grids unlock ------------------- */
+@media (min-width: 640px) {
+    .grid--2 {
         grid-template-columns: repeat(2, 1fr);
     }
-}
-
-@media (max-width: 768px) {
-
-    .grid--2,
-    .grid--3 {
-        grid-template-columns: 1fr;
-    }
-}
-
-@media (max-width: 480px) {
-
-    .grid--4,
     .grid--auto {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     }
 }
 
+/* -- Desktop (>=768px): 3-col grids unlock ------------------ */
+@media (min-width: 768px) {
+    .grid--3 {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    .grid--4 {
+        grid-template-columns: repeat(2, 1fr); /* tablet: 4-col shows as 2 */
+    }
+}
+
+/* -- Wide (>=1024px): full 4-col grid ----------------------- */
+@media (min-width: 1024px) {
+    .grid--4 {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
 
 /* ═══════════════════════════════════════════════════════════
    CARD SYSTEM
@@ -446,7 +431,7 @@ img {
 }
 
 .card {
-    padding: 2rem;
+    padding: var(--space-xl); /* 2rem */
     transition:
         transform var(--transition-normal),
         box-shadow var(--transition-normal),
@@ -469,9 +454,8 @@ img {
     text-align: center;
 }
 
-/* Feature variant — larger padding for showcase cards */
 .card--feature {
-    padding: 2.5rem;
+    padding: clamp(1.5rem, 4vw, 2.5rem); /* fluid: tighter on mobile */
 }
 
 /* No-hover variant — static card, no lift */
@@ -679,8 +663,8 @@ img {
 }
 
 .btn-lg {
-    padding: 0.9rem 2rem;
-    font-size: 1rem;
+    padding: clamp(0.75rem, 2vw, 0.9rem) clamp(1.25rem, 4vw, 2rem);
+    font-size: clamp(0.9375rem, 1.5vw, 1rem);
 }
 
 
@@ -692,13 +676,13 @@ img {
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: var(--space-sm); /* 0.5rem */
 }
 
 .feature-item {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: var(--space-sm); /* 0.5rem */
     font-size: 0.9375rem;
     font-weight: 500;
 }
@@ -819,7 +803,7 @@ img {
 
 .cta-card {
     position: relative;
-    padding: 5rem 4rem;
+    padding: clamp(2rem, 6vw, 5rem) clamp(1.25rem, 5vw, 4rem); /* fluid: compact on mobile */
     text-align: center;
     overflow: hidden;
     background: linear-gradient(135deg,
@@ -853,18 +837,20 @@ img {
 
 .cta-text {
     color: var(--text-secondary);
-    font-size: 1.0625rem;
+    font-size: clamp(0.9375rem, 1.5vw, 1.0625rem); /* fluid typography */
     line-height: 1.75;
     max-width: 560px;
     margin: 0 auto 2.5rem;
 }
 
+/* Mobile base: stacked actions, column contact row, hidden divider */
 .cta-actions {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     gap: 0.875rem;
     margin-bottom: 2.5rem;
+    flex-direction: column;
 }
 
 .cta-contact-row {
@@ -872,9 +858,10 @@ img {
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;
-    gap: 0.75rem;
+    gap: 0.5rem;
     font-size: 0.875rem;
     color: var(--text-muted);
+    flex-direction: column;
 }
 
 .cta-contact-item {
@@ -899,25 +886,23 @@ img {
 }
 
 .cta-divider {
+    display: none;
     opacity: 0.3;
 }
 
-@media (max-width: 768px) {
-    .cta-card {
-        padding: 3rem 1.5rem;
-    }
-
+/* Desktop (>=769px): restore row layout */
+@media (min-width: 769px) {
     .cta-actions {
-        flex-direction: column;
+        flex-direction: row;
     }
 
     .cta-contact-row {
-        flex-direction: column;
-        gap: 0.5rem;
+        flex-direction: row;
+        gap: 0.75rem;
     }
 
     .cta-divider {
-        display: none;
+        display: block;
     }
 }
 

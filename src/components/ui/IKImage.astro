@@ -5,13 +5,14 @@
  * Features:
  *   - Automatic format negotiation (WebP/AVIF)
  *   - Responsive srcset generation
- *   - Low-quality placeholder (LQIP) blur-up
+ *   - Low-quality placeholder (LQIP) real blur-up via CSS background + onload
  *   - Lazy loading by default
  *   - Proper alt text enforcement
  *
  * @example
  * <IKImage src="/hero/banner.jpg" alt="C&F Bouw werkplaats" width={1200} />
  * <IKImage src="/producten/kozijn.jpg" alt="Kunststof kozijn" sizes="(max-width: 768px) 100vw, 50vw" />
+ * <IKImage src="/logo.png" alt="Logo" noLqip />
  */
 import { ikUrl, ikSrcSet, type IKTransform } from "../../lib/imagekit";
 
@@ -44,6 +45,8 @@ interface Props {
     focus?: "auto" | "face" | "center";
     /** Additional transforms */
     transforms?: IKTransform;
+    /** Disable LQIP blur-up (useful for small icons or logos) */
+    noLqip?: boolean;
 }
 
 const {
@@ -61,6 +64,7 @@ const {
     aspectRatio,
     focus,
     transforms = {},
+    noLqip = false,
 } = Astro.props;
 
 const baseTransforms: IKTransform = {
@@ -73,6 +77,13 @@ const baseTransforms: IKTransform = {
 const mainSrc = ikUrl(src, { ...baseTransforms, w: width });
 const srcset = ikSrcSet(src, widths, baseTransforms);
 
+// LQIP: 20px wide, quality 20, ImageKit blur (bl-10) — renders in ~1-3KB
+// Used as CSS background-image on the wrapper so it shows instantly before
+// the real <img> loads. When the real img finishes loading, opacity fades to 1.
+const lqipSrc = noLqip
+    ? undefined
+    : ikUrl(src, { w: 20, q: 20, bl: 10, f: "auto" });
+
 const imgStyle = [
     fit && `object-fit: ${fit}`,
     aspectRatio && `aspect-ratio: ${aspectRatio}`,
@@ -82,13 +93,27 @@ const imgStyle = [
 
 const resolvedFetchPriority =
     fetchpriority || (loading === "eager" ? "high" : "auto");
+
+// Unique per-instance ID so each img can be targeted by its own onload script.
+// Math.random is fine here — this only runs at build/SSR time.
+const uid = `ik-${Math.random().toString(36).slice(2, 9)}`;
+
+const wrapperStyle = [
+    aspectRatio ? `aspect-ratio: ${aspectRatio}` : "",
+    lqipSrc
+        ? `background-image: url('${lqipSrc}'); background-size: cover; background-position: center;`
+        : "",
+]
+    .filter(Boolean)
+    .join("; ");
 ---
 
 <div
     class:list={["ik-image", className]}
-    style={aspectRatio ? `aspect-ratio: ${aspectRatio}` : undefined}
+    style={wrapperStyle || undefined}
 >
     <img
+        id={uid}
         src={mainSrc}
         srcset={srcset}
         sizes={sizes}
@@ -98,10 +123,26 @@ const resolvedFetchPriority =
         loading={loading}
         fetchpriority={resolvedFetchPriority}
         decoding="async"
-        style={imgStyle}
-        class="ik-img"
+        style={imgStyle || undefined}
+        class:list={["ik-img", lqipSrc ? "ik-img--lqip" : ""]}
     />
 </div>
+
+{/* Inline per-instance load handler — adds .is-loaded which fades in the image */}
+{lqipSrc && (
+    <script define:vars={{ uid }}>
+        (function () {
+            var img = document.getElementById(uid);
+            if (!img) return;
+            function reveal() { img.classList.add("is-loaded"); }
+            if (img.complete && img.naturalWidth > 0) {
+                reveal();
+            } else {
+                img.addEventListener("load", reveal, { once: true });
+            }
+        })();
+    </script>
+)}
 
 <style>
     .ik-image {
@@ -109,10 +150,20 @@ const resolvedFetchPriority =
         overflow: hidden;
         border-radius: var(--radius-lg);
     }
+
     .ik-img {
         display: block;
         width: 100%;
         height: 100%;
-        transition: opacity 0.3s ease;
+    }
+
+    /* LQIP blur-up: img starts invisible, fades in once loaded */
+    .ik-img--lqip {
+        opacity: 0;
+        transition: opacity 0.45s ease;
+    }
+
+    .ik-img--lqip.is-loaded {
+        opacity: 1;
     }
 </style>

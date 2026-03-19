@@ -3,7 +3,7 @@
  * All styling is inline to guarantee it renders correctly regardless of
  * Astro CSS scoping. Matches the dark glass design system.
  */
-import { useState, type FormEvent, type CSSProperties } from 'react';
+import { useState, useEffect, type FormEvent, type CSSProperties } from 'react';
 
 type FormStatus = 'idle' | 'loading' | 'success' | 'error';
 
@@ -52,12 +52,12 @@ const styles = {
 
     input: {
         padding: '0.875rem 1rem',
-        background: 'var(--surface-glass, rgba(255, 255, 255, 0.05))',
-        border: '1px solid var(--border-glass, rgba(255, 255, 255, 0.1))',
+        background: 'var(--surface-card, #FEFDFB)',
+        border: '1px solid var(--border-card, #DDD8D0)',
         borderRadius: '0.625rem',
         fontFamily: "var(--font-body)",
         fontSize: '1rem',
-        color: 'var(--text-primary, #fff)',
+        color: 'var(--text-primary, #0F172A)',
         outline: 'none',
         width: '100%',
         boxSizing: 'border-box',
@@ -77,12 +77,12 @@ const styles = {
 
     select: {
         padding: '0.875rem 1rem',
-        background: 'var(--surface-glass, rgba(255, 255, 255, 0.05))',
-        border: '1px solid var(--border-glass, rgba(255, 255, 255, 0.1))',
+        background: 'var(--surface-card, #FEFDFB)',
+        border: '1px solid var(--border-card, #DDD8D0)',
         borderRadius: '0.625rem',
         fontFamily: "var(--font-body)",
         fontSize: '1rem',
-        color: 'var(--text-primary, #fff)',
+        color: 'var(--text-primary, #0F172A)',
         outline: 'none',
         width: '100%',
         boxSizing: 'border-box',
@@ -90,7 +90,8 @@ const styles = {
         cursor: 'pointer',
         WebkitAppearance: 'none',
         appearance: 'none',
-        backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.5)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E")`,
+        // Neutral dark chevron — visible in both light + dark mode via currentColor
+        backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E")`,
         backgroundRepeat: 'no-repeat',
         backgroundPosition: 'right 1rem center',
         backgroundSize: '16px',
@@ -162,12 +163,12 @@ const styles = {
         fontFamily: "var(--font-heading)",
         fontSize: '1.375rem',
         fontWeight: 700,
-        color: 'var(--text-heading, #fff)',
+        color: 'var(--text-heading, #0F172A)',
         marginBottom: '0.5rem',
     } as CSSProperties,
 
     successText: {
-        color: 'var(--text-secondary, rgba(255,255,255,0.7))',
+        color: 'var(--text-secondary, #5A595A)',
         marginBottom: '1.5rem',
         lineHeight: 1.6,
     } as CSSProperties,
@@ -179,8 +180,8 @@ const styles = {
         gap: '0.5rem',
         padding: '0.75rem 1.5rem',
         background: 'transparent',
-        color: 'var(--text-primary, #fff)',
-        border: '1px solid var(--border-glass, rgba(255, 255, 255, 0.15))',
+        color: 'var(--text-primary, #0F172A)',
+        border: '1px solid var(--border-card, #DDD8D0)',
         borderRadius: '0.625rem',
         fontFamily: "var(--font-heading)",
         fontSize: '0.9375rem',
@@ -193,7 +194,7 @@ const styles = {
         display: 'inline-block',
         width: '18px',
         height: '18px',
-        border: '2px solid rgba(255,255,255,0.3)',
+        border: '2px solid rgba(255,255,255,0.3)', /* spinner is always on CTA orange = always white OK */
         borderTopColor: '#fff',
         borderRadius: '50%',
         animation: 'contactSpin 0.6s linear infinite',
@@ -209,6 +210,19 @@ export default function ContactFormIsland() {
     const [message, setMessage] = useState('');
     const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>({});
     const [focused, setFocused] = useState<string | null>(null);
+
+    // Reset all form state when the contact modal closes
+    useEffect(() => {
+        function handleModalClosed() {
+            setData(INITIAL_DATA);
+            setStatus('idle');
+            setErrors({});
+            setMessage('');
+            setFocused(null);
+        }
+        document.addEventListener('modal:closed', handleModalClosed);
+        return () => document.removeEventListener('modal:closed', handleModalClosed);
+    }, []);
 
     function validateField(name: keyof FormData, value: string): string {
         if (name === 'naam' && value.trim().length < 2) return 'Vul uw naam in';

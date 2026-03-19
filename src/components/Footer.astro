@@ -163,18 +163,34 @@ const year = new Date().getFullYear();
         color: var(--footer-text);
         padding: var(--space-3xl) 0 0;
         position: relative;
+        border-top: none; /* replaced by ::before gradient */
     }
 
-    /* Top bleed: smooth muted → footer-bg fade from Contact section */
+    /* Light mode: a gradient bridge from the warm contact bg into footer blue */
     .footer::before {
-        content: "";
+        content: '';
         position: absolute;
-        top: -60px;
+        top: -48px;
         left: 0;
         right: 0;
-        height: 60px;
-        background: linear-gradient(to bottom, transparent, var(--footer-bg));
+        height: 48px;
+        background: linear-gradient(
+            to bottom,
+            transparent,
+            rgba(var(--color-primary-rgb), 0.18)
+        );
         pointer-events: none;
+        z-index: 0;
+    }
+
+    /* Dark mode: suppress the bridge — dark-to-darker transition needs no help */
+    :global([data-theme="dark"]) .footer::before {
+        display: none;
+    }
+
+    /* Dark mode: restore a clean separator border */
+    :global([data-theme="dark"]) .footer {
+        border-top: 1px solid var(--footer-border);
     }
 
     .footer-grid {
@@ -199,7 +215,7 @@ const year = new Date().getFullYear();
     }
 
     .footer-logo-img {
-        width: 380px;
+        /* width controlled by mobile-first responsive rules below */
         max-width: 100%;
         height: auto;
         object-fit: contain;
@@ -306,24 +322,43 @@ const year = new Date().getFullYear();
         color: var(--footer-dim);
     }
 
-    /* ── Responsive ─────────────────────────────────────── */
+    /* ── Responsive — Mobile-First ────────────────────────── */
 
-    @media (max-width: 768px) {
+    /* Mobile base: brand row stacks vertically */
+    .footer-brand {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-lg);
+    }
+    .footer-logo-img {
+        width: clamp(200px, 40vw, 280px); /* fluid: smaller on mobile */
+    }
+    .footer-bottom {
+        flex-direction: column;
+        gap: 0.75rem;
+        text-align: center;
+    }
+    .footer-legal {
+        text-align: center;
+    }
+
+    /* Desktop (>=769px): switch brand row back to horizontal */
+    @media (min-width: 769px) {
         .footer-brand {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: var(--space-lg);
+            flex-direction: row;
+            align-items: center;
+            gap: var(--space-2xl);
         }
         .footer-logo-img {
-            width: 280px;
+            width: clamp(280px, 30vw, 380px); /* desktop: wider logo */
         }
         .footer-bottom {
-            flex-direction: column;
-            gap: 0.75rem;
-            text-align: center;
+            flex-direction: row;
+            gap: 0;
+            text-align: left;
         }
         .footer-legal {
-            text-align: center;
+            text-align: left;
         }
     }
 </style>

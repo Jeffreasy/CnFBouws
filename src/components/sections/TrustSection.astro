@@ -57,12 +57,15 @@ import Icon from "../ui/Icon.astro";
 </Section>
 
 <style>
-    /* ─── Gold accent tokens (local scope) ───────────────── */
+    /* ─── Gold accent tokens (scoped to keurmerk badges) ── */
 
-    :root {
+    .keurmerk-badge {
         --gold-base: 200, 160, 78;
-        --gold-text: #9a7c3a;
-        --gold-text-dark: #e8c86a;
+        --gold-text: #9a7c3a; /* light mode */
+    }
+
+    :global([data-theme="dark"]) .keurmerk-badge {
+        --gold-text: #e8c86a; /* dark mode — lighter gold for dark bg */
     }
 
     /* ─── Compact Badge ──────────────────────────────────── */
@@ -170,7 +173,7 @@ import Icon from "../ui/Icon.astro";
     }
 
     .subsidie-title {
-        font-size: 1.25rem;
+        font-size: clamp(1.0625rem, 2.5vw, 1.25rem);
         font-family: var(--font-heading);
         font-weight: 700;
         color: var(--text-heading);
@@ -197,7 +200,7 @@ import Icon from "../ui/Icon.astro";
     }
 
     [data-theme="dark"] .keurmerk-abbr {
-        color: var(--gold-text-dark);
+        color: var(--gold-text); /* auto-switched to e8c86a via scoped dark override */
         background: rgba(var(--gold-base), 0.15);
         border-color: rgba(var(--gold-base), 0.25);
     }
@@ -210,11 +213,15 @@ import Icon from "../ui/Icon.astro";
         }
     }
 
-    /* ─── Responsive ─────────────────────────────────────── */
+    /* Mobile base: compact padding */
+    .subsidie-body {
+        padding: 1.5rem;
+    }
 
-    @media (max-width: 768px) {
+    /* Desktop (>=769px): full padding */
+    @media (min-width: 769px) {
         .subsidie-body {
-            padding: 1.5rem;
+            padding: 2.5rem;
         }
     }
 </style>
