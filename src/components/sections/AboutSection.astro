@@ -1,8 +1,10 @@
 ---
 import { SITE } from "../../data/site";
+import { HERO_IMAGE } from "../../data/images";
 import Section from "../ui/Section.astro";
 import Grid from "../ui/Grid.astro";
 import Icon from "../ui/Icon.astro";
+import IKImage from "../ui/IKImage.astro";
 ---
 
 <Section id="over-ons">
@@ -10,15 +12,16 @@ import Icon from "../ui/Icon.astro";
         <Grid cols={2} gap="lg">
             <div class="about-visual">
                 <div class="about-image-wrapper">
-                    <div class="about-image-placeholder">
-                        <Icon
-                            name="panels-top-left"
-                            size={64}
-                            strokeWidth={1.5}
-                            class="about-placeholder-icon"
-                        />
-                        <span>{SITE.name}</span>
-                    </div>
+                    <IKImage
+                        src={HERO_IMAGE.src}
+                        alt={HERO_IMAGE.alt}
+                        aspectRatio="4/3"
+                        widths={[600, 900, 1200]}
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                        quality={85}
+                        focus="auto"
+                        class="about-img"
+                    />
                 </div>
                 <div class="about-float">
                     <span class="float-number">Schüco</span>
@@ -82,18 +85,14 @@ import Icon from "../ui/Icon.astro";
         border: 1px solid var(--border-card);
         border-radius: var(--radius-lg);
     }
-    .about-image-placeholder {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 1rem;
-        color: var(--text-muted);
-        font-family: var(--font-heading);
-        font-weight: 600;
-        font-size: clamp(1rem, 2.5vw, 1.25rem); /* fluid */
+    /* IKImage vult de wrapper volledig */
+    .about-image-wrapper :global(.about-img) {
+        border-radius: 0; /* wrapper bepaalt de radius */
     }
-    .about-placeholder-icon {
-        opacity: 0.3;
+    .about-image-wrapper :global(.ik-img) {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
     }
 
     .about-float {

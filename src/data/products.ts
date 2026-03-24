@@ -8,6 +8,10 @@ export interface SchucoProfile {
     description: string;
     bestFor: string;
     features: string[];
+    /** Optional ImageKit path for product image */
+    image?: string;
+    /** Alt text for the image */
+    imageAlt?: string;
 }
 
 export interface ProductCategory {
@@ -32,6 +36,8 @@ export const SCHUCO_PROFILES: SchucoProfile[] = [
             "Maximaal comfort",
             "Uiterst duurzaam",
         ],
+        image: "/cfbouw/webassets/image-cmcid-173603--data.jpg",
+        imageAlt: "Schüco Living profiel — premium kunststof kozijn",
     },
     {
         id: "ct70-accent",
@@ -46,6 +52,8 @@ export const SCHUCO_PROFILES: SchucoProfile[] = [
             "Goede prijs-kwaliteit",
             "Veelzijdig inzetbaar",
         ],
+        image: "/cfbouw/webassets/grijs%20schuco%20accent%20CT%2070.jpg",
+        imageAlt: "Schüco CT70 Accent profiel — grijs kunststof kozijn",
     },
     {
         id: "ct70",
@@ -60,6 +68,8 @@ export const SCHUCO_PROFILES: SchucoProfile[] = [
             "Duurzaam materiaal",
             "Breed inzetbaar",
         ],
+        image: "/cfbouw/webassets/schueco_CT-70-corona-accent.avif",
+        imageAlt: "Schüco Corona CT70 profiel — kunststof kozijn",
     },
 ];
 

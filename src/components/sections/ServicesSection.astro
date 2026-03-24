@@ -32,6 +32,9 @@ const diensten = SERVICES.filter(
             {
                 producten.map((service) => (
                     <Card accentBar>
+                        <div class="svc-img-placeholder">
+                            <Icon name={service.icon} size={36} strokeWidth={1.25} class="svc-img-icon" />
+                        </div>
                         <div class="icon-box icon-box--lg service-icon">
                             <Icon name={service.icon} size={28} />
                         </div>
@@ -75,6 +78,28 @@ const diensten = SERVICES.filter(
 </Section>
 
 <style>
+    /* ─── Image placeholder ──────────────────────────────── */
+    .svc-img-placeholder {
+        aspect-ratio: 16 / 9;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(
+            135deg,
+            rgba(var(--color-cta-rgb), 0.07),
+            rgba(var(--color-accent-rgb), 0.04)
+        );
+        border: 1px dashed rgba(var(--color-cta-rgb), 0.2);
+        border-radius: var(--radius-md);
+        margin: -1.25rem -1.25rem 1.25rem; /* bleed to card edges */
+        border-top-left-radius: var(--radius-md);
+        border-top-right-radius: var(--radius-md);
+    }
+    .svc-img-icon {
+        color: var(--color-cta);
+        opacity: 0.25;
+    }
+
     /* ─── Group labels ──────────────────────────────────── */
     .services-group {
         margin-bottom: var(--space-2xl);
