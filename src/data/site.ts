@@ -6,7 +6,7 @@ export const SITE = {
     legalName: "Connect Diensten V.O.F.",
     kvk: "97394297",
     domain: "www.cfbouw.nl",
-    region: "Apeldoorn en omgeving",
+    region: "Gelderland, Overijssel en omstreken",
     logo: "/cfbouw/webassets/CFLogo.webp",
 
     contact: {
@@ -21,7 +21,7 @@ export const SITE = {
     seo: {
         title: "Kunststof kozijnen & schuifpuien | C&F Bouw",
         description:
-            "C&F Bouw is gespecialiseerd in het leveren en monteren van hoogwaardige kunststof kozijnen, deuren en schuifpuien. Schüco kwaliteit, vakkundige montage in Apeldoorn en omgeving.",
+            "C&F Bouw is gespecialiseerd in het leveren en monteren van hoogwaardige kunststof kozijnen, deuren en schuifpuien. Schüco kwaliteit, vakkundige montage in Gelderland, Overijssel en omstreken.",
         ogImage: "https://ik.imagekit.io/a0oim4e3e/cfbouw/webassets/CFLogo.webp?tr=w-1200,h-630,f-jpg",
     },
 
@@ -46,7 +46,7 @@ export const SITE = {
         titleLine1: "Kunststof kozijnen,",
         titleLine2: "deuren & schuifpuien",
         subtitle:
-            "C&F Bouw verzorgt het complete traject — van advies en opmeten tot vakkundige montage en nette oplevering. Persoonlijk, snel en betrouwbaar in de regio Apeldoorn.",
+            "C&F Bouw verzorgt het complete traject — van advies en opmeten tot vakkundige montage en nette oplevering. Persoonlijk, snel en betrouwbaar in Gelderland, Overijssel en omstreken.",
         stats: [
             { value: "Maatwerk", label: "Op maat gemaakt" },
             { value: "Snel", label: "Levering & montage" },

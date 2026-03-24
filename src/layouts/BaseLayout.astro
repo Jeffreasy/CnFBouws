@@ -8,6 +8,7 @@
  * - Scroll reveal uses astro:page-load for VT compatibility
  */
 import { ClientRouter } from "astro:transitions";
+import Analytics from "@vercel/analytics/astro";
 import Navbar from "../components/Navbar.astro";
 import Footer from "../components/Footer.astro";
 import { SITE } from "../data/site";
@@ -96,10 +97,16 @@ const { title = SITE.seo.title, description = SITE.seo.description } =
         "addressCountry": "NL"
       },
       "areaServed": [
+        { "@type": "AdministrativeArea", "name": "Gelderland" },
+        { "@type": "AdministrativeArea", "name": "Overijssel" },
         { "@type": "City", "name": "Apeldoorn" },
         { "@type": "City", "name": "Deventer" },
         { "@type": "City", "name": "Zutphen" },
-        { "@type": "City", "name": "Arnhem" }
+        { "@type": "City", "name": "Arnhem" },
+        { "@type": "City", "name": "Nijmegen" },
+        { "@type": "City", "name": "Enschede" },
+        { "@type": "City", "name": "Zwolle" },
+        { "@type": "City", "name": "Hengelo" }
       ],
       "priceRange": "€€",
       "knowsAbout": ["Kunststof kozijnen", "Schuifpuien", "Aluminium deuren", "Schüco systemen"],
@@ -113,6 +120,7 @@ const { title = SITE.seo.title, description = SITE.seo.description } =
       <slot />
     </main>
     <Footer />
+    <Analytics />
 
     <!-- Scroll Reveal + IKImage blur-up: VT-compatible via astro:page-load -->
     <script>
