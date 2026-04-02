@@ -5,6 +5,10 @@ export interface Service {
     title: string;
     description: string;
     icon: string; // SVG path reference
+    /** Optional ImageKit path for service image */
+    image?: string;
+    /** Alt text for the image */
+    imageAlt?: string;
 }
 
 export interface WerkwijzeStep {
@@ -36,6 +40,8 @@ export const SERVICES: Service[] = [
         description:
             "Hoogwaardige Schüco kunststof kozijnen op maat, voorzien van HR++ of HR+++ isolatieglas. Geschikt voor zowel nieuwbouw als het vervangen van bestaande kozijnen.",
         icon: "square",
+        image: "/cfbouw/webassets/Levering kozijnen.jpg",
+        imageAlt: "Kunststof kozijnen op maat — Schüco profiel met HR++ isolatieglas",
     },
     {
         id: "deuren",
@@ -43,6 +49,8 @@ export const SERVICES: Service[] = [
         description:
             "Veilige en goed isolerende kunststof deuren voor zowel voor- als achtergevels, in diverse stijlen.",
         icon: "door-open",
+        image: "/cfbouw/webassets/Levering deuren.jpg",
+        imageAlt: "Kunststof voordeur — veilige en isolerende deur van Schüco",
     },
     {
         id: "schuifpuien",
@@ -50,6 +58,8 @@ export const SERVICES: Service[] = [
         description:
             "Ruimtelijke schuifpuien voor meer licht en een moderne uitstraling. Soepele bediening gegarandeerd.",
         icon: "panels-top-left",
+        image: "/cfbouw/webassets/Levering Schuifpuien.jpg",
+        imageAlt: "Kunststof schuifpui — meer licht en ruimte in uw woning",
     },
     {
         id: "montage",

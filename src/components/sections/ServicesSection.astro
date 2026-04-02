@@ -4,6 +4,7 @@ import Section from "../ui/Section.astro";
 import Grid from "../ui/Grid.astro";
 import Card from "../ui/Card.astro";
 import Icon from "../ui/Icon.astro";
+import IKImage from "../ui/IKImage.astro";
 
 // Split services into logical groups
 const producten = SERVICES.filter((s) =>
@@ -32,9 +33,20 @@ const diensten = SERVICES.filter(
             {
                 producten.map((service) => (
                     <Card accentBar>
-                        <div class="svc-img-placeholder">
-                            <Icon name={service.icon} size={36} strokeWidth={1.25} class="svc-img-icon" />
-                        </div>
+                        {service.image ? (
+                            <IKImage
+                                src={service.image}
+                                alt={service.imageAlt || service.title}
+                                aspectRatio="4/3"
+                                sizes="(max-width: 768px) 100vw, 33vw"
+                                widths={[400, 700, 960]}
+                                class="svc-img"
+                            />
+                        ) : (
+                            <div class="svc-img-placeholder">
+                                <Icon name={service.icon} size={36} strokeWidth={1.25} class="svc-img-icon" />
+                            </div>
+                        )}
                         <div class="icon-box icon-box--lg service-icon">
                             <Icon name={service.icon} size={28} />
                         </div>
@@ -78,7 +90,13 @@ const diensten = SERVICES.filter(
 </Section>
 
 <style>
-    /* ─── Image placeholder ──────────────────────────────── */
+    /* ─── Service image (real photo) ──────────────────────── */
+    :global(.svc-img) {
+        margin: -1.25rem -1.25rem 1.25rem;
+        border-radius: var(--radius-md) var(--radius-md) 0 0 !important;
+    }
+
+    /* ─── Image placeholder (fallback) ───────────────────── */
     .svc-img-placeholder {
         aspect-ratio: 16 / 9;
         display: flex;

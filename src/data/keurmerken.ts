@@ -1,13 +1,13 @@
 // ─── C&F Bouw — Keurmerken & Subsidie Data ───────────────
-// ImageKit CDN base URL loaded from env
+// ImageKit CDN base URL
 const CDN = "https://ik.imagekit.io/a0oim4e3e";
 
 /**
  * Build optimized ImageKit URL for keurmerk logos.
- * Transforms raw uploads (up to 95KB) into ~5KB optimized images.
+ * New WebP logos are already optimized — only apply auto-format and sizing.
  */
 function keurmerkUrl(path: string): string {
-    return `${CDN}/tr:w-200,h-200,cm-at_max,f-auto,q-80${path}`;
+    return `${CDN}/tr:w-200,h-200,cm-at_max,f-auto,q-85${path}`;
 }
 
 export interface Keurmerk {
@@ -26,7 +26,7 @@ export const KEURMERKEN: Keurmerk[] = [
         abbreviation: "KOMO",
         description:
             "Onafhankelijk kwaliteitskeurmerk dat garandeert dat producten en processen voldoen aan de geldende bouwregelgeving.",
-        logo: keurmerkUrl("/cfbouw/webassets/Logo_KOMO_XL_RGB.jpg"),
+        logo: keurmerkUrl("/cfbouw/webassets/logo-komo-keurmerk-66d2febc.webp"),
     },
     {
         id: "vkg",
@@ -34,7 +34,7 @@ export const KEURMERKEN: Keurmerk[] = [
         abbreviation: "VKG",
         description:
             "Keurmerk van de Vereniging Kunststof Gevelelementenindustrie. Staat voor kwaliteitsgarantie in kunststof kozijnen.",
-        logo: keurmerkUrl("/cfbouw/webassets/VKG_logo.png"),
+        logo: keurmerkUrl("/cfbouw/webassets/logo-vkg-keurmerk-25140c60.webp"),
     },
     {
         id: "skg",
@@ -42,7 +42,7 @@ export const KEURMERKEN: Keurmerk[] = [
         abbreviation: "SKG",
         description:
             "Het hang- en sluitwerk is SKG-gecertificeerd en geschikt voor het Politiekeurmerk Veilig Wonen.",
-        logo: keurmerkUrl("/cfbouw/webassets/SKG_keurmerk.png"),
+        logo: keurmerkUrl("/cfbouw/webassets/logo-skg-keurmerk-ec1bcb8d.webp"),
     },
     {
         id: "pkvw",
@@ -50,9 +50,7 @@ export const KEURMERKEN: Keurmerk[] = [
         abbreviation: "PKVW",
         description:
             "Keurmerk dat aangeeft dat de producten voldoen aan de veiligheidseisen voor inbraakpreventie.",
-        logo: keurmerkUrl(
-            "/cfbouw/webassets/cropped-Politie-veilig-wonen-keurmerk-1.jpg"
-        ),
+        logo: keurmerkUrl("/cfbouw/webassets/logo-pkvw-keurmerk-621c6def.webp"),
     },
 ];
 
