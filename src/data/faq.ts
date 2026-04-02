@@ -11,7 +11,7 @@ export const FAQ_ITEMS: FAQItem[] = [
     {
         question: "Wat kosten kunststof kozijnen inclusief montage?",
         answer:
-            "De kosten van kunststof kozijnen variëren afhankelijk van het profieltype, de glassoort en het aantal kozijnen. Bij C&F Bouw werken wij uitsluitend met Schüco-profielen in drie lijnen: Schüco Living (premium), CT70 Accent (klassiek) en Corona CT70 (veelzijdig). Vraag een vrijblijvende offerte aan voor een exacte prijsopgave op maat.",
+            "De kosten van kunststof kozijnen variëren afhankelijk van het profieltype, de glassoort (HR++ of HR+++) en het aantal kozijnen. Bij C&F Bouw werken wij uitsluitend met Schüco-profielen in drie lijnen: Schüco Living (premium), CT70 Accent (klassiek) en Corona CT70 (veelzijdig). Vraag een vrijblijvende offerte aan voor een exacte prijsopgave op maat.",
     },
     {
         question: "Welke Schüco-profielen biedt C&F Bouw aan?",
@@ -31,12 +31,12 @@ export const FAQ_ITEMS: FAQItem[] = [
     {
         question: "Kan ik subsidie krijgen voor nieuwe kozijnen?",
         answer:
-            "Ja, onze kunststof kozijnen en deuren voldoen aan alle technische eisen voor de ISDE-subsidie (Investeringssubsidie Duurzame Energie en Energiebesparing). C&F Bouw levert alle benodigde documenten, zodat u als klant eenvoudig zelf de subsidie kunt aanvragen bij de Rijksdienst voor Ondernemend Nederland (RVO).",
+            "Ja, onze kunststof kozijnen en deuren voldoen aan alle technische eisen voor de ISDE-subsidie (Investeringssubsidie Duurzame Energie en Energiebesparing). Voorwaarde is onder andere het gebruik van HR++ of HR+++ isolatieglas. C&F Bouw levert alle benodigde documenten, zodat u als klant eenvoudig zelf de subsidie kunt aanvragen bij de Rijksdienst voor Ondernemend Nederland (RVO).",
     },
     {
         question: "Welke keurmerken hebben de producten van C&F Bouw?",
         answer:
-            "Onze producten voldoen aan de hoogste kwaliteitseisen en beschikken over de volgende certificeringen: KOMO-keurmerk (bouwkwaliteit), VKG-keurmerk (kunststof gevelelementen), SKG-certificering (hang- en sluitwerk) en het Politie Keurmerk Veilig Wonen (PKVW) voor inbraakpreventie.",
+            "Onze producten voldoen aan de hoogste kwaliteitseisen en beschikken over de volgende certificeringen: KOMO-keurmerk (bouwkwaliteit), VKG-keurmerk (kunststof gevelelementen), SKG-certificering (hang- en sluitwerk) en het Politie Keurmerk Veilig Wonen (PKVW) voor inbraakpreventie. Daarnaast geldt op al onze producten de fabrieksgarantie van Schüco.",
     },
     {
         question: "Wat is het verschil tussen kunststof en aluminium kozijnen?",

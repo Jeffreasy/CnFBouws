@@ -43,7 +43,7 @@ export const SITE = {
     },
 
     hero: {
-        badge: "Specialist in Kunststof Kozijnen",
+        badge: "Uw kozijnspecialist in de regio",
         titleLine1: "Kunststof kozijnen,",
         titleLine2: "deuren & schuifpuien",
         subtitle:
@@ -59,9 +59,9 @@ export const SITE = {
         tagline: "Over Ons",
         title: "Vakmanschap met een persoonlijke aanpak",
         paragraphs: [
-            "C&F Bouw is gespecialiseerd in het leveren en monteren van hoogwaardige kozijnen voor zowel particuliere als zakelijke klanten. Wij combineren vakmanschap met zorgvuldig geselecteerde producten en werken uitsluitend samen met betrouwbare fabrikanten die voldoen aan de geldende kwaliteitseisen.",
+            "C&F Bouw is uw kozijnspecialist voor het leveren, plaatsen en vervangen van hoogwaardige kunststof kozijnen — voor zowel particuliere als zakelijke klanten. Wij combineren vakmanschap met zorgvuldig geselecteerde producten en werken uitsluitend samen met betrouwbare fabrikanten die voldoen aan de geldende kwaliteitseisen.",
             "Door korte lijnen met onze leveranciers en een efficiënte werkwijze kunnen wij maatwerkoplossingen bieden die passen bij iedere woning of project. Van advies en inmeten tot montage en oplevering: wij begeleiden het volledige traject met aandacht voor detail en een heldere communicatie.",
-            "Bij C&F Bouw staan duurzaamheid, veiligheid en afwerking centraal. Wij geloven dat goede kozijnen niet alleen bijdragen aan het comfort en de uitstraling van een pand, maar ook aan energiebesparing en woonveiligheid op de lange termijn.",
+            "Bij C&F Bouw staan duurzaamheid, veiligheid en afwerking centraal. Wij geloven dat goede kozijnen niet alleen bijdragen aan het comfort en de uitstraling van een pand, maar ook aan energiebesparing en woonveiligheid op de lange termijn. Op al onze producten geldt de fabrieksgarantie van Schüco.",
         ],
         features: [
             "Snelle offerte & levering",

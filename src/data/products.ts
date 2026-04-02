@@ -28,7 +28,7 @@ export const SCHUCO_PROFILES: SchucoProfile[] = [
         name: "Schüco Living",
         subtitle: "Premium profiel",
         description:
-            "Schüco Living is het meest hoogwaardige profiel binnen ons assortiment. Het biedt uitstekende isolatie, een moderne uitstraling en is zeer geschikt voor energiezuinige en nieuwbouwwoningen.",
+            "Schüco Living is het meest hoogwaardige profiel binnen ons assortiment. Het biedt uitstekende isolatie met HR+++ glas, een moderne uitstraling en is zeer geschikt voor energiezuinige en nieuwbouwwoningen.",
         bestFor: "Nieuwbouw & energiezuinige woningen",
         features: [
             "Hoogste isolatiewaarden",
@@ -44,7 +44,7 @@ export const SCHUCO_PROFILES: SchucoProfile[] = [
         name: "Schüco CT70 Accent",
         subtitle: "Klassieke kwaliteit",
         description:
-            "Schüco CT70 Accent combineert betrouwbare kwaliteit met een klassiek design. Dit profiel is een goede keuze voor renovaties en bestaande woningen waar uitstraling en prijs-kwaliteitverhouding belangrijk zijn.",
+            "Schüco CT70 Accent combineert betrouwbare kwaliteit met een klassiek design. Dit profiel is een uitstekende keuze voor het vervangen van oude kozijnen en renovaties van bestaande woningen.",
         bestFor: "Renovaties & bestaande woningen",
         features: [
             "Klassiek design",

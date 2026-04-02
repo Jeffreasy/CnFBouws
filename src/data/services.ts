@@ -34,7 +34,7 @@ export const SERVICES: Service[] = [
         id: "kozijnen",
         title: "Levering kunststof kozijnen",
         description:
-            "Hoogwaardige Schüco kunststof kozijnen met uitstekende isolatiewaarden, geleverd op maat en naar wens.",
+            "Hoogwaardige Schüco kunststof kozijnen op maat, voorzien van HR++ of HR+++ isolatieglas. Geschikt voor zowel nieuwbouw als het vervangen van bestaande kozijnen.",
         icon: "square",
     },
     {
@@ -55,7 +55,7 @@ export const SERVICES: Service[] = [
         id: "montage",
         title: "Professionele montage",
         description:
-            "Vakkundige montage door ervaren vakmensen. Nette afwerking en oplevering inclusief. Snel en betrouwbaar.",
+            "Vakkundige montage en plaatsing door ervaren vakmensen. Nette afwerking en oplevering inclusief. Snel en betrouwbaar.",
         icon: "wrench",
     },
     {
