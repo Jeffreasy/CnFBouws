@@ -8,6 +8,7 @@ interface ImportMetaEnv {
     readonly IMAGEKIT_PRIVATE_KEY: string;
     readonly RESEND_API_KEY: string;
     readonly CONTACT_EMAIL: string;
+    readonly CONVEX_URL: string;
 }
 
 interface ImportMeta {

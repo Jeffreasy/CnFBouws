@@ -185,22 +185,22 @@ import Icon from "../ui/Icon.astro";
 
     /* ─── Dark Mode ──────────────────────────────────────── */
 
-    [data-theme="dark"] .keurmerk-badge {
+    :global([data-theme="dark"]) .keurmerk-badge {
         background: rgba(255, 255, 255, 0.03);
         border-color: var(--border-subtle);
     }
 
-    [data-theme="dark"] .keurmerk-badge:hover {
+    :global([data-theme="dark"]) .keurmerk-badge:hover {
         border-color: rgba(var(--gold-base), 0.3);
         box-shadow: 0 2px 12px rgba(var(--gold-base), 0.06);
     }
 
-    [data-theme="dark"] .keurmerk-ring {
+    :global([data-theme="dark"]) .keurmerk-ring {
         background: rgba(255, 255, 255, 0.05);
     }
 
-    [data-theme="dark"] .keurmerk-abbr {
-        color: var(--gold-text); /* auto-switched to e8c86a via scoped dark override */
+    :global([data-theme="dark"]) .keurmerk-abbr {
+        color: var(--gold-text);
         background: rgba(var(--gold-base), 0.15);
         border-color: rgba(var(--gold-base), 0.25);
     }

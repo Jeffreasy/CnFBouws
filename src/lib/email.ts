@@ -12,16 +12,29 @@ interface ContactPayload {
     bericht?: string;
 }
 
+/** Escape HTML special characters to prevent XSS in email clients */
+function escapeHtml(str: string): string {
+    return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
 /**
  * Build a professional HTML email from a contact form submission.
  */
 function buildHtml(p: ContactPayload): string {
+    const safeNaam = escapeHtml(p.naam);
+    const safeEmail = escapeHtml(p.email);
+
     const rows = [
-        ['Naam', p.naam],
-        ['E-mail', `<a href="mailto:${p.email}">${p.email}</a>`],
-        p.telefoon ? ['Telefoon', `<a href="tel:${p.telefoon}">${p.telefoon}</a>`] : null,
-        p.interesse ? ['Interesse', p.interesse] : null,
-        p.bericht ? ['Bericht', p.bericht.replace(/\n/g, '<br>')] : null,
+        ['Naam', safeNaam],
+        ['E-mail', `<a href="mailto:${safeEmail}">${safeEmail}</a>`],
+        p.telefoon ? ['Telefoon', `<a href="tel:${escapeHtml(p.telefoon)}">${escapeHtml(p.telefoon)}</a>`] : null,
+        p.interesse ? ['Interesse', escapeHtml(p.interesse)] : null,
+        p.bericht ? ['Bericht', escapeHtml(p.bericht).replace(/\n/g, '<br>')] : null,
     ].filter(Boolean) as [string, string][];
 
     return `
