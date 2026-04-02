@@ -256,7 +256,7 @@ function isActive(href: string): boolean {
 
   .nav-link {
     display: block;
-    padding: 0.5rem 1rem;
+    padding: 0.5rem 0.75rem;
     font-family: var(--font-body);
     font-size: 0.9375rem;
     font-weight: 500;
@@ -264,6 +264,7 @@ function isActive(href: string): boolean {
     text-decoration: none;
     border-radius: var(--radius-sm);
     position: relative;
+    white-space: nowrap;
     transition:
       color var(--transition-fast),
       background var(--transition-fast);
@@ -409,10 +410,14 @@ function isActive(href: string): boolean {
   /* ── Mobile Menu ─────────────────────────────────────── */
 
   .mobile-menu {
-    background: var(--surface-glass);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    background: var(--bg-base);
     border-top: 1px solid var(--border-subtle);
+    box-shadow: var(--shadow-lg);
     max-height: 0;
     overflow: hidden;
     transition:

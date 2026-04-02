@@ -155,6 +155,18 @@ import IKImage from "../ui/IKImage.astro";
 </Section>
 
 <style>
+    :global(.products-grid) {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 2rem;
+    }
+
+    :global(.products-grid) > :global(*) {
+        flex: 0 1 calc(25% - 1.5rem);
+        min-width: 240px;
+    }
+
     .product-icon {
         margin: 0 auto 1.25rem;
     }
