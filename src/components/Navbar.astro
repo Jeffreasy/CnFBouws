@@ -204,6 +204,10 @@ function isActive(href: string): boolean {
     box-shadow: var(--shadow-md);
   }
 
+  .navbar.menu-open {
+    box-shadow: none;
+  }
+
   .nav-container {
     max-width: 1200px;
     margin-inline: auto;
@@ -415,11 +419,11 @@ function isActive(href: string): boolean {
     left: 0;
     right: 0;
     z-index: 10;
-    background: var(--bg-base);
+    background: var(--surface-body);
     border-top: 1px solid var(--border-subtle);
-    box-shadow: var(--shadow-lg);
     max-height: 0;
     overflow: hidden;
+    overflow-y: auto;
     transition:
       max-height var(--transition-normal),
       opacity var(--transition-normal);
@@ -431,13 +435,13 @@ function isActive(href: string): boolean {
   }
 
   .mobile-menu.open {
-    max-height: 500px;
+    max-height: calc(100dvh - 72px);
     opacity: 1;
   }
 
   .mobile-links {
     list-style: none;
-    padding: 1rem 1.5rem 0;
+    padding: 0.5rem 1.5rem 0;
   }
 
   .mobile-link {
@@ -558,6 +562,7 @@ function isActive(href: string): boolean {
       toggle!.setAttribute("aria-expanded", "true");
       toggle!.setAttribute("aria-label", "Menu sluiten");
       menu!.classList.add("open");
+      navbar!.classList.add("menu-open");
       backdrop!.classList.add("visible");
       document.documentElement.style.overflow = "hidden";
 
@@ -570,6 +575,7 @@ function isActive(href: string): boolean {
       toggle!.setAttribute("aria-expanded", "false");
       toggle!.setAttribute("aria-label", "Menu openen");
       menu!.classList.remove("open");
+      navbar!.classList.remove("menu-open");
       backdrop!.classList.remove("visible");
       document.documentElement.style.overflow = "";
 
