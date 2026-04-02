@@ -12,6 +12,9 @@ import Analytics from "@vercel/analytics/astro";
 import Navbar from "../components/Navbar.astro";
 import Footer from "../components/Footer.astro";
 import { SITE } from "../data/site";
+import { FAQ_ITEMS } from "../data/faq";
+import { SERVICES, WERKWIJZE } from "../data/services";
+import { SCHUCO_PROFILES } from "../data/products";
 import "../styles/global.css";
 
 interface Props {
@@ -53,6 +56,10 @@ const { title = SITE.seo.title, description = SITE.seo.description } =
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- DNS Prefetch: ImageKit CDN -->
+    <link rel="dns-prefetch" href="https://ik.imagekit.io" />
+    <link rel="preconnect" href="https://ik.imagekit.io" crossorigin />
 
     <!-- Fonts: Lexend (headings) + Source Sans 3 (body) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -112,6 +119,91 @@ const { title = SITE.seo.title, description = SITE.seo.description } =
       "priceRange": "€€",
       "knowsAbout": ["Kunststof kozijnen", "Schuifpuien", "Aluminium deuren", "Schüco systemen"],
       "sameAs": [`https://wa.me/31613963156`]
+    })} />
+
+    <!-- JSON-LD Structured Data: FAQPage (GEO + SEO) -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": FAQ_ITEMS.map(item => ({
+        "@type": "Question",
+        "name": item.question,
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": item.answer
+        }
+      }))
+    })} />
+
+    <!-- Last Modified: AI freshness signal -->
+    <meta name="last-modified" content={new Date().toISOString().split('T')[0]} />
+    <meta name="revised" content={new Date().toISOString().split('T')[0]} />
+
+    <!-- JSON-LD Structured Data: Service (per dienst) -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "name": "Diensten van C&F Bouw",
+      "itemListElement": SERVICES.map((svc, i) => ({
+        "@type": "ListItem",
+        "position": i + 1,
+        "item": {
+          "@type": "Service",
+          "name": svc.title,
+          "description": svc.description,
+          "provider": {
+            "@type": "LocalBusiness",
+            "name": SITE.name
+          },
+          "areaServed": {
+            "@type": "AdministrativeArea",
+            "name": "Gelderland en Overijssel"
+          }
+        }
+      }))
+    })} />
+
+    <!-- JSON-LD Structured Data: Product (Schüco profielen) -->
+    {SCHUCO_PROFILES.map(profile => (
+      <script type="application/ld+json" set:html={JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "Product",
+        "name": profile.name,
+        "description": profile.description,
+        "brand": {
+          "@type": "Brand",
+          "name": "Schüco"
+        },
+        "category": "Kunststof kozijnen",
+        "manufacturer": {
+          "@type": "Organization",
+          "name": "Schüco International KG"
+        },
+        "offers": {
+          "@type": "Offer",
+          "priceCurrency": "EUR",
+          "availability": "https://schema.org/InStock",
+          "seller": {
+            "@type": "LocalBusiness",
+            "name": SITE.name
+          }
+        }
+      })} />
+    ))}
+
+    <!-- JSON-LD Structured Data: HowTo (Werkwijze) -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      "name": "Hoe werkt het proces bij C&F Bouw?",
+      "description": "Van eerste contact tot oplevering: het volledige proces voor nieuwe kunststof kozijnen bij C&F Bouw.",
+      "totalTime": "P14D",
+      "step": WERKWIJZE.map(step => ({
+        "@type": "HowToStep",
+        "position": step.step,
+        "name": step.title,
+        "text": step.description
+      }))
     })} />
   </head>
   <body>

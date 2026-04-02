@@ -1,0 +1,139 @@
+---
+/**
+ * FAQSection — Veelgestelde Vragen
+ *
+ * Dual purpose:
+ * 1. SEO: Generates FAQ content for Google Featured Snippets
+ * 2. GEO: Structured Q&A that AI engines (ChatGPT, Perplexity) love to cite
+ *
+ * Uses native <details>/<summary> for zero-JS accordion behavior.
+ */
+import { FAQ_ITEMS } from "../../data/faq";
+import Section from "../ui/Section.astro";
+import Icon from "../ui/Icon.astro";
+---
+
+<Section
+    id="faq"
+    tag="Veelgestelde Vragen"
+    title="Alles over kunststof kozijnen"
+    subtitle="De meest gestelde vragen over onze kozijnen, diensten en werkwijze. Staat uw vraag er niet bij? Neem gerust contact met ons op."
+>
+    <div class="faq-grid">
+        {
+            FAQ_ITEMS.map((item, i) => (
+                <details class="faq-item glass-card" id={`faq-${i}`}>
+                    <summary class="faq-question">
+                        <span class="faq-q-text">{item.question}</span>
+                        <span class="faq-chevron" aria-hidden="true">
+                            <Icon name="chevron-down" size={20} />
+                        </span>
+                    </summary>
+                    <div class="faq-answer">
+                        <p>{item.answer}</p>
+                    </div>
+                </details>
+            ))
+        }
+    </div>
+</Section>
+
+<style>
+    .faq-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        max-width: 820px;
+        margin: 0 auto;
+    }
+
+    /* ─── Accordion Item ──────────────────────────────────── */
+    .faq-item {
+        overflow: hidden;
+        transition: border-color var(--transition-normal);
+    }
+
+    .faq-item:hover {
+        border-color: rgba(var(--color-cta-rgb), 0.2);
+    }
+
+    .faq-item[open] {
+        border-color: rgba(var(--color-cta-rgb), 0.25);
+        box-shadow:
+            var(--shadow-md),
+            0 0 20px rgba(var(--color-cta-rgb), 0.06);
+    }
+
+    /* ─── Question (Summary) ──────────────────────────────── */
+    .faq-question {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 1.25rem 1.5rem;
+        cursor: pointer;
+        list-style: none;
+        font-family: var(--font-heading);
+        font-size: clamp(0.9375rem, 1.5vw, 1.0625rem);
+        font-weight: 600;
+        color: var(--text-heading);
+        line-height: 1.4;
+        transition: color var(--transition-fast);
+    }
+
+    .faq-question::-webkit-details-marker {
+        display: none;
+    }
+
+    .faq-question::marker {
+        display: none;
+        content: "";
+    }
+
+    .faq-question:hover {
+        color: var(--color-cta);
+    }
+
+    /* ─── Chevron Rotation ────────────────────────────────── */
+    .faq-chevron {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: rgba(var(--color-cta-rgb), 0.08);
+        color: var(--color-cta);
+        transition: transform var(--transition-normal),
+                    background var(--transition-normal);
+    }
+
+    .faq-item[open] .faq-chevron {
+        transform: rotate(180deg);
+        background: rgba(var(--color-cta-rgb), 0.15);
+    }
+
+    /* ─── Answer ──────────────────────────────────────────── */
+    .faq-answer {
+        padding: 0 1.5rem 1.5rem;
+        color: var(--text-secondary);
+        font-size: 0.9375rem;
+        line-height: 1.75;
+    }
+
+    .faq-answer p {
+        border-top: 1px solid var(--border-subtle);
+        padding-top: 1rem;
+    }
+
+    /* ─── Reduced Motion ──────────────────────────────────── */
+    @media (prefers-reduced-motion: reduce) {
+        .faq-chevron {
+            transition: none;
+        }
+        .faq-item {
+            transition: none;
+        }
+    }
+</style>
