@@ -7,7 +7,7 @@ const CDN = "https://ik.imagekit.io/a0oim4e3e";
  * New WebP logos are already optimized — only apply auto-format and sizing.
  */
 function keurmerkUrl(path: string): string {
-    return `${CDN}/tr:w-200,h-200,cm-at_max,f-auto,q-85${path}`;
+    return `${CDN}/tr:h-200,f-auto,q-85${path}`;
 }
 
 export interface Keurmerk {
