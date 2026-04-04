@@ -539,6 +539,11 @@
                     if (success) success.hidden = false;
                     if (msgEl)   msgEl.textContent = result.message || 'Bedankt! Wij nemen zo snel mogelijk contact met u op.';
                     form.reset();
+                    // Scroll modal to top so success state is visible
+                    const modalPanel = form.closest('.modal-body') || form.closest('.modal-panel');
+                    if (modalPanel) modalPanel.scrollTop = 0;
+                    const panel = form.closest('.modal-panel');
+                    if (panel) panel.scrollTop = 0;
                 } else {
                     if (alert) { alert.textContent = result.error || 'Er ging iets mis. Probeer het opnieuw.'; alert.hidden = false; }
                 }
