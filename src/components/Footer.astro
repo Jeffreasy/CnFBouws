@@ -49,8 +49,14 @@ const year = new Date().getFullYear();
                 <div class="footer-badges" role="list" aria-label="Keurmerken">
                     {
                         KEURMERKEN.map((k) => (
-                            <span class="badge" role="listitem" title={k.name}>
-                                {k.abbreviation}
+                            <span class="badge badge--logo" role="listitem" title={k.name}>
+                                <img
+                                    src={k.logo}
+                                    alt={`${k.name} logo`}
+                                    class="badge-logo-img"
+                                    loading="lazy"
+                                    decoding="async"
+                                />
                             </span>
                         ))
                     }
@@ -257,6 +263,21 @@ const year = new Date().getFullYear();
         color: var(--footer-badge-text);
         letter-spacing: 0.05em;
         text-transform: uppercase;
+    }
+
+    .badge--logo {
+        padding: 0.3rem 0.625rem;
+        background: rgba(255, 255, 255, 0.12);
+        border-color: rgba(255, 255, 255, 0.15);
+        border-radius: var(--radius-sm);
+    }
+
+    .badge-logo-img {
+        height: 24px;
+        width: auto;
+        object-fit: contain;
+        filter: brightness(0) invert(1);
+        opacity: 0.85;
     }
 
     /* ── Columns ────────────────────────────────────────── */
