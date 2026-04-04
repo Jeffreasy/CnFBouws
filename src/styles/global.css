@@ -41,11 +41,11 @@
     --surface-warm: #E5DFD6;
     --surface-brand: #E8EEF3;
 
-    /* Text — Dark for readability, softer than black */
-    --text-primary: #0F172A;
+    /* Text — Warm dark gray, matched to C&F Bouw logo tones */
+    --text-primary: #2D3748;
     --text-secondary: #5A595A;
     --text-muted: #64748B;
-    --text-heading: #0F172A;
+    --text-heading: #1E2A3A;
     --text-on-brand: #FFFFFF;
     --text-on-cta: #FFFFFF;
 
