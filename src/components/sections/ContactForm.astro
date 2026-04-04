@@ -83,3 +83,206 @@ import NativeContactForm from "../ui/NativeContactForm.astro";
 <Modal id="contact-modal" title="Offerte aanvragen" size="md">
     <NativeContactForm />
 </Modal>
+
+{/* ═══════════════════════════════════════════════════════════
+   SUCCESS MODAL — opens after form submit success
+   ═══════════════════════════════════════════════════════════ */}
+<Modal id="contact-success-modal" size="sm">
+    <div class="success-content">
+        <div class="success-badge">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </div>
+        <h3 class="success-title">Bericht verzonden!</h3>
+        <p class="success-text">
+            Bedankt voor uw bericht. Wij nemen binnen <strong>24 uur</strong> contact met u op.
+        </p>
+        <div class="success-contact-box">
+            <span class="success-contact-label">Liever direct contact?</span>
+            <a href="tel:+31613963156" class="success-phone">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                </svg>
+                06 13 96 31 56
+            </a>
+        </div>
+        <div class="success-actions">
+            <button type="button" class="success-close-btn" data-modal-close="contact-success-modal">Sluiten</button>
+            <button type="button" class="success-again-btn" id="success-send-again">Nog een bericht</button>
+        </div>
+    </div>
+</Modal>
+
+<style>
+    /* ── Success Modal Content ──────────────────────────────── */
+    @keyframes success-scale-in {
+        from { transform: scale(0.5); opacity: 0; }
+        to   { transform: scale(1);   opacity: 1; }
+    }
+    @keyframes success-check-draw {
+        from { stroke-dashoffset: 30; }
+        to   { stroke-dashoffset: 0; }
+    }
+
+    .success-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 1.5rem 1rem 0.5rem;
+    }
+
+    .success-badge {
+        width: 72px;
+        height: 72px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 8px 24px rgba(34, 197, 94, 0.25);
+        animation: success-scale-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    .success-badge svg {
+        color: #fff;
+        stroke-dasharray: 30;
+        stroke-dashoffset: 30;
+        animation: success-check-draw 0.5s ease 0.35s forwards;
+    }
+
+    .success-title {
+        font-family: var(--font-heading);
+        font-size: clamp(1.25rem, 3vw, 1.5rem);
+        font-weight: 700;
+        color: var(--text-heading);
+        margin: 0 0 0.625rem;
+    }
+
+    .success-text {
+        color: var(--text-secondary);
+        margin: 0 0 1.75rem;
+        line-height: 1.6;
+        font-size: 0.9375rem;
+        max-width: 320px;
+    }
+
+    .success-contact-box {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1.75rem;
+        padding: 0.875rem 1.5rem;
+        background: rgba(var(--color-cta-rgb), 0.06);
+        border: 1px solid rgba(var(--color-cta-rgb), 0.15);
+        border-radius: 0.625rem;
+        width: 100%;
+        max-width: 280px;
+    }
+
+    .success-contact-label {
+        font-size: 0.8125rem;
+        color: var(--text-muted);
+    }
+
+    .success-phone {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-family: var(--font-heading);
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--color-cta);
+        text-decoration: none;
+        transition: opacity 0.2s ease;
+    }
+
+    .success-phone:hover {
+        opacity: 0.8;
+    }
+
+    .success-actions {
+        display: flex;
+        gap: 0.75rem;
+        width: 100%;
+        max-width: 320px;
+    }
+
+    .success-close-btn,
+    .success-again-btn {
+        flex: 1;
+        min-height: 44px;
+        padding: 0.75rem 1rem;
+        border-radius: 0.625rem;
+        font-family: var(--font-heading);
+        font-size: 0.875rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s ease, border-color 0.2s ease;
+        touch-action: manipulation;
+    }
+
+    .success-close-btn {
+        background: transparent;
+        color: var(--text-secondary);
+        border: 1px solid var(--border-card);
+    }
+
+    .success-close-btn:hover {
+        border-color: var(--text-muted);
+    }
+
+    .success-again-btn {
+        background: var(--color-cta);
+        color: #fff;
+        border: none;
+    }
+
+    .success-again-btn:hover {
+        background: var(--color-cta-hover, var(--color-cta));
+        opacity: 0.9;
+    }
+</style>
+
+<script>
+    /**
+     * Success modal controller.
+     * Listens for 'contact:success' from NativeContactForm,
+     * waits for the form modal to close, then opens the success modal.
+     */
+    function initSuccessModal(): void {
+        const handler = (): void => {
+            // Wait for form modal close animation to complete
+            setTimeout(() => {
+                const successBackdrop = document.getElementById('contact-success-modal-backdrop');
+                if (successBackdrop) {
+                    successBackdrop.classList.add('open');
+                    document.documentElement.style.overflow = 'hidden';
+                }
+            }, 350);
+        };
+        document.addEventListener('contact:success', handler);
+
+        // "Nog een bericht" button: close success modal → re-open contact modal
+        const againBtn = document.getElementById('success-send-again');
+        const againHandler = (): void => {
+            const closeBtn = document.querySelector<HTMLElement>('[data-modal-close="contact-success-modal"]');
+            closeBtn?.click();
+            setTimeout(() => {
+                const contactBackdrop = document.getElementById('contact-modal-backdrop');
+                if (contactBackdrop) {
+                    contactBackdrop.classList.add('open');
+                    document.documentElement.style.overflow = 'hidden';
+                    const firstInput = contactBackdrop.querySelector<HTMLElement>('input:not([hidden])');
+                    setTimeout(() => firstInput?.focus(), 100);
+                }
+            }, 350);
+        };
+        againBtn?.addEventListener('click', againHandler);
+    }
+
+    document.addEventListener('astro:page-load', initSuccessModal);
+</script>
