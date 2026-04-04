@@ -6,8 +6,8 @@ interface ImportMetaEnv {
     readonly PUBLIC_IMAGEKIT_URL: string;
     readonly IMAGEKIT_PUBLIC_KEY: string;
     readonly IMAGEKIT_PRIVATE_KEY: string;
-    readonly RESEND_API_KEY: string;
-    readonly CONTACT_EMAIL: string;
+    // Email dispatch: handled by LaventeCare AuthSystem backend (PUBLIC_API_URL)
+    // RESEND_API_KEY and CONTACT_EMAIL removed — no longer needed
     readonly CONVEX_URL: string;
 }
 

@@ -1,13 +1,23 @@
 // src/pages/api/contact.ts
 // Server endpoint for contact form submissions.
-// Pipeline: validate → rate-limit → honeypot → send email → persist to Convex
+// Pipeline: validate → rate-limit → honeypot → LaventeCare backend (dual-email dispatch) → persist to Convex
+//
+// Migration (April 2026): Replaced Resend API with LaventeCare AuthSystem backend.
+// The Go backend handles:
+//   - Admin notification → info@cfbouw.nl (via mail_config.admin_email)
+//   - User confirmation  → customer email (TemplateContactConfirmation, branded C&F Bouw HTML)
+//   - Queue with retry, audit logging, tenant isolation
 
 import type { APIRoute }    from 'astro';
-import { sendContactEmail }  from '../../lib/email';
 import { checkRateLimit }    from '../../lib/rateLimit';
 import { getConvexClient, api } from '../../lib/convex';
 
 export const prerender = false;
+
+const API_URL = import.meta.env.PUBLIC_API_URL
+    || "https://laventecareauthsystems.onrender.com/api/v1";
+const TENANT_ID = import.meta.env.PUBLIC_TENANT_ID
+    || "3b542934-6ac6-42b2-9511-a09e6cff8c80";
 
 // Allowed origins for CSRF protection
 const ALLOWED_ORIGINS = [
@@ -59,6 +69,83 @@ function getClientIP(request: Request): string {
     );
 }
 
+/**
+ * Compose a structured message body from all form fields.
+ * The LaventeCare backend requires a minimum of 10 characters for the message field.
+ */
+function composeMessage(payload: ContactPayload): string {
+    const parts: string[] = [];
+
+    if (payload.telefoon) {
+        parts.push(`Telefoon: ${payload.telefoon}`);
+    }
+    if (payload.interesse) {
+        const labels: Record<string, string> = {
+            offerte:  'Vrijblijvende offerte',
+            advies:   'Adviesgesprek & inmeten',
+            showroom: 'Showroom bezoeken',
+            overig:   'Overige vraag',
+        };
+        parts.push(`Interesse: ${labels[payload.interesse] || payload.interesse}`);
+    }
+    if (payload.bericht) {
+        parts.push(`\nBericht:\n${payload.bericht}`);
+    }
+
+    const message = parts.join('\n');
+
+    // Backend requires minimum 10 chars. Pad with context if too short.
+    if (message.length < 10) {
+        return `Contactverzoek via cfbouw.nl formulier.${message ? '\n' + message : ''}`;
+    }
+
+    return message;
+}
+
+/**
+ * Send contact form data to the LaventeCare AuthSystem backend.
+ * The backend handles dual-email dispatch:
+ *   1. Admin notification → info@cfbouw.nl (via TemplatePlainReply)
+ *   2. User confirmation  → customer email (via TemplateContactConfirmation)
+ */
+async function sendViaLaventeCare(
+    payload: ContactPayload,
+    origin: string | null,
+): Promise<{ success: boolean; error?: string }> {
+    try {
+        const res = await fetch(`${API_URL}/public/contact`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Tenant-ID': TENANT_ID,
+                ...(origin ? { 'Origin': origin } : {}),
+            },
+            body: JSON.stringify({
+                name:    payload.naam,
+                email:   payload.email,
+                message: composeMessage(payload),
+            }),
+        });
+
+        if (!res.ok) {
+            const errorText = await res.text();
+            console.error('[LaventeCare] Backend error:', res.status, errorText);
+
+            // Specific error for missing SMTP config (mail_config NULL)
+            if (res.status === 500 && errorText.includes('tenant configuration incomplete')) {
+                return { success: false, error: 'E-mailservice wordt momenteel geconfigureerd. Neem telefonisch contact op.' };
+            }
+
+            return { success: false, error: 'E-mail kon niet worden verstuurd' };
+        }
+
+        return { success: true };
+    } catch (e) {
+        console.error('[LaventeCare] Network error:', e);
+        return { success: false, error: 'E-mailservice is tijdelijk onbereikbaar' };
+    }
+}
+
 export const POST: APIRoute = async ({ request }) => {
     try {
         // ── 1. Origin Check (lightweight CSRF) ──────────────────
@@ -97,8 +184,8 @@ export const POST: APIRoute = async ({ request }) => {
 
         const { payload } = result;
 
-        // ── 5. Send Email ────────────────────────────────────────
-        const emailResult = await sendContactEmail(payload);
+        // ── 5. Send via LaventeCare Backend (Dual-Email Dispatch) ─
+        const emailResult = await sendViaLaventeCare(payload, origin);
         if (!emailResult.success) {
             return json({ success: false, error: emailResult.error || 'Er ging iets mis bij het versturen.' }, 502);
         }
@@ -115,7 +202,7 @@ export const POST: APIRoute = async ({ request }) => {
                 ip:        clientIP,
             });
         } catch (convexErr) {
-            // Log but don't fail the request — email is already sent
+            // Log but don't fail the request — email is already queued
             console.warn('[Convex] Failed to persist aanvraag:', convexErr);
         }
 
