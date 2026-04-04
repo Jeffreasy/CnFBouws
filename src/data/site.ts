@@ -49,7 +49,7 @@ export const SITE = {
         subtitle:
             "C&F Bouw verzorgt het complete traject — van advies en opmeten tot vakkundige montage en nette oplevering. Persoonlijk, snel en betrouwbaar in Gelderland, Overijssel en omstreken.",
         stats: [
-            { value: "100%", label: "Schüco kwaliteit" },
+            { value: "100%", label: "Hoogwaardige kwaliteit" },
             { value: "10+", label: "Regio's bediend" },
             { value: "4", label: "Keurmerken" },
         ],

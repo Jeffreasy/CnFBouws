@@ -46,6 +46,6 @@ export const FAQ_ITEMS: FAQItem[] = [
     {
         question: "Hoe lang duurt de montage van nieuwe kozijnen?",
         answer:
-            "De montage hangt af van het aantal kozijnen en de complexiteit van het project. Voor een gemiddelde woning met 5-10 kozijnen duurt de montage doorgaans 1 tot 2 werkdagen. Na montage controleren wij alles zorgvuldig en leveren wij het werk netjes op. Pas als u tevreden bent, is het project afgerond.",
+            "De montage hangt af van het aantal kozijnen en de complexiteit van het project. Na montage controleren wij alles zorgvuldig en leveren wij het werk netjes op. Pas als u tevreden bent, is het project afgerond.",
     },
 ];

@@ -61,6 +61,7 @@ export const SUBSIDIE = {
     description:
         "Onze kozijnen en deuren voldoen aan alle technische eisen voor ISDE-subsidie. Wij leveren alle benodigde documenten, zodat u als klant eenvoudig zelf de subsidie kunt aanvragen.",
     note: "De producten voldoen aan de eisen voor subsidieaanvragen.",
+    rvoUrl: "https://www.rvo.nl/subsidies-financiering/isde",
 } as const;
 
 // ─── Trust Statement ─────────────────────────────────────

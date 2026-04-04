@@ -56,35 +56,6 @@ const diensten = SERVICES.filter(
                 ))
             }
         </Grid>
-    </div>
-
-    <!-- Service Process — 4 cards -->
-    <div class="services-group">
-        <h3 class="services-group-label">
-            <span class="services-group-label-line"></span>
-            Ons Proces
-            <span class="services-group-label-line"></span>
-        </h3>
-        <Grid cols={4} gap="lg">
-            {
-                diensten.map((service, i) => (
-                    <Card accentBar>
-                        <div class="service-step-header">
-                            <div class="icon-box icon-box--lg service-icon">
-                                <Icon name={service.icon} size={28} />
-                            </div>
-                            <span
-                                class="service-step-number"
-                                aria-hidden="true"
-                            >
-                                {String(i + 1).padStart(2, "0")}
-                            </span>
-                        </div>
-                        <h3 class="card-title">{service.title}</h3>
-                        <p class="card-desc">{service.description}</p>
-                    </Card>
-                ))
-            }
         </Grid>
     </div>
 </Section>
