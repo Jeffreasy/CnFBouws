@@ -110,13 +110,29 @@
 
 <!-- Success state (hidden until form submits successfully) -->
 <div id="cnf-success" class="cnf-success" role="alert" hidden>
-    <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="cnf-success-icon" aria-hidden="true">
-        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-        <polyline points="22 4 12 14.01 9 11.01"></polyline>
-    </svg>
+    <div class="cnf-success-badge">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+    </div>
     <h3 class="cnf-success-title">Bericht verzonden!</h3>
-    <p class="cnf-success-text" id="cnf-success-msg">Bedankt! Wij nemen zo snel mogelijk contact met u op.</p>
-    <button type="button" id="cnf-reset" class="cnf-reset-btn">Nog een bericht versturen</button>
+    <p class="cnf-success-text" id="cnf-success-msg">Bedankt voor uw bericht. Wij nemen binnen <strong>24 uur</strong> contact met u op.</p>
+    <div class="cnf-success-contact">
+        <p>Liever direct contact?</p>
+        <a href="tel:+31613963156" class="cnf-success-phone">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"></path>
+            </svg>
+            06 13 96 31 56
+        </a>
+    </div>
+    <button type="button" id="cnf-reset" class="cnf-reset-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="1 4 1 10 7 10"></polyline>
+            <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+        </svg>
+        Nog een bericht versturen
+    </button>
 </div>
 
 <style>
@@ -279,38 +295,102 @@
     }
 
     /* ── Success ────────────────────────────────────────────── */
+    @keyframes cnf-scale-in {
+        from { transform: scale(0.5); opacity: 0; }
+        to   { transform: scale(1);   opacity: 1; }
+    }
+
+    @keyframes cnf-check-draw {
+        from { stroke-dashoffset: 30; }
+        to   { stroke-dashoffset: 0; }
+    }
+
     /* :not([hidden]) prevents overriding hidden attribute like display:flex does */
     .cnf-success:not([hidden]) {
         display: flex;
         flex-direction: column;
         align-items: center;
         text-align: center;
-        padding: 3rem 1.5rem;
+        padding: 3rem 2rem;
+        min-height: 360px;
+        justify-content: center;
     }
 
     @media (max-width: 768px) {
         .cnf-success:not([hidden]) {
-            padding: 2rem 1rem; /* less padding so it fits on small screens */
+            padding: 2rem 1.25rem;
+            min-height: 300px;
         }
     }
 
-    .cnf-success-icon {
-        color: var(--color-cta);
-        margin-bottom: 1.25rem;
+    .cnf-success-badge {
+        width: 72px;
+        height: 72px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 8px 24px rgba(34, 197, 94, 0.25);
+        animation: cnf-scale-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    .cnf-success-badge svg {
+        color: #fff;
+        stroke-dasharray: 30;
+        stroke-dashoffset: 30;
+        animation: cnf-check-draw 0.5s ease 0.35s forwards;
     }
 
     .cnf-success-title {
         font-family: var(--font-heading);
-        font-size: clamp(1.125rem, 2.5vw, 1.375rem);
+        font-size: clamp(1.25rem, 3vw, 1.5rem);
         font-weight: 700;
         color: var(--text-heading);
-        margin-bottom: 0.5rem;
+        margin: 0 0 0.625rem;
     }
 
     .cnf-success-text {
         color: var(--text-secondary);
-        margin-bottom: 1.5rem;
+        margin: 0 0 1.75rem;
         line-height: 1.6;
+        font-size: 0.9375rem;
+        max-width: 340px;
+    }
+
+    .cnf-success-contact {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 2rem;
+        padding: 1rem 1.5rem;
+        background: rgba(var(--color-cta-rgb), 0.06);
+        border: 1px solid rgba(var(--color-cta-rgb), 0.15);
+        border-radius: 0.625rem;
+    }
+
+    .cnf-success-contact p {
+        margin: 0;
+        font-size: 0.8125rem;
+        color: var(--text-muted);
+    }
+
+    .cnf-success-phone {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-family: var(--font-heading);
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--color-cta);
+        text-decoration: none;
+        transition: opacity 0.2s ease;
+    }
+
+    .cnf-success-phone:hover {
+        opacity: 0.8;
     }
 
     .cnf-reset-btn {
