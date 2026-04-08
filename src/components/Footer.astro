@@ -84,36 +84,7 @@ const year = new Date().getFullYear();
                 </nav>
             </div>
 
-            <!-- Column 2: Services -->
-            <div class="footer-col">
-                <nav aria-label="Footer diensten">
-                    <h3 class="footer-heading">Diensten</h3>
-                    <ul class="footer-list" role="list">
-                        <li>
-                            <a href="#diensten" class="footer-link"
-                                >Advies op maat</a
-                            >
-                        </li>
-                        <li>
-                            <a href="#diensten" class="footer-link"
-                                >Inmeten op locatie</a
-                            >
-                        </li>
-                        <li>
-                            <a href="#diensten" class="footer-link"
-                                >Kunststof kozijnen</a
-                            >
-                        </li>
-                        <li>
-                            <a href="#diensten" class="footer-link"
-                                >Professionele montage</a
-                            >
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-
-            <!-- Column 3: Contact -->
+            <!-- Column 2: Contact -->
             <div class="footer-col">
                 <div class="footer-contact-section">
                     <h3 class="footer-heading">Contact</h3>
@@ -147,18 +118,38 @@ const year = new Date().getFullYear();
                     </ul>
                 </div>
             </div>
+
+            <!-- Column 3: Project Team -->
+            <div class="footer-col">
+                <h3 class="footer-heading">Project Team</h3>
+                <div class="footer-team-card">
+                    <p class="footer-team-role">Fullstack Prompt-engineer</p>
+                    <div class="footer-team-name">
+                        <span>Jeffrey Lavente</span>
+                    </div>
+                </div>
+            </div>
         </Grid>
 
-        <!-- Bottom Bar -->
+        <!-- Bottom Bar — LaventeCare Branding -->
         <div class="footer-bottom">
             <div class="footer-legal">
                 <p>{SITE.footer.legalLine}</p>
                 <p>{SITE.footer.kvkLine}</p>
             </div>
-            <p class="footer-copy">
-                &copy; {year}
-                {SITE.name}. Alle rechten voorbehouden.
-            </p>
+            <div class="footer-branding">
+                <p class="footer-copy">
+                    &copy; {year} LaventeCare. All rights reserved.
+                </p>
+                <p class="footer-powered">
+                    Powered by <a
+                        href="https://www.laventecare.nl"
+                        class="footer-shimmer-link"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >LaventeCare AuthSystem<span class="sr-only"> (opent in nieuw tabblad)</span></a>
+                </p>
+            </div>
         </div>
     </div>
 </footer>
@@ -338,9 +329,82 @@ const year = new Date().getFullYear();
         line-height: 1.5;
     }
 
+    .footer-branding {
+        text-align: right;
+    }
+
     .footer-copy {
         font-size: 0.8125rem;
         color: var(--footer-dim);
+    }
+
+    .footer-powered {
+        font-size: 0.8125rem;
+        color: var(--footer-dim);
+        margin-top: 0.25rem;
+    }
+
+    /* ── Shimmer Link — Signature Element ───────────────── */
+
+    .footer-shimmer-link {
+        font-weight: 600;
+        background: linear-gradient(
+            to right,
+            #ffffff,
+            #a5d8f0,
+            #ffffff
+        );
+        background-size: 200% auto;
+        animation: shimmer 3s linear infinite;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        transition: opacity var(--transition-fast);
+        text-decoration: none;
+    }
+
+    :global([data-theme="dark"]) .footer-shimmer-link {
+        background: linear-gradient(
+            to right,
+            #2A85BC,
+            #4ecdc4,
+            #2A85BC
+        );
+        background-size: 200% auto;
+        -webkit-background-clip: text;
+        background-clip: text;
+    }
+
+    .footer-shimmer-link:hover {
+        opacity: 0.8;
+        color: transparent;
+    }
+
+    /* ── Project Team Card ──────────────────────────────── */
+
+    .footer-team-card {
+        padding: var(--space-md);
+        border-radius: var(--radius-md);
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid var(--footer-border);
+    }
+
+    .footer-team-role {
+        font-size: 0.75rem;
+        color: var(--footer-dim);
+        margin-bottom: 0.5rem;
+    }
+
+    .footer-team-name {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 600;
+        color: var(--footer-heading);
+    }
+
+    .footer-heart {
+        flex-shrink: 0;
     }
 
     /* ── Responsive — Mobile-First ────────────────────────── */
@@ -362,6 +426,9 @@ const year = new Date().getFullYear();
     .footer-legal {
         text-align: center;
     }
+    .footer-branding {
+        text-align: center;
+    }
 
     /* Desktop (>=769px): switch brand row back to horizontal */
     @media (min-width: 769px) {
@@ -380,6 +447,9 @@ const year = new Date().getFullYear();
         }
         .footer-legal {
             text-align: left;
+        }
+        .footer-branding {
+            text-align: right;
         }
     }
 </style>
