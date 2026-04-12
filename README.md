@@ -1,60 +1,49 @@
-# C&F Bouw — Website
+<div align="center">
+  <h1>C&F Bouw</h1>
+  <p><strong>De professionele frontend applicatie voor Connect Diensten V.O.F.</strong></p>
+  
+  [![Astro](https://img.shields.io/badge/Astro-5.0-orange?style=flat-square&logo=astro)](https://astro.build/)
+  [![Convex](https://img.shields.io/badge/Convex-1.33.1-blue?style=flat-square&logo=convex)](https://convex.dev/)
+  [![Vercel](https://img.shields.io/badge/Hosted%20on-Vercel-black?style=flat-square&logo=vercel)](https://vercel.com)
+</div>
 
-Bedrijfswebsite van **C&F Bouw** (Connect Diensten V.O.F.), gespecialiseerd in kunststof kozijnen, deuren en schuifpuien met Schüco kwaliteit.
+---
 
-## Tech Stack
+## 📌 Project Overview
+Deze repository bevat de performante bedrijfswebsite ten behoeve van **C&F Bouw**. Het project is volledig gebouwd als een **Pure Astro 5** applicatie en opereert bewust zonder grote front-end bibliotheken zoals React, wat zorgt voor een compromisloze performance (Zero Thead Blocking). Het systeem integreert beveiligd met het **LaventeCare AuthSystem** voor e-mail afhandeling, en maakt gebruik van **Convex** als high-speed database voor opgeslagen leads.
 
-| Layer | Technologie |
-|-------|-------------|
-| Framework | [Astro 5](https://astro.build) (SSR + prerender) |
-| UI | Astro Components + React 19 Islands |
-| Styling | Vanilla CSS via design tokens (`global.css`) |
-| Images | [ImageKit](https://imagekit.io) CDN met responsive srcset |
-| Email | [Resend](https://resend.com) transactional email |
-| Auth | LaventeCare AuthSystem (Zero-Trust middleware) |
-| Hosting | [Vercel](https://vercel.com) |
+### 📚 The Handbook
+Voor een diepgaande technische weergave van de architectuur, datastructuur, implementatie van de "Dual-Email" proxy, en de Vanilla CSS-organisatie ben je verplicht de referentie documentatie te lezen.
 
-## Projectstructuur
+**👉 Start hier: [FrontendDocs / The Handbook](./FrontendDocs/docs/README.md)**
 
-```
-src/
-├── components/
-│   ├── sections/      # 9 page sections (Hero, Services, Products, etc.)
-│   ├── islands/       # React islands (ContactFormIsland)
-│   ├── ui/            # Reusable UI (Card, Grid, Icon, Modal, etc.)
-│   ├── Navbar.astro
-│   └── Footer.astro
-├── data/              # Centralized site data (site.ts, services.ts, etc.)
-├── layouts/           # BaseLayout with View Transitions
-├── lib/               # Utilities (imagekit, email, rateLimit, api)
-├── pages/
-│   ├── index.astro    # Homepage (prerendered)
-│   └── api/           # Server endpoints (contact, auth)
-├── styles/            # global.css design system
-└── middleware.ts      # Zero-Trust session validation
-```
+---
 
-## Development
+## 🚀 Quick Start (Local Development)
+
+Zorg ervoor dat je `Node.js` v20+ hebt draaien.
 
 ```bash
-npm install            # Installeer dependencies
-npm run dev            # Start dev server op localhost:4321
-npm run build          # Productie build
-npm run preview        # Preview build lokaal
+# 1. Installeer dependencies
+npm install
+
+# 2. Kopieer .env
+cp .env.example .env
+
+# 3. Start development server
+npm run dev
 ```
+De applicatie draait nu op `http://localhost:4321`.
 
-## Environment Variables
+## ⚙️ Core Technology Stack
 
-Maak een `.env` bestand aan (zie `.env.example`):
+- **Framework**: Astro 5 (Server-first SSR + Prerendering)
+- **UI & Interactivity**: Pure Astro Components & Vanilla JS Scripts
+- **Styling**: Vanilla CSS + Design Tokens (`global.css`)
+- **Database**: Convex (Lead opslag / Aanvragen)
+- **Media Optimization**: ImageKit CDN (Responsive `srcset`)
+- **Security & APIs**: LaventeCare AuthSystem & BFF Proxy
 
-```env
-PUBLIC_API_URL=         # LaventeCare API endpoint
-PUBLIC_TENANT_ID=       # Tenant identifier
-PUBLIC_IMAGEKIT_URL=    # ImageKit base URL
-RESEND_API_KEY=         # Resend email API key
-CONTACT_EMAIL=          # Ontvangst e-mailadres
-```
-
-## KvK
-
-**Connect Diensten V.O.F.** — KvK: 97394297
+## 🏢 Bedrijfsgegevens
+**Connect Diensten V.O.F. (C&F Bouw)**
+- **KvK**: 97394297
